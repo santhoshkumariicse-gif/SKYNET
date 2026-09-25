@@ -63,4 +63,15 @@ class Settings(BaseSettings):
         "extra": "ignore"
     }
 
+    def validate_production_hardening(self) -> None:
+        """Enforces DevSecOps safe-fail on production startup if default secrets are detected."""
+        if self.ENVIRONMENT.lower() == "production":
+            insecure_jwt = "change_me" in self.SECRET_KEY or self.SECRET_KEY == "skynet_super_secret_jwt_key_enterprise_2026_prod_change_me"
+            insecure_agent = self.AGENT_API_KEY == "skynet_agent_default_secret_token_2026"
+            if insecure_jwt:
+                raise ValueError("CRITICAL SECURITY ERROR: Production startup aborted. Insecure default SECRET_KEY detected.")
+            if insecure_agent:
+                raise ValueError("CRITICAL SECURITY ERROR: Production startup aborted. Insecure default AGENT_API_KEY detected.")
+
 settings = Settings()
+settings.validate_production_hardening()

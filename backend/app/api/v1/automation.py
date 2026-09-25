@@ -32,7 +32,7 @@ class ExecuteWorkflowRequest(BaseModel):
 
 
 @router.get("/workflows")
-async def get_workflows():
+async def get_workflows(limit: int = Query(150, ge=1, le=200)):
     """Inspects workflows directory and returns available playbooks and active pipelines."""
     playbooks = []
     all_150_dir = os.path.join(WORKFLOWS_DIR, "SKYNET_v5_ALL_150_N8N_WORKFLOWS")
@@ -60,7 +60,7 @@ async def get_workflows():
 
     # 2. 150 Modular Workflows
     if os.path.exists(all_150_dir):
-        for fname in sorted(os.listdir(all_150_dir))[:50]: # Sample top 50 in list response
+        for fname in sorted(os.listdir(all_150_dir))[:limit]:
             if fname.endswith(".json"):
                 fpath = os.path.join(all_150_dir, fname)
                 try:

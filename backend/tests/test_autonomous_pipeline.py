@@ -388,3 +388,31 @@ async def test_automation_workflows_and_execution(client: AsyncClient):
     assert edata["latency_ms"] >= 0
 
 
+@pytest.mark.asyncio
+async def test_all_150_workflows_matrix_and_contracts():
+    """Audits and validates the contractual execution of all 150 modular playbooks."""
+    from scripts.verify_all_150_workflows import audit_and_test_all_150
+    report = audit_and_test_all_150()
+    assert report["total_workflows"] == 150
+    assert report["passed"] == 150
+    assert report["failed"] == 0
+    assert report["overall_status"] == "PASS"
+
+
+@pytest.mark.asyncio
+async def test_20_attack_scenarios_execution():
+    """Executes all 20 closed-loop defense and resilience scenarios."""
+    from scripts.run_20_attack_scenarios import run_all_scenarios
+    # Execute the async scenarios engine
+    await run_all_scenarios()
+
+
+@pytest.mark.asyncio
+async def test_disaster_recovery_backup_and_parity():
+    """Executes the full disaster recovery lifecycle: backup -> corrupt -> restore -> parity."""
+    from scripts.disaster_recovery_test import run_disaster_recovery_test
+    result = run_disaster_recovery_test()
+    assert result is True
+
+
+
