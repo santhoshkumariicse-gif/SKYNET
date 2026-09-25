@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-25T17:46:52.207096+00:00",
+  "timestamp": "2026-09-25T19:19:49.552481+00:00",
   "total_workflows": 150,
   "passed": 150,
   "failed": 0,
@@ -9,7 +9,7 @@
     {
       "id": "WF-001",
       "number": 1,
-      "workflow": "SOC Event Intake, IOC Enrichment & Triage",
+      "workflow": "Syslog ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -20,13 +20,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0001|lat:0.53ms|nodes:6",
-      "latency_ms": 0.53
+      "evidence": "exec_id:EXEC-0001|lat:0.58ms|nodes:6",
+      "latency_ms": 0.58
     },
     {
       "id": "WF-002",
       "number": 2,
-      "workflow": "Event Normalization & Schema Validation",
+      "workflow": "Windows Event ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -37,13 +37,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0002|lat:0.59ms|nodes:6",
-      "latency_ms": 0.59
+      "evidence": "exec_id:EXEC-0002|lat:0.58ms|nodes:6",
+      "latency_ms": 0.58
     },
     {
       "id": "WF-003",
       "number": 3,
-      "workflow": "Duplicate Event Detection",
+      "workflow": "Linux log ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -60,7 +60,7 @@
     {
       "id": "WF-004",
       "number": 4,
-      "workflow": "Event Deduplication & Suppression",
+      "workflow": "Endpoint telemetry ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -71,13 +71,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0004|lat:0.56ms|nodes:6",
-      "latency_ms": 0.56
+      "evidence": "exec_id:EXEC-0004|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-005",
       "number": 5,
-      "workflow": "Log Source Health Monitoring",
+      "workflow": "Firewall event ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -94,7 +94,7 @@
     {
       "id": "WF-006",
       "number": 6,
-      "workflow": "Agent & Endpoint Health Monitoring",
+      "workflow": "IDS/IPS event ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -105,13 +105,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0006|lat:0.54ms|nodes:6",
-      "latency_ms": 0.54
+      "evidence": "exec_id:EXEC-0006|lat:0.52ms|nodes:6",
+      "latency_ms": 0.52
     },
     {
       "id": "WF-007",
       "number": 7,
-      "workflow": "Event Enrichment",
+      "workflow": "EDR event ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -122,13 +122,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0007|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0007|lat:0.6ms|nodes:6",
+      "latency_ms": 0.6
     },
     {
       "id": "WF-008",
       "number": 8,
-      "workflow": "Asset Context Enrichment",
+      "workflow": "Cloud event ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -139,13 +139,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0008|lat:0.55ms|nodes:6",
-      "latency_ms": 0.55
+      "evidence": "exec_id:EXEC-0008|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-009",
       "number": 9,
-      "workflow": "User Context Enrichment",
+      "workflow": "Application log ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -162,7 +162,7 @@
     {
       "id": "WF-010",
       "number": 10,
-      "workflow": "GeoIP & Network Context Enrichment",
+      "workflow": "Network-flow ingestion",
       "domain": "Domain 01: Event Intake",
       "exists": true,
       "connected": true,
@@ -173,13 +173,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0010|lat:0.39ms|nodes:6",
-      "latency_ms": 0.39
+      "evidence": "exec_id:EXEC-0010|lat:0.63ms|nodes:6",
+      "latency_ms": 0.63
     },
     {
       "id": "WF-011",
       "number": 11,
-      "workflow": "IP Reputation Enrichment",
+      "workflow": "Common event schema",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -196,7 +196,7 @@
     {
       "id": "WF-012",
       "number": 12,
-      "workflow": "Domain Reputation Enrichment",
+      "workflow": "Timestamp normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -207,13 +207,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0012|lat:0.63ms|nodes:6",
-      "latency_ms": 0.63
+      "evidence": "exec_id:EXEC-0012|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-013",
       "number": 13,
-      "workflow": "URL Reputation Enrichment",
+      "workflow": "IP normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -230,7 +230,7 @@
     {
       "id": "WF-014",
       "number": 14,
-      "workflow": "File Hash Reputation",
+      "workflow": "User identity normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -247,7 +247,7 @@
     {
       "id": "WF-015",
       "number": 15,
-      "workflow": "Malware Intelligence",
+      "workflow": "Host normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -264,7 +264,7 @@
     {
       "id": "WF-016",
       "number": 16,
-      "workflow": "IOC Correlation",
+      "workflow": "Process normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -281,7 +281,7 @@
     {
       "id": "WF-017",
       "number": 17,
-      "workflow": "Threat Actor Intelligence",
+      "workflow": "Network connection normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -298,7 +298,7 @@
     {
       "id": "WF-018",
       "number": 18,
-      "workflow": "CVE Intelligence",
+      "workflow": "Authentication normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -315,7 +315,7 @@
     {
       "id": "WF-019",
       "number": 19,
-      "workflow": "Vulnerability Intelligence",
+      "workflow": "Cloud-event normalization",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -332,7 +332,7 @@
     {
       "id": "WF-020",
       "number": 20,
-      "workflow": "Threat Intelligence Feed Synchronization",
+      "workflow": "Raw-event preservation",
       "domain": "Domain 02: Normalization",
       "exists": true,
       "connected": true,
@@ -349,7 +349,7 @@
     {
       "id": "WF-021",
       "number": 21,
-      "workflow": "Brute Force Detection",
+      "workflow": "Asset enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -360,13 +360,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0021|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0021|lat:3.88ms|nodes:6",
+      "latency_ms": 3.88
     },
     {
       "id": "WF-022",
       "number": 22,
-      "workflow": "Password Spray Detection",
+      "workflow": "User enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -383,7 +383,7 @@
     {
       "id": "WF-023",
       "number": 23,
-      "workflow": "Account Compromise Detection",
+      "workflow": "GeoIP enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -394,13 +394,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0023|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0023|lat:0.82ms|nodes:6",
+      "latency_ms": 0.82
     },
     {
       "id": "WF-024",
       "number": 24,
-      "workflow": "Privilege Escalation Detection",
+      "workflow": "DNS enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -417,7 +417,7 @@
     {
       "id": "WF-025",
       "number": 25,
-      "workflow": "PowerShell Detection",
+      "workflow": "WHOIS enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -434,7 +434,7 @@
     {
       "id": "WF-026",
       "number": 26,
-      "workflow": "Suspicious Command-Line Detection",
+      "workflow": "ASN enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -451,7 +451,7 @@
     {
       "id": "WF-027",
       "number": 27,
-      "workflow": "Malware Detection",
+      "workflow": "Domain enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -468,7 +468,7 @@
     {
       "id": "WF-028",
       "number": 28,
-      "workflow": "Ransomware Detection",
+      "workflow": "Hash enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -485,7 +485,7 @@
     {
       "id": "WF-029",
       "number": 29,
-      "workflow": "Persistence Detection",
+      "workflow": "Process enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -496,13 +496,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0029|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0029|lat:2.02ms|nodes:6",
+      "latency_ms": 2.02
     },
     {
       "id": "WF-030",
       "number": 30,
-      "workflow": "Defense Evasion Detection",
+      "workflow": "Vulnerability enrichment",
       "domain": "Domain 03: Enrichment",
       "exists": true,
       "connected": true,
@@ -519,7 +519,7 @@
     {
       "id": "WF-031",
       "number": 31,
-      "workflow": "Lateral Movement Detection",
+      "workflow": "IOC lookup",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -536,7 +536,7 @@
     {
       "id": "WF-032",
       "number": 32,
-      "workflow": "C2 Detection",
+      "workflow": "IP reputation",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -553,7 +553,7 @@
     {
       "id": "WF-033",
       "number": 33,
-      "workflow": "Port Scan Detection",
+      "workflow": "Domain reputation",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -570,7 +570,7 @@
     {
       "id": "WF-034",
       "number": 34,
-      "workflow": "Network Anomaly Detection",
+      "workflow": "URL reputation",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -587,7 +587,7 @@
     {
       "id": "WF-035",
       "number": 35,
-      "workflow": "Data Exfiltration Detection",
+      "workflow": "Hash reputation",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -604,7 +604,7 @@
     {
       "id": "WF-036",
       "number": 36,
-      "workflow": "Phishing Detection",
+      "workflow": "Malware intelligence",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -621,7 +621,7 @@
     {
       "id": "WF-037",
       "number": 37,
-      "workflow": "Suspicious Login Detection",
+      "workflow": "Ransomware intelligence",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -638,7 +638,7 @@
     {
       "id": "WF-038",
       "number": 38,
-      "workflow": "Impossible Travel Detection",
+      "workflow": "CVE intelligence",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -655,7 +655,7 @@
     {
       "id": "WF-039",
       "number": 39,
-      "workflow": "Multiple IOC Correlation",
+      "workflow": "Threat-actor intelligence",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -672,7 +672,7 @@
     {
       "id": "WF-040",
       "number": 40,
-      "workflow": "Multi-Stage Attack Correlation",
+      "workflow": "Threat-feed synchronization",
       "domain": "Domain 04: Threat Intelligence",
       "exists": true,
       "connected": true,
@@ -689,7 +689,7 @@
     {
       "id": "WF-041",
       "number": 41,
-      "workflow": "Alert Creation",
+      "workflow": "Brute-force detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -700,13 +700,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0041|lat:6.1ms|nodes:6",
-      "latency_ms": 6.1
+      "evidence": "exec_id:EXEC-0041|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-042",
       "number": 42,
-      "workflow": "Alert Severity Calculation",
+      "workflow": "Credential-stuffing detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -723,7 +723,7 @@
     {
       "id": "WF-043",
       "number": 43,
-      "workflow": "Alert Risk Scoring",
+      "workflow": "Malware detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -740,7 +740,7 @@
     {
       "id": "WF-044",
       "number": 44,
-      "workflow": "Alert Deduplication",
+      "workflow": "Ransomware detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -757,7 +757,7 @@
     {
       "id": "WF-045",
       "number": 45,
-      "workflow": "Alert Suppression",
+      "workflow": "Phishing detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -768,13 +768,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0045|lat:1.42ms|nodes:6",
-      "latency_ms": 1.42
+      "evidence": "exec_id:EXEC-0045|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-046",
       "number": 46,
-      "workflow": "Alert Enrichment",
+      "workflow": "Suspicious PowerShell detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -791,7 +791,7 @@
     {
       "id": "WF-047",
       "number": 47,
-      "workflow": "Alert Assignment",
+      "workflow": "Suspicious process detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -808,7 +808,7 @@
     {
       "id": "WF-048",
       "number": 48,
-      "workflow": "Alert Escalation",
+      "workflow": "Privilege-escalation detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -819,13 +819,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0048|lat:1.1ms|nodes:6",
-      "latency_ms": 1.1
+      "evidence": "exec_id:EXEC-0048|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-049",
       "number": 49,
-      "workflow": "Alert SLA Monitoring",
+      "workflow": "Data-exfiltration detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -842,7 +842,7 @@
     {
       "id": "WF-050",
       "number": 50,
-      "workflow": "Alert Closure Validation",
+      "workflow": "Lateral-movement detection",
       "domain": "Domain 05: Detection",
       "exists": true,
       "connected": true,
@@ -853,13 +853,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0050|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0050|lat:0.55ms|nodes:6",
+      "latency_ms": 0.55
     },
     {
       "id": "WF-051",
       "number": 51,
-      "workflow": "Incident Creation",
+      "workflow": "Authentication correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -876,7 +876,7 @@
     {
       "id": "WF-052",
       "number": 52,
-      "workflow": "Incident Classification",
+      "workflow": "Endpoint correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -893,7 +893,7 @@
     {
       "id": "WF-053",
       "number": 53,
-      "workflow": "Incident Prioritization",
+      "workflow": "Network correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -910,7 +910,7 @@
     {
       "id": "WF-054",
       "number": 54,
-      "workflow": "Incident Timeline Generation",
+      "workflow": "Identity correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -927,7 +927,7 @@
     {
       "id": "WF-055",
       "number": 55,
-      "workflow": "Evidence Collection",
+      "workflow": "Malware correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -938,13 +938,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0055|lat:1.46ms|nodes:6",
-      "latency_ms": 1.46
+      "evidence": "exec_id:EXEC-0055|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-056",
       "number": 56,
-      "workflow": "Incident Correlation",
+      "workflow": "Cloud correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -961,7 +961,7 @@
     {
       "id": "WF-057",
       "number": 57,
-      "workflow": "Incident Escalation",
+      "workflow": "Multi-host correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -972,13 +972,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0057|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0057|lat:2.52ms|nodes:6",
+      "latency_ms": 2.52
     },
     {
       "id": "WF-058",
       "number": 58,
-      "workflow": "Incident SLA Monitoring",
+      "workflow": "Multi-user correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -989,13 +989,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0058|lat:0.72ms|nodes:6",
-      "latency_ms": 0.72
+      "evidence": "exec_id:EXEC-0058|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-059",
       "number": 59,
-      "workflow": "Incident Status Synchronization",
+      "workflow": "Kill-chain correlation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -1012,7 +1012,7 @@
     {
       "id": "WF-060",
       "number": 60,
-      "workflow": "Incident Closure",
+      "workflow": "Attack-story generation",
       "domain": "Domain 06: Correlation",
       "exists": true,
       "connected": true,
@@ -1023,13 +1023,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0060|lat:1.29ms|nodes:6",
-      "latency_ms": 1.29
+      "evidence": "exec_id:EXEC-0060|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-061",
       "number": 61,
-      "workflow": "Suspicious Host Response",
+      "workflow": "Event risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1046,7 +1046,7 @@
     {
       "id": "WF-062",
       "number": 62,
-      "workflow": "Endpoint Isolation Approval",
+      "workflow": "IOC risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1063,7 +1063,7 @@
     {
       "id": "WF-063",
       "number": 63,
-      "workflow": "Account Disable Approval",
+      "workflow": "Asset criticality scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1080,7 +1080,7 @@
     {
       "id": "WF-064",
       "number": 64,
-      "workflow": "Credential Reset Workflow",
+      "workflow": "User-risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1097,7 +1097,7 @@
     {
       "id": "WF-065",
       "number": 65,
-      "workflow": "Malicious IP Blocking",
+      "workflow": "Vulnerability risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1114,7 +1114,7 @@
     {
       "id": "WF-066",
       "number": 66,
-      "workflow": "Malicious Domain Blocking",
+      "workflow": "Threat severity scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1131,7 +1131,7 @@
     {
       "id": "WF-067",
       "number": 67,
-      "workflow": "Malicious URL Blocking",
+      "workflow": "Behavioral risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1148,7 +1148,7 @@
     {
       "id": "WF-068",
       "number": 68,
-      "workflow": "Hash Blocking",
+      "workflow": "Incident risk scoring",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1165,7 +1165,7 @@
     {
       "id": "WF-069",
       "number": 69,
-      "workflow": "Process Termination Approval",
+      "workflow": "Composite risk calculation",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1182,7 +1182,7 @@
     {
       "id": "WF-070",
       "number": 70,
-      "workflow": "Malware Quarantine",
+      "workflow": "Risk recalculation",
       "domain": "Domain 07: Risk Scoring",
       "exists": true,
       "connected": true,
@@ -1199,7 +1199,7 @@
     {
       "id": "WF-071",
       "number": 71,
-      "workflow": "Phishing Email Response",
+      "workflow": "Alert creation",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1210,13 +1210,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0071|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0071|lat:4.28ms|nodes:6",
+      "latency_ms": 4.28
     },
     {
       "id": "WF-072",
       "number": 72,
-      "workflow": "Firewall Rule Request",
+      "workflow": "Alert deduplication",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1233,7 +1233,7 @@
     {
       "id": "WF-073",
       "number": 73,
-      "workflow": "IOC Distribution",
+      "workflow": "Alert grouping",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1250,7 +1250,7 @@
     {
       "id": "WF-074",
       "number": 74,
-      "workflow": "Containment Verification",
+      "workflow": "Alert suppression",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1267,7 +1267,7 @@
     {
       "id": "WF-075",
       "number": 75,
-      "workflow": "Recovery Verification",
+      "workflow": "Alert prioritization",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1278,13 +1278,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0075|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0075|lat:1.1ms|nodes:6",
+      "latency_ms": 1.1
     },
     {
       "id": "WF-076",
       "number": 76,
-      "workflow": "MITRE Technique Mapping",
+      "workflow": "Alert escalation",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1301,7 +1301,7 @@
     {
       "id": "WF-077",
       "number": 77,
-      "workflow": "ATT&CK Coverage Analysis",
+      "workflow": "Alert assignment",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1318,7 +1318,7 @@
     {
       "id": "WF-078",
       "number": 78,
-      "workflow": "Threat Hunt Creation",
+      "workflow": "Alert SLA monitoring",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1335,7 +1335,7 @@
     {
       "id": "WF-079",
       "number": 79,
-      "workflow": "Threat Hunt Execution",
+      "workflow": "Alert lifecycle management",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1352,7 +1352,7 @@
     {
       "id": "WF-080",
       "number": 80,
-      "workflow": "Suspicious Process Hunt",
+      "workflow": "Alert closure validation",
       "domain": "Domain 08: Alert Management",
       "exists": true,
       "connected": true,
@@ -1369,7 +1369,7 @@
     {
       "id": "WF-081",
       "number": 81,
-      "workflow": "Persistence Hunt",
+      "workflow": "Alert investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1386,7 +1386,7 @@
     {
       "id": "WF-082",
       "number": 82,
-      "workflow": "Credential Access Hunt",
+      "workflow": "IP investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1403,7 +1403,7 @@
     {
       "id": "WF-083",
       "number": 83,
-      "workflow": "Lateral Movement Hunt",
+      "workflow": "Domain investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1420,7 +1420,7 @@
     {
       "id": "WF-084",
       "number": 84,
-      "workflow": "C2 Hunt",
+      "workflow": "Hash investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1437,7 +1437,7 @@
     {
       "id": "WF-085",
       "number": 85,
-      "workflow": "Exfiltration Hunt",
+      "workflow": "User investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1454,7 +1454,7 @@
     {
       "id": "WF-086",
       "number": 86,
-      "workflow": "AI Alert Summarization",
+      "workflow": "Host investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1471,7 +1471,7 @@
     {
       "id": "WF-087",
       "number": 87,
-      "workflow": "AI Incident Summarization",
+      "workflow": "Process investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1488,7 +1488,7 @@
     {
       "id": "WF-088",
       "number": 88,
-      "workflow": "AI Investigation Assistant",
+      "workflow": "Authentication investigation",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1505,7 +1505,7 @@
     {
       "id": "WF-089",
       "number": 89,
-      "workflow": "AI Root-Cause Analysis",
+      "workflow": "Timeline reconstruction",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1522,7 +1522,7 @@
     {
       "id": "WF-090",
       "number": 90,
-      "workflow": "AI False-Positive Analysis",
+      "workflow": "AI investigation summary",
       "domain": "Domain 09: Investigation",
       "exists": true,
       "connected": true,
@@ -1539,7 +1539,7 @@
     {
       "id": "WF-091",
       "number": 91,
-      "workflow": "AI Detection Recommendation",
+      "workflow": "Incident creation",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1556,7 +1556,7 @@
     {
       "id": "WF-092",
       "number": 92,
-      "workflow": "AI Correlation Recommendation",
+      "workflow": "Incident classification",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1567,13 +1567,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0092|lat:1.16ms|nodes:6",
-      "latency_ms": 1.16
+      "evidence": "exec_id:EXEC-0092|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-093",
       "number": 93,
-      "workflow": "AI Threat-Hunting Recommendation",
+      "workflow": "Incident severity assignment",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1590,7 +1590,7 @@
     {
       "id": "WF-094",
       "number": 94,
-      "workflow": "AI Playbook Recommendation",
+      "workflow": "Incident ownership",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1607,7 +1607,7 @@
     {
       "id": "WF-095",
       "number": 95,
-      "workflow": "AI Analyst Briefing",
+      "workflow": "Incident evidence collection",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1624,7 +1624,7 @@
     {
       "id": "WF-096",
       "number": 96,
-      "workflow": "Windows Endpoint Monitoring",
+      "workflow": "Incident timeline",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1641,7 +1641,7 @@
     {
       "id": "WF-097",
       "number": 97,
-      "workflow": "Linux Endpoint Monitoring",
+      "workflow": "Incident task generation",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1658,7 +1658,7 @@
     {
       "id": "WF-098",
       "number": 98,
-      "workflow": "Android Device Monitoring",
+      "workflow": "Incident escalation",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1675,7 +1675,7 @@
     {
       "id": "WF-099",
       "number": 99,
-      "workflow": "Server Health Monitoring",
+      "workflow": "Incident SLA tracking",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1686,13 +1686,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0099|lat:1.32ms|nodes:6",
-      "latency_ms": 1.32
+      "evidence": "exec_id:EXEC-0099|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-100",
       "number": 100,
-      "workflow": "CPU/GPU Anomaly Detection",
+      "workflow": "Incident closure",
       "domain": "Domain 10: Incident Management",
       "exists": true,
       "connected": true,
@@ -1709,7 +1709,7 @@
     {
       "id": "WF-101",
       "number": 101,
-      "workflow": "Memory Anomaly Detection",
+      "workflow": "Endpoint isolation",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1726,7 +1726,7 @@
     {
       "id": "WF-102",
       "number": 102,
-      "workflow": "Disk Anomaly Detection",
+      "workflow": "Malicious-process termination",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1743,7 +1743,7 @@
     {
       "id": "WF-103",
       "number": 103,
-      "workflow": "Network Interface Monitoring",
+      "workflow": "Account disablement",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1760,7 +1760,7 @@
     {
       "id": "WF-104",
       "number": 104,
-      "workflow": "Service Health Monitoring",
+      "workflow": "Credential-reset workflow",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1777,7 +1777,7 @@
     {
       "id": "WF-105",
       "number": 105,
-      "workflow": "Firmware/Security Update Monitoring",
+      "workflow": "IP blocking",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1794,7 +1794,7 @@
     {
       "id": "WF-106",
       "number": 106,
-      "workflow": "Vulnerability Scan Intake",
+      "workflow": "Domain blocking",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1811,7 +1811,7 @@
     {
       "id": "WF-107",
       "number": 107,
-      "workflow": "CVE Enrichment",
+      "workflow": "URL blocking",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1828,7 +1828,7 @@
     {
       "id": "WF-108",
       "number": 108,
-      "workflow": "Asset Vulnerability Correlation",
+      "workflow": "Firewall rule automation",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1839,13 +1839,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0108|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0108|lat:2.01ms|nodes:6",
+      "latency_ms": 2.01
     },
     {
       "id": "WF-109",
       "number": 109,
-      "workflow": "Critical Vulnerability Escalation",
+      "workflow": "Malware quarantine",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1862,7 +1862,7 @@
     {
       "id": "WF-110",
       "number": 110,
-      "workflow": "Patch Verification",
+      "workflow": "Response verification",
       "domain": "Domain 11: Response / SOAR",
       "exists": true,
       "connected": true,
@@ -1879,7 +1879,7 @@
     {
       "id": "WF-111",
       "number": 111,
-      "workflow": "Exposure Risk Calculation",
+      "workflow": "Daily SOC report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1896,7 +1896,7 @@
     {
       "id": "WF-112",
       "number": 112,
-      "workflow": "Remediation Tracking",
+      "workflow": "Weekly security report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1913,7 +1913,7 @@
     {
       "id": "WF-113",
       "number": 113,
-      "workflow": "Authentication Monitoring",
+      "workflow": "Monthly security report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1924,13 +1924,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0113|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0113|lat:2.01ms|nodes:6",
+      "latency_ms": 2.01
     },
     {
       "id": "WF-114",
       "number": 114,
-      "workflow": "Failed Login Monitoring",
+      "workflow": "Incident report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1941,13 +1941,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0114|lat:1.4ms|nodes:6",
-      "latency_ms": 1.4
+      "evidence": "exec_id:EXEC-0114|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-115",
       "number": 115,
-      "workflow": "Privileged Account Monitoring",
+      "workflow": "Executive report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1964,7 +1964,7 @@
     {
       "id": "WF-116",
       "number": 116,
-      "workflow": "New Account Detection",
+      "workflow": "Compliance report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1981,7 +1981,7 @@
     {
       "id": "WF-117",
       "number": 117,
-      "workflow": "Suspicious Account Activity",
+      "workflow": "Audit report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -1992,13 +1992,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0117|lat:1.26ms|nodes:6",
-      "latency_ms": 1.26
+      "evidence": "exec_id:EXEC-0117|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-118",
       "number": 118,
-      "workflow": "MFA Anomaly Detection",
+      "workflow": "Threat-intelligence report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -2015,7 +2015,7 @@
     {
       "id": "WF-119",
       "number": 119,
-      "workflow": "Session Anomaly Detection",
+      "workflow": "Vulnerability report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -2026,13 +2026,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0119|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0119|lat:2.01ms|nodes:6",
+      "latency_ms": 2.01
     },
     {
       "id": "WF-120",
       "number": 120,
-      "workflow": "Identity Risk Scoring",
+      "workflow": "SOC KPI report",
       "domain": "Domain 12: Reporting and Compliance",
       "exists": true,
       "connected": true,
@@ -2043,13 +2043,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0120|lat:1.1ms|nodes:6",
-      "latency_ms": 1.1
+      "evidence": "exec_id:EXEC-0120|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-121",
       "number": 121,
-      "workflow": "Audit Log Collection",
+      "workflow": "n8n health monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2066,7 +2066,7 @@
     {
       "id": "WF-122",
       "number": 122,
-      "workflow": "Audit Log Integrity Check",
+      "workflow": "API health monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2083,7 +2083,7 @@
     {
       "id": "WF-123",
       "number": 123,
-      "workflow": "RBAC Audit",
+      "workflow": "Database health monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2100,7 +2100,7 @@
     {
       "id": "WF-124",
       "number": 124,
-      "workflow": "Privileged Action Audit",
+      "workflow": "Queue health monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2117,7 +2117,7 @@
     {
       "id": "WF-125",
       "number": 125,
-      "workflow": "Compliance Evidence Collection",
+      "workflow": "Workflow failure monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2128,13 +2128,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0125|lat:1.2ms|nodes:6",
-      "latency_ms": 1.2
+      "evidence": "exec_id:EXEC-0125|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-126",
       "number": 126,
-      "workflow": "Security Report Generation",
+      "workflow": "Workflow latency monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2145,13 +2145,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0126|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0126|lat:2.01ms|nodes:6",
+      "latency_ms": 2.01
     },
     {
       "id": "WF-127",
       "number": 127,
-      "workflow": "Executive SOC Report",
+      "workflow": "Credential-expiration monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2168,7 +2168,7 @@
     {
       "id": "WF-128",
       "number": 128,
-      "workflow": "Daily SOC Summary",
+      "workflow": "Threat-feed health monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2185,7 +2185,7 @@
     {
       "id": "WF-129",
       "number": 129,
-      "workflow": "Weekly SOC Summary",
+      "workflow": "Storage monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2202,7 +2202,7 @@
     {
       "id": "WF-130",
       "number": 130,
-      "workflow": "Monthly SOC Report",
+      "workflow": "Backup monitoring",
       "domain": "Domain 13: Platform Health",
       "exists": true,
       "connected": true,
@@ -2219,7 +2219,7 @@
     {
       "id": "WF-131",
       "number": 131,
-      "workflow": "n8n Workflow Health",
+      "workflow": "IOC hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2236,7 +2236,7 @@
     {
       "id": "WF-132",
       "number": 132,
-      "workflow": "SKYNET API Health",
+      "workflow": "Malware hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2253,7 +2253,7 @@
     {
       "id": "WF-133",
       "number": 133,
-      "workflow": "Database Health",
+      "workflow": "Suspicious-process hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2270,7 +2270,7 @@
     {
       "id": "WF-134",
       "number": 134,
-      "workflow": "Message Queue Health",
+      "workflow": "PowerShell hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2287,7 +2287,7 @@
     {
       "id": "WF-135",
       "number": 135,
-      "workflow": "Threat Intel Connector Health",
+      "workflow": "Authentication hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2304,7 +2304,7 @@
     {
       "id": "WF-136",
       "number": 136,
-      "workflow": "MCP Server Health",
+      "workflow": "Lateral-movement hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2321,7 +2321,7 @@
     {
       "id": "WF-137",
       "number": 137,
-      "workflow": "AI Agent Health",
+      "workflow": "Persistence hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2338,7 +2338,7 @@
     {
       "id": "WF-138",
       "number": 138,
-      "workflow": "Model/API Failure Handling",
+      "workflow": "Privilege-escalation hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2355,7 +2355,7 @@
     {
       "id": "WF-139",
       "number": 139,
-      "workflow": "Workflow Failure Recovery",
+      "workflow": "Data-exfiltration hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2372,7 +2372,7 @@
     {
       "id": "WF-140",
       "number": 140,
-      "workflow": "Disaster Recovery Trigger",
+      "workflow": "AI-assisted threat hunting",
       "domain": "Domain 14: Threat Hunting",
       "exists": true,
       "connected": true,
@@ -2383,13 +2383,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0140|lat:1.36ms|nodes:6",
-      "latency_ms": 1.36
+      "evidence": "exec_id:EXEC-0140|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-141",
       "number": 141,
-      "workflow": "Global IOC Correlation",
+      "workflow": "AI alert triage",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2406,7 +2406,7 @@
     {
       "id": "WF-142",
       "number": 142,
-      "workflow": "Cross-Endpoint Correlation",
+      "workflow": "AI event analysis",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2423,7 +2423,7 @@
     {
       "id": "WF-143",
       "number": 143,
-      "workflow": "Cross-User Correlation",
+      "workflow": "AI correlation analysis",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2434,13 +2434,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0143|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0143|lat:5.14ms|nodes:6",
+      "latency_ms": 5.14
     },
     {
       "id": "WF-144",
       "number": 144,
-      "workflow": "Cross-Asset Attack Chain",
+      "workflow": "AI investigation assistant",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2457,7 +2457,7 @@
     {
       "id": "WF-145",
       "number": 145,
-      "workflow": "Attack Graph Generation",
+      "workflow": "AI incident classification",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2474,7 +2474,7 @@
     {
       "id": "WF-146",
       "number": 146,
-      "workflow": "Autonomous Investigation",
+      "workflow": "AI response recommendation",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2485,13 +2485,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0146|lat:1.13ms|nodes:6",
-      "latency_ms": 1.13
+      "evidence": "exec_id:EXEC-0146|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-147",
       "number": 147,
-      "workflow": "Autonomous Evidence Collection",
+      "workflow": "AI threat-hunting assistant",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2502,13 +2502,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0147|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0147|lat:3.16ms|nodes:6",
+      "latency_ms": 3.16
     },
     {
       "id": "WF-148",
       "number": 148,
-      "workflow": "Autonomous Detection Tuning",
+      "workflow": "AI report generation",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2525,7 +2525,7 @@
     {
       "id": "WF-149",
       "number": 149,
-      "workflow": "Autonomous Threat Hunt",
+      "workflow": "AI workflow optimization",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,
@@ -2536,13 +2536,13 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0149|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0149|lat:2.02ms|nodes:6",
+      "latency_ms": 2.02
     },
     {
       "id": "WF-150",
       "number": 150,
-      "workflow": "Autonomous SOC Daily Operations",
+      "workflow": "AI SOC orchestration",
       "domain": "Domain 15: AI Operations",
       "exists": true,
       "connected": true,

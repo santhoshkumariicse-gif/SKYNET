@@ -48,9 +48,32 @@ async def init_db():
 
     async with AsyncSessionLocal() as session:
         try:
-            # Seed Roles
+            # Migrate AuditLog columns if SQLite
+            if DB_URL.startswith("sqlite"):
+                from sqlalchemy import text
+                async with engine.begin() as alter_conn:
+                    table_info = await alter_conn.execute(text("PRAGMA table_info(audit_logs)"))
+                    existing_cols = {row[1] for row in table_info.fetchall()}
+                    new_cols = {
+                        "hmac_signature": "VARCHAR(64)",
+                        "correlation_id": "VARCHAR(64)",
+                        "workflow_id": "VARCHAR(64)",
+                        "old_value": "TEXT",
+                        "new_value": "TEXT",
+                        "result": "VARCHAR(32) DEFAULT 'SUCCESS'"
+                    }
+                    for col_name, col_def in new_cols.items():
+                        if col_name not in existing_cols:
+                            await alter_conn.execute(text(f"ALTER TABLE audit_logs ADD COLUMN {col_name} {col_def}"))
+
+            # Seed 6 Enterprise Roles
             roles_data = [
                 ("ADMIN", ["*"]),
+                ("SOC_ANALYST", ["alerts:read", "alerts:write", "incidents:read", "incidents:write", "investigations:read", "investigations:write", "hunt:read", "hunt:write"]),
+                ("INVESTIGATOR", ["alerts:read", "incidents:read", "investigations:read", "investigations:write", "hunt:read", "assets:read"]),
+                ("INCIDENT_RESPONDER", ["alerts:read", "incidents:read", "incidents:write", "soar:execute", "approvals:write", "approvals:read"]),
+                ("AUDITOR", ["audit:read", "audit:verify", "compliance:read", "reports:read", "alerts:read", "incidents:read"]),
+                ("READ_ONLY", ["alerts:read", "incidents:read", "assets:read", "dashboard:read"]),
                 ("L1_ANALYST", ["alerts:read", "alerts:write", "incidents:read", "incidents:write", "soar:execute"]),
                 ("THREAT_HUNTER", ["alerts:read", "incidents:read", "threatintel:read"])
             ]
@@ -60,21 +83,42 @@ async def init_db():
                     session.add(Role(name=role_name, permissions=perms))
             await session.commit()
 
-            # Seed Admin User
-            admin_role_result = await session.execute(select(Role).where(Role.name == "ADMIN"))
-            admin_role = admin_role_result.scalars().first()
-            if admin_role:
-                admin_result = await session.execute(select(User).where(User.username == "admin"))
-                if not admin_result.scalars().first():
-                    admin_user = User(
-                        username="admin",
-                        email="admin@skynet.sec",
-                        hashed_password=get_password_hash("admin123"),
-                        role_id=admin_role.id,
-                        status="ACTIVE"
-                    )
-                    session.add(admin_user)
-                    logger.info("Created default administrator: admin / admin123")
+            # Seed Enterprise Users for each role
+            users_to_seed = [
+                ("admin", "admin@skynet.sec", "ADMIN", settings.ADMIN_INITIAL_PASSWORD or "admin123"),
+                ("analyst", "analyst@skynet.sec", "SOC_ANALYST", "AnalystSecure2026!"),
+                ("investigator", "investigator@skynet.sec", "INVESTIGATOR", "InvestigatorSecure2026!"),
+                ("responder", "responder@skynet.sec", "INCIDENT_RESPONDER", "ResponderSecure2026!"),
+                ("auditor", "auditor@skynet.sec", "AUDITOR", "AuditorSecure2026!"),
+                ("readonly", "readonly@skynet.sec", "READ_ONLY", "ReadOnlySecure2026!")
+            ]
+            for uname, uemail, rname, pwd in users_to_seed:
+                r_res = await session.execute(select(Role).where(Role.name == rname))
+                role_obj = r_res.scalars().first()
+                if role_obj:
+                    u_res = await session.execute(select(User).where(User.username == uname))
+                    if not u_res.scalars().first():
+                        session.add(User(
+                            username=uname,
+                            email=uemail,
+                            hashed_password=get_password_hash(pwd),
+                            role_id=role_obj.id,
+                            status="ACTIVE"
+                        ))
+            await session.commit()
+            logger.info("Enterprise RBAC roles and users seeded.")
+
+            # Cryptographically seal all audit log entries with authentic HMAC signatures
+            from app.core.security import generate_audit_hmac
+            audit_records = (await session.execute(select(AuditLog))).scalars().all()
+            for al in audit_records:
+                al.hmac_signature = generate_audit_hmac(
+                    actor=al.actor,
+                    action=al.action,
+                    resource_type=al.resource_type,
+                    resource_id=al.resource_id
+                )
+            await session.commit()
 
             # Seed Sample IOCs
             sample_iocs = [

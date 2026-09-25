@@ -163,7 +163,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $json;\n\n// Central Cryptographic HMAC-SHA256 Audit Log\nconst crypto = require('crypto');\nconst secret = 'skynet-enterprise-audit-secret-2026';\nconst auditData = `${item.event_id}:${item.status}:${new Date().toISOString()}`;\nconst hmac = crypto.createHmac('sha256', secret).update(auditData).digest('hex');\n\nitem.audit = {\n  audit_id: 'AUD-' + Math.random().toString(36).substring(2, 10).toUpperCase(),\n  hmac_signature: hmac,\n  timestamp: new Date().toISOString(),\n  actor: 'SKYNET Master Orchestrator (Autonomous)',\n  action: `STATE_TRANSITION_${item.status}`,\n  resource_id: item.event_id\n};\n\nreturn [{ json: item }];"
+        "jsCode": "const item = $json;\n\n// Central Cryptographic HMAC-SHA256 Audit Log\nconst crypto = require('crypto');\nconst secret = $env.SKYNET_HMAC_SECRET || 'skynet_hmac_sha256_audit_key_enterprise_2026_change_me';\nconst auditData = `${item.event_id}:${item.status}:${new Date().toISOString()}`;\nconst hmac = crypto.createHmac('sha256', secret).update(auditData).digest('hex');\n\nitem.audit = {\n  audit_id: 'AUD-' + Math.random().toString(36).substring(2, 10).toUpperCase(),\n  hmac_signature: hmac,\n  timestamp: new Date().toISOString(),\n  actor: 'SKYNET Master Orchestrator (Autonomous)',\n  action: `STATE_TRANSITION_${item.status}`,\n  resource_id: item.event_id\n};\n\nreturn [{ json: item }];"
       },
       "id": "central-audit-logger",
       "name": "12 Centralized HMAC Audit Logger (WF121-WF125)",

@@ -2,906 +2,2734 @@
   "project": "SKYNET",
   "version": "5.0",
   "workflow_count": 150,
+  "domains_count": 15,
   "workflows": [
     {
       "number": 1,
-      "name": "SOC Event Intake, IOC Enrichment & Triage",
-      "file": "SKYNET_v5_WF001_soc_event_intake_ioc_enrichment_triage.json",
-      "category": "Threat Intelligence"
+      "id": "WF-001",
+      "name": "Syslog ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF001_syslog_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "raw_log",
+        "source_ip"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 2,
-      "name": "Event Normalization & Schema Validation",
-      "file": "SKYNET_v5_WF002_event_normalization_schema_validation.json",
-      "category": "Core SOC"
+      "id": "WF-002",
+      "name": "Windows Event ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF002_windows_event_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "channel",
+        "event_id_code"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 3,
-      "name": "Duplicate Event Detection",
-      "file": "SKYNET_v5_WF003_duplicate_event_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-003",
+      "name": "Linux log ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF003_linux_log_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "facility",
+        "message"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 4,
-      "name": "Event Deduplication & Suppression",
-      "file": "SKYNET_v5_WF004_event_deduplication_suppression.json",
-      "category": "Core SOC"
+      "id": "WF-004",
+      "name": "Endpoint telemetry ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF004_endpoint_telemetry_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "hostname",
+        "agent_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 5,
-      "name": "Log Source Health Monitoring",
-      "file": "SKYNET_v5_WF005_log_source_health_monitoring.json",
-      "category": "Core SOC"
+      "id": "WF-005",
+      "name": "Firewall event ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF005_firewall_event_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "src_ip",
+        "dst_ip",
+        "action"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 6,
-      "name": "Agent & Endpoint Health Monitoring",
-      "file": "SKYNET_v5_WF006_agent_endpoint_health_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-006",
+      "name": "IDS/IPS event ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF006_ids_ips_event_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "signature_id",
+        "severity"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 7,
-      "name": "Event Enrichment",
-      "file": "SKYNET_v5_WF007_event_enrichment.json",
-      "category": "Core SOC"
+      "id": "WF-007",
+      "name": "EDR event ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF007_edr_event_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "endpoint_id",
+        "process_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 8,
-      "name": "Asset Context Enrichment",
-      "file": "SKYNET_v5_WF008_asset_context_enrichment.json",
-      "category": "Core SOC"
+      "id": "WF-008",
+      "name": "Cloud event ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF008_cloud_event_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "cloud_provider",
+        "account_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 9,
-      "name": "User Context Enrichment",
-      "file": "SKYNET_v5_WF009_user_context_enrichment.json",
-      "category": "Core SOC"
+      "id": "WF-009",
+      "name": "Application log ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF009_application_log_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "app_name",
+        "log_level"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 10,
-      "name": "GeoIP & Network Context Enrichment",
-      "file": "SKYNET_v5_WF010_geoip_network_context_enrichment.json",
-      "category": "Core SOC"
+      "id": "WF-010",
+      "name": "Network-flow ingestion",
+      "domain": "Domain 01: Event Intake",
+      "category": "Event Intake",
+      "file": "SKYNET_v5_WF010_network_flow_ingestion.json",
+      "required_inputs": [
+        "event_id",
+        "src_ip",
+        "dst_ip",
+        "bytes"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 11,
-      "name": "IP Reputation Enrichment",
-      "file": "SKYNET_v5_WF011_ip_reputation_enrichment.json",
-      "category": "Threat Intelligence"
+      "id": "WF-011",
+      "name": "Common event schema",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF011_common_event_schema.json",
+      "required_inputs": [
+        "event_id",
+        "raw_payload"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 12,
-      "name": "Domain Reputation Enrichment",
-      "file": "SKYNET_v5_WF012_domain_reputation_enrichment.json",
-      "category": "Threat Intelligence"
+      "id": "WF-012",
+      "name": "Timestamp normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF012_timestamp_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "timestamp"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 13,
-      "name": "URL Reputation Enrichment",
-      "file": "SKYNET_v5_WF013_url_reputation_enrichment.json",
-      "category": "Threat Intelligence"
+      "id": "WF-013",
+      "name": "IP normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF013_ip_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "ip_address"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 14,
-      "name": "File Hash Reputation",
-      "file": "SKYNET_v5_WF014_file_hash_reputation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-014",
+      "name": "User identity normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF014_user_identity_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "username"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 15,
-      "name": "Malware Intelligence",
-      "file": "SKYNET_v5_WF015_malware_intelligence.json",
-      "category": "Threat Intelligence"
+      "id": "WF-015",
+      "name": "Host normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF015_host_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "hostname"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 16,
-      "name": "IOC Correlation",
-      "file": "SKYNET_v5_WF016_ioc_correlation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-016",
+      "name": "Process normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF016_process_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "process_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 17,
-      "name": "Threat Actor Intelligence",
-      "file": "SKYNET_v5_WF017_threat_actor_intelligence.json",
-      "category": "Threat Intelligence"
+      "id": "WF-017",
+      "name": "Network connection normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF017_network_connection_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "dst_ip",
+        "dst_port"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 18,
-      "name": "CVE Intelligence",
-      "file": "SKYNET_v5_WF018_cve_intelligence.json",
-      "category": "Threat Intelligence"
+      "id": "WF-018",
+      "name": "Authentication normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF018_authentication_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "auth_status"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 19,
-      "name": "Vulnerability Intelligence",
-      "file": "SKYNET_v5_WF019_vulnerability_intelligence.json",
-      "category": "Threat Intelligence"
+      "id": "WF-019",
+      "name": "Cloud-event normalization",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF019_cloud_event_normalization.json",
+      "required_inputs": [
+        "event_id",
+        "cloud_service"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 20,
-      "name": "Threat Intelligence Feed Synchronization",
-      "file": "SKYNET_v5_WF020_threat_intelligence_feed_synchronization.json",
-      "category": "Threat Intelligence"
+      "id": "WF-020",
+      "name": "Raw-event preservation",
+      "domain": "Domain 02: Normalization",
+      "category": "Normalization",
+      "file": "SKYNET_v5_WF020_raw_event_preservation.json",
+      "required_inputs": [
+        "event_id",
+        "raw_evidence"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 21,
-      "name": "Brute Force Detection",
-      "file": "SKYNET_v5_WF021_brute_force_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-021",
+      "name": "Asset enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF021_asset_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "hostname"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 22,
-      "name": "Password Spray Detection",
-      "file": "SKYNET_v5_WF022_password_spray_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-022",
+      "name": "User enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF022_user_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "username"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 23,
-      "name": "Account Compromise Detection",
-      "file": "SKYNET_v5_WF023_account_compromise_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-023",
+      "name": "GeoIP enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF023_geoip_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "ip_address"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 24,
-      "name": "Privilege Escalation Detection",
-      "file": "SKYNET_v5_WF024_privilege_escalation_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-024",
+      "name": "DNS enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF024_dns_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "domain"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 25,
-      "name": "PowerShell Detection",
-      "file": "SKYNET_v5_WF025_powershell_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-025",
+      "name": "WHOIS enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF025_whois_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "domain"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 26,
-      "name": "Suspicious Command-Line Detection",
-      "file": "SKYNET_v5_WF026_suspicious_command_line_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-026",
+      "name": "ASN enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF026_asn_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "ip_address"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 27,
-      "name": "Malware Detection",
-      "file": "SKYNET_v5_WF027_malware_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-027",
+      "name": "Domain enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF027_domain_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "domain"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 28,
-      "name": "Ransomware Detection",
-      "file": "SKYNET_v5_WF028_ransomware_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-028",
+      "name": "Hash enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF028_hash_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "file_hash"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 29,
-      "name": "Persistence Detection",
-      "file": "SKYNET_v5_WF029_persistence_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-029",
+      "name": "Process enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF029_process_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "process_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 30,
-      "name": "Defense Evasion Detection",
-      "file": "SKYNET_v5_WF030_defense_evasion_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-030",
+      "name": "Vulnerability enrichment",
+      "domain": "Domain 03: Enrichment",
+      "category": "Enrichment",
+      "file": "SKYNET_v5_WF030_vulnerability_enrichment.json",
+      "required_inputs": [
+        "event_id",
+        "cve_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 31,
-      "name": "Lateral Movement Detection",
-      "file": "SKYNET_v5_WF031_lateral_movement_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-031",
+      "name": "IOC lookup",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF031_ioc_lookup.json",
+      "required_inputs": [
+        "event_id",
+        "ioc_value"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 32,
-      "name": "C2 Detection",
-      "file": "SKYNET_v5_WF032_c2_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-032",
+      "name": "IP reputation",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF032_ip_reputation.json",
+      "required_inputs": [
+        "event_id",
+        "ip_address"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 33,
-      "name": "Port Scan Detection",
-      "file": "SKYNET_v5_WF033_port_scan_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-033",
+      "name": "Domain reputation",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF033_domain_reputation.json",
+      "required_inputs": [
+        "event_id",
+        "domain"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 34,
-      "name": "Network Anomaly Detection",
-      "file": "SKYNET_v5_WF034_network_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-034",
+      "name": "URL reputation",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF034_url_reputation.json",
+      "required_inputs": [
+        "event_id",
+        "url"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 35,
-      "name": "Data Exfiltration Detection",
-      "file": "SKYNET_v5_WF035_data_exfiltration_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-035",
+      "name": "Hash reputation",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF035_hash_reputation.json",
+      "required_inputs": [
+        "event_id",
+        "hash_sha256"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 36,
-      "name": "Phishing Detection",
-      "file": "SKYNET_v5_WF036_phishing_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-036",
+      "name": "Malware intelligence",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF036_malware_intelligence.json",
+      "required_inputs": [
+        "event_id",
+        "malware_family"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 37,
-      "name": "Suspicious Login Detection",
-      "file": "SKYNET_v5_WF037_suspicious_login_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-037",
+      "name": "Ransomware intelligence",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF037_ransomware_intelligence.json",
+      "required_inputs": [
+        "event_id",
+        "threat_signature"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 38,
-      "name": "Impossible Travel Detection",
-      "file": "SKYNET_v5_WF038_impossible_travel_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-038",
+      "name": "CVE intelligence",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF038_cve_intelligence.json",
+      "required_inputs": [
+        "event_id",
+        "cve_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 39,
-      "name": "Multiple IOC Correlation",
-      "file": "SKYNET_v5_WF039_multiple_ioc_correlation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-039",
+      "name": "Threat-actor intelligence",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF039_threat_actor_intelligence.json",
+      "required_inputs": [
+        "event_id",
+        "actor_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 40,
-      "name": "Multi-Stage Attack Correlation",
-      "file": "SKYNET_v5_WF040_multi_stage_attack_correlation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-040",
+      "name": "Threat-feed synchronization",
+      "domain": "Domain 04: Threat Intelligence",
+      "category": "Threat Intelligence",
+      "file": "SKYNET_v5_WF040_threat_feed_synchronization.json",
+      "required_inputs": [
+        "event_id",
+        "feed_url"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 41,
-      "name": "Alert Creation",
-      "file": "SKYNET_v5_WF041_alert_creation.json",
-      "category": "Alert Management"
+      "id": "WF-041",
+      "name": "Brute-force detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF041_brute_force_detection.json",
+      "required_inputs": [
+        "event_id",
+        "user_name",
+        "failure_count"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 42,
-      "name": "Alert Severity Calculation",
-      "file": "SKYNET_v5_WF042_alert_severity_calculation.json",
-      "category": "Alert Management"
+      "id": "WF-042",
+      "name": "Credential-stuffing detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF042_credential_stuffing_detection.json",
+      "required_inputs": [
+        "event_id",
+        "source_ip",
+        "distinct_users"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 43,
-      "name": "Alert Risk Scoring",
-      "file": "SKYNET_v5_WF043_alert_risk_scoring.json",
-      "category": "Alert Management"
+      "id": "WF-043",
+      "name": "Malware detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF043_malware_detection.json",
+      "required_inputs": [
+        "event_id",
+        "process_name",
+        "file_hash"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 44,
-      "name": "Alert Deduplication",
-      "file": "SKYNET_v5_WF044_alert_deduplication.json",
-      "category": "Alert Management"
+      "id": "WF-044",
+      "name": "Ransomware detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF044_ransomware_detection.json",
+      "required_inputs": [
+        "event_id",
+        "file_operations",
+        "command_line"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 45,
-      "name": "Alert Suppression",
-      "file": "SKYNET_v5_WF045_alert_suppression.json",
-      "category": "Alert Management"
+      "id": "WF-045",
+      "name": "Phishing detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF045_phishing_detection.json",
+      "required_inputs": [
+        "event_id",
+        "sender",
+        "url"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 46,
-      "name": "Alert Enrichment",
-      "file": "SKYNET_v5_WF046_alert_enrichment.json",
-      "category": "Alert Management"
+      "id": "WF-046",
+      "name": "Suspicious PowerShell detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF046_suspicious_powershell_detection.json",
+      "required_inputs": [
+        "event_id",
+        "command_line"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 47,
-      "name": "Alert Assignment",
-      "file": "SKYNET_v5_WF047_alert_assignment.json",
-      "category": "Alert Management"
+      "id": "WF-047",
+      "name": "Suspicious process detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF047_suspicious_process_detection.json",
+      "required_inputs": [
+        "event_id",
+        "process_name",
+        "parent_process"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 48,
-      "name": "Alert Escalation",
-      "file": "SKYNET_v5_WF048_alert_escalation.json",
-      "category": "Alert Management"
+      "id": "WF-048",
+      "name": "Privilege-escalation detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF048_privilege_escalation_detection.json",
+      "required_inputs": [
+        "event_id",
+        "user_name",
+        "target_privilege"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 49,
-      "name": "Alert SLA Monitoring",
-      "file": "SKYNET_v5_WF049_alert_sla_monitoring.json",
-      "category": "Alert Management"
+      "id": "WF-049",
+      "name": "Data-exfiltration detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF049_data_exfiltration_detection.json",
+      "required_inputs": [
+        "event_id",
+        "dst_ip",
+        "bytes_transferred"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 50,
-      "name": "Alert Closure Validation",
-      "file": "SKYNET_v5_WF050_alert_closure_validation.json",
-      "category": "Alert Management"
+      "id": "WF-050",
+      "name": "Lateral-movement detection",
+      "domain": "Domain 05: Detection",
+      "category": "Detection",
+      "file": "SKYNET_v5_WF050_lateral_movement_detection.json",
+      "required_inputs": [
+        "event_id",
+        "source_host",
+        "target_host"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 51,
-      "name": "Incident Creation",
-      "file": "SKYNET_v5_WF051_incident_creation.json",
-      "category": "Incident Management"
+      "id": "WF-051",
+      "name": "Authentication correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF051_authentication_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "correlation_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 52,
-      "name": "Incident Classification",
-      "file": "SKYNET_v5_WF052_incident_classification.json",
-      "category": "Incident Management"
+      "id": "WF-052",
+      "name": "Endpoint correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF052_endpoint_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "hostname"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 53,
-      "name": "Incident Prioritization",
-      "file": "SKYNET_v5_WF053_incident_prioritization.json",
-      "category": "Incident Management"
+      "id": "WF-053",
+      "name": "Network correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF053_network_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "src_ip",
+        "dst_ip"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 54,
-      "name": "Incident Timeline Generation",
-      "file": "SKYNET_v5_WF054_incident_timeline_generation.json",
-      "category": "Incident Management"
+      "id": "WF-054",
+      "name": "Identity correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF054_identity_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "user_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 55,
-      "name": "Evidence Collection",
-      "file": "SKYNET_v5_WF055_evidence_collection.json",
-      "category": "Core SOC"
+      "id": "WF-055",
+      "name": "Malware correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF055_malware_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "file_hash"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 56,
-      "name": "Incident Correlation",
-      "file": "SKYNET_v5_WF056_incident_correlation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-056",
+      "name": "Cloud correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF056_cloud_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "cloud_account"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 57,
-      "name": "Incident Escalation",
-      "file": "SKYNET_v5_WF057_incident_escalation.json",
-      "category": "Incident Management"
+      "id": "WF-057",
+      "name": "Multi-host correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF057_multi_host_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "host_list"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 58,
-      "name": "Incident SLA Monitoring",
-      "file": "SKYNET_v5_WF058_incident_sla_monitoring.json",
-      "category": "Incident Management"
+      "id": "WF-058",
+      "name": "Multi-user correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF058_multi_user_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "user_list"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 59,
-      "name": "Incident Status Synchronization",
-      "file": "SKYNET_v5_WF059_incident_status_synchronization.json",
-      "category": "Incident Management"
+      "id": "WF-059",
+      "name": "Kill-chain correlation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF059_kill_chain_correlation.json",
+      "required_inputs": [
+        "event_id",
+        "tactic"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 60,
-      "name": "Incident Closure",
-      "file": "SKYNET_v5_WF060_incident_closure.json",
-      "category": "Incident Management"
+      "id": "WF-060",
+      "name": "Attack-story generation",
+      "domain": "Domain 06: Correlation",
+      "category": "Correlation",
+      "file": "SKYNET_v5_WF060_attack_story_generation.json",
+      "required_inputs": [
+        "event_id",
+        "incident_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 61,
-      "name": "Suspicious Host Response",
-      "file": "SKYNET_v5_WF061_suspicious_host_response.json",
-      "category": "SOAR & Response"
+      "id": "WF-061",
+      "name": "Event risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF061_event_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "severity"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 62,
-      "name": "Endpoint Isolation Approval",
-      "file": "SKYNET_v5_WF062_endpoint_isolation_approval.json",
-      "category": "SOAR & Response"
+      "id": "WF-062",
+      "name": "IOC risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF062_ioc_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "ioc_score"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 63,
-      "name": "Account Disable Approval",
-      "file": "SKYNET_v5_WF063_account_disable_approval.json",
-      "category": "SOAR & Response"
+      "id": "WF-063",
+      "name": "Asset criticality scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF063_asset_criticality_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "asset_tier"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 64,
-      "name": "Credential Reset Workflow",
-      "file": "SKYNET_v5_WF064_credential_reset_workflow.json",
-      "category": "SOAR & Response"
+      "id": "WF-064",
+      "name": "User-risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF064_user_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "user_privilege"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 65,
-      "name": "Malicious IP Blocking",
-      "file": "SKYNET_v5_WF065_malicious_ip_blocking.json",
-      "category": "SOAR & Response"
+      "id": "WF-065",
+      "name": "Vulnerability risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF065_vulnerability_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "cvss_score"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 66,
-      "name": "Malicious Domain Blocking",
-      "file": "SKYNET_v5_WF066_malicious_domain_blocking.json",
-      "category": "SOAR & Response"
+      "id": "WF-066",
+      "name": "Threat severity scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF066_threat_severity_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "indicator_type"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 67,
-      "name": "Malicious URL Blocking",
-      "file": "SKYNET_v5_WF067_malicious_url_blocking.json",
-      "category": "SOAR & Response"
+      "id": "WF-067",
+      "name": "Behavioral risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF067_behavioral_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "anomaly_score"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 68,
-      "name": "Hash Blocking",
-      "file": "SKYNET_v5_WF068_hash_blocking.json",
-      "category": "SOAR & Response"
+      "id": "WF-068",
+      "name": "Incident risk scoring",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF068_incident_risk_scoring.json",
+      "required_inputs": [
+        "event_id",
+        "blast_radius"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 69,
-      "name": "Process Termination Approval",
-      "file": "SKYNET_v5_WF069_process_termination_approval.json",
-      "category": "SOAR & Response"
+      "id": "WF-069",
+      "name": "Composite risk calculation",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF069_composite_risk_calculation.json",
+      "required_inputs": [
+        "event_id",
+        "factors"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 70,
-      "name": "Malware Quarantine",
-      "file": "SKYNET_v5_WF070_malware_quarantine.json",
-      "category": "SOAR & Response"
+      "id": "WF-070",
+      "name": "Risk recalculation",
+      "domain": "Domain 07: Risk Scoring",
+      "category": "Risk Scoring",
+      "file": "SKYNET_v5_WF070_risk_recalculation.json",
+      "required_inputs": [
+        "event_id",
+        "updated_evidence"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 71,
-      "name": "Phishing Email Response",
-      "file": "SKYNET_v5_WF071_phishing_email_response.json",
-      "category": "Detection & Correlation"
+      "id": "WF-071",
+      "name": "Alert creation",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF071_alert_creation.json",
+      "required_inputs": [
+        "event_id",
+        "title",
+        "severity"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 72,
-      "name": "Firewall Rule Request",
-      "file": "SKYNET_v5_WF072_firewall_rule_request.json",
-      "category": "SOAR & Response"
+      "id": "WF-072",
+      "name": "Alert deduplication",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF072_alert_deduplication.json",
+      "required_inputs": [
+        "event_id",
+        "fingerprint"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 73,
-      "name": "IOC Distribution",
-      "file": "SKYNET_v5_WF073_ioc_distribution.json",
-      "category": "Threat Intelligence"
+      "id": "WF-073",
+      "name": "Alert grouping",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF073_alert_grouping.json",
+      "required_inputs": [
+        "event_id",
+        "correlation_key"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 74,
-      "name": "Containment Verification",
-      "file": "SKYNET_v5_WF074_containment_verification.json",
-      "category": "SOAR & Response"
+      "id": "WF-074",
+      "name": "Alert suppression",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF074_alert_suppression.json",
+      "required_inputs": [
+        "event_id",
+        "rule_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 75,
-      "name": "Recovery Verification",
-      "file": "SKYNET_v5_WF075_recovery_verification.json",
-      "category": "SOAR & Response"
+      "id": "WF-075",
+      "name": "Alert prioritization",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF075_alert_prioritization.json",
+      "required_inputs": [
+        "event_id",
+        "risk_score"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 76,
-      "name": "MITRE Technique Mapping",
-      "file": "SKYNET_v5_WF076_mitre_technique_mapping.json",
-      "category": "Threat Hunting"
+      "id": "WF-076",
+      "name": "Alert escalation",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF076_alert_escalation.json",
+      "required_inputs": [
+        "event_id",
+        "sla_seconds"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 77,
-      "name": "ATT&CK Coverage Analysis",
-      "file": "SKYNET_v5_WF077_att_ck_coverage_analysis.json",
-      "category": "Threat Hunting"
+      "id": "WF-077",
+      "name": "Alert assignment",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF077_alert_assignment.json",
+      "required_inputs": [
+        "event_id",
+        "analyst_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 78,
-      "name": "Threat Hunt Creation",
-      "file": "SKYNET_v5_WF078_threat_hunt_creation.json",
-      "category": "Threat Hunting"
+      "id": "WF-078",
+      "name": "Alert SLA monitoring",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF078_alert_sla_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "created_at"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 79,
-      "name": "Threat Hunt Execution",
-      "file": "SKYNET_v5_WF079_threat_hunt_execution.json",
-      "category": "Threat Hunting"
+      "id": "WF-079",
+      "name": "Alert lifecycle management",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF079_alert_lifecycle_management.json",
+      "required_inputs": [
+        "event_id",
+        "current_state"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 80,
-      "name": "Suspicious Process Hunt",
-      "file": "SKYNET_v5_WF080_suspicious_process_hunt.json",
-      "category": "Threat Hunting"
+      "id": "WF-080",
+      "name": "Alert closure validation",
+      "domain": "Domain 08: Alert Management",
+      "category": "Alert Management",
+      "file": "SKYNET_v5_WF080_alert_closure_validation.json",
+      "required_inputs": [
+        "event_id",
+        "resolution_notes"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 81,
-      "name": "Persistence Hunt",
-      "file": "SKYNET_v5_WF081_persistence_hunt.json",
-      "category": "Detection & Correlation"
+      "id": "WF-081",
+      "name": "Alert investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF081_alert_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "alert_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 82,
-      "name": "Credential Access Hunt",
-      "file": "SKYNET_v5_WF082_credential_access_hunt.json",
-      "category": "Threat Hunting"
+      "id": "WF-082",
+      "name": "IP investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF082_ip_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "ip_address"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 83,
-      "name": "Lateral Movement Hunt",
-      "file": "SKYNET_v5_WF083_lateral_movement_hunt.json",
-      "category": "Detection & Correlation"
+      "id": "WF-083",
+      "name": "Domain investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF083_domain_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "domain"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 84,
-      "name": "C2 Hunt",
-      "file": "SKYNET_v5_WF084_c2_hunt.json",
-      "category": "Detection & Correlation"
+      "id": "WF-084",
+      "name": "Hash investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF084_hash_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "file_hash"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 85,
-      "name": "Exfiltration Hunt",
-      "file": "SKYNET_v5_WF085_exfiltration_hunt.json",
-      "category": "Detection & Correlation"
+      "id": "WF-085",
+      "name": "User investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF085_user_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "username"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 86,
-      "name": "AI Alert Summarization",
-      "file": "SKYNET_v5_WF086_ai_alert_summarization.json",
-      "category": "Alert Management"
+      "id": "WF-086",
+      "name": "Host investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF086_host_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "hostname"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 87,
-      "name": "AI Incident Summarization",
-      "file": "SKYNET_v5_WF087_ai_incident_summarization.json",
-      "category": "Incident Management"
+      "id": "WF-087",
+      "name": "Process investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF087_process_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "process_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 88,
-      "name": "AI Investigation Assistant",
-      "file": "SKYNET_v5_WF088_ai_investigation_assistant.json",
-      "category": "AI Operations"
+      "id": "WF-088",
+      "name": "Authentication investigation",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF088_authentication_investigation.json",
+      "required_inputs": [
+        "event_id",
+        "auth_token"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 89,
-      "name": "AI Root-Cause Analysis",
-      "file": "SKYNET_v5_WF089_ai_root_cause_analysis.json",
-      "category": "AI Operations"
+      "id": "WF-089",
+      "name": "Timeline reconstruction",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF089_timeline_reconstruction.json",
+      "required_inputs": [
+        "event_id",
+        "time_window"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 90,
-      "name": "AI False-Positive Analysis",
-      "file": "SKYNET_v5_WF090_ai_false_positive_analysis.json",
-      "category": "AI Operations"
+      "id": "WF-090",
+      "name": "AI investigation summary",
+      "domain": "Domain 09: Investigation",
+      "category": "Investigation",
+      "file": "SKYNET_v5_WF090_ai_investigation_summary.json",
+      "required_inputs": [
+        "event_id",
+        "investigation_dossier"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 91,
-      "name": "AI Detection Recommendation",
-      "file": "SKYNET_v5_WF091_ai_detection_recommendation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-091",
+      "name": "Incident creation",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF091_incident_creation.json",
+      "required_inputs": [
+        "event_id",
+        "title",
+        "severity"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 92,
-      "name": "AI Correlation Recommendation",
-      "file": "SKYNET_v5_WF092_ai_correlation_recommendation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-092",
+      "name": "Incident classification",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF092_incident_classification.json",
+      "required_inputs": [
+        "event_id",
+        "incident_category"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 93,
-      "name": "AI Threat-Hunting Recommendation",
-      "file": "SKYNET_v5_WF093_ai_threat_hunting_recommendation.json",
-      "category": "Threat Hunting"
+      "id": "WF-093",
+      "name": "Incident severity assignment",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF093_incident_severity_assignment.json",
+      "required_inputs": [
+        "event_id",
+        "impact_score"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 94,
-      "name": "AI Playbook Recommendation",
-      "file": "SKYNET_v5_WF094_ai_playbook_recommendation.json",
-      "category": "AI Operations"
+      "id": "WF-094",
+      "name": "Incident ownership",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF094_incident_ownership.json",
+      "required_inputs": [
+        "event_id",
+        "owner_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 95,
-      "name": "AI Analyst Briefing",
-      "file": "SKYNET_v5_WF095_ai_analyst_briefing.json",
-      "category": "AI Operations"
+      "id": "WF-095",
+      "name": "Incident evidence collection",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF095_incident_evidence_collection.json",
+      "required_inputs": [
+        "event_id",
+        "evidence_list"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 96,
-      "name": "Windows Endpoint Monitoring",
-      "file": "SKYNET_v5_WF096_windows_endpoint_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-096",
+      "name": "Incident timeline",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF096_incident_timeline.json",
+      "required_inputs": [
+        "event_id",
+        "event_sequence"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 97,
-      "name": "Linux Endpoint Monitoring",
-      "file": "SKYNET_v5_WF097_linux_endpoint_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-097",
+      "name": "Incident task generation",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF097_incident_task_generation.json",
+      "required_inputs": [
+        "event_id",
+        "playbook_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 98,
-      "name": "Android Device Monitoring",
-      "file": "SKYNET_v5_WF098_android_device_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-098",
+      "name": "Incident escalation",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF098_incident_escalation.json",
+      "required_inputs": [
+        "event_id",
+        "escalation_tier"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 99,
-      "name": "Server Health Monitoring",
-      "file": "SKYNET_v5_WF099_server_health_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-099",
+      "name": "Incident SLA tracking",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF099_incident_sla_tracking.json",
+      "required_inputs": [
+        "event_id",
+        "sla_target"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 100,
-      "name": "CPU/GPU Anomaly Detection",
-      "file": "SKYNET_v5_WF100_cpu_gpu_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-100",
+      "name": "Incident closure",
+      "domain": "Domain 10: Incident Management",
+      "category": "Incident Management",
+      "file": "SKYNET_v5_WF100_incident_closure.json",
+      "required_inputs": [
+        "event_id",
+        "post_mortem"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 101,
-      "name": "Memory Anomaly Detection",
-      "file": "SKYNET_v5_WF101_memory_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-101",
+      "name": "Endpoint isolation",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF101_endpoint_isolation.json",
+      "required_inputs": [
+        "event_id",
+        "hostname",
+        "approval_token"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 102,
-      "name": "Disk Anomaly Detection",
-      "file": "SKYNET_v5_WF102_disk_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-102",
+      "name": "Malicious-process termination",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF102_malicious_process_termination.json",
+      "required_inputs": [
+        "event_id",
+        "process_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 103,
-      "name": "Network Interface Monitoring",
-      "file": "SKYNET_v5_WF103_network_interface_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-103",
+      "name": "Account disablement",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF103_account_disablement.json",
+      "required_inputs": [
+        "event_id",
+        "username",
+        "approval_token"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 104,
-      "name": "Service Health Monitoring",
-      "file": "SKYNET_v5_WF104_service_health_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-104",
+      "name": "Credential-reset workflow",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF104_credential_reset_workflow.json",
+      "required_inputs": [
+        "event_id",
+        "user_email"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 105,
-      "name": "Firmware/Security Update Monitoring",
-      "file": "SKYNET_v5_WF105_firmware_security_update_monitoring.json",
-      "category": "Infrastructure"
+      "id": "WF-105",
+      "name": "IP blocking",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF105_ip_blocking.json",
+      "required_inputs": [
+        "event_id",
+        "dst_ip"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 106,
-      "name": "Vulnerability Scan Intake",
-      "file": "SKYNET_v5_WF106_vulnerability_scan_intake.json",
-      "category": "Threat Intelligence"
+      "id": "WF-106",
+      "name": "Domain blocking",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF106_domain_blocking.json",
+      "required_inputs": [
+        "event_id",
+        "domain_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 107,
-      "name": "CVE Enrichment",
-      "file": "SKYNET_v5_WF107_cve_enrichment.json",
-      "category": "Threat Intelligence"
+      "id": "WF-107",
+      "name": "URL blocking",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF107_url_blocking.json",
+      "required_inputs": [
+        "event_id",
+        "malicious_url"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 108,
-      "name": "Asset Vulnerability Correlation",
-      "file": "SKYNET_v5_WF108_asset_vulnerability_correlation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-108",
+      "name": "Firewall rule automation",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF108_firewall_rule_automation.json",
+      "required_inputs": [
+        "event_id",
+        "rule_spec"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 109,
-      "name": "Critical Vulnerability Escalation",
-      "file": "SKYNET_v5_WF109_critical_vulnerability_escalation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-109",
+      "name": "Malware quarantine",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF109_malware_quarantine.json",
+      "required_inputs": [
+        "event_id",
+        "file_path"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 110,
-      "name": "Patch Verification",
-      "file": "SKYNET_v5_WF110_patch_verification.json",
-      "category": "Core SOC"
+      "id": "WF-110",
+      "name": "Response verification",
+      "domain": "Domain 11: Response / SOAR",
+      "category": "Response / SOAR",
+      "file": "SKYNET_v5_WF110_response_verification.json",
+      "required_inputs": [
+        "event_id",
+        "action_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 111,
-      "name": "Exposure Risk Calculation",
-      "file": "SKYNET_v5_WF111_exposure_risk_calculation.json",
-      "category": "Core SOC"
+      "id": "WF-111",
+      "name": "Daily SOC report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF111_daily_soc_report.json",
+      "required_inputs": [
+        "event_id",
+        "report_date"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 112,
-      "name": "Remediation Tracking",
-      "file": "SKYNET_v5_WF112_remediation_tracking.json",
-      "category": "Core SOC"
+      "id": "WF-112",
+      "name": "Weekly security report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF112_weekly_security_report.json",
+      "required_inputs": [
+        "event_id",
+        "week_number"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 113,
-      "name": "Authentication Monitoring",
-      "file": "SKYNET_v5_WF113_authentication_monitoring.json",
-      "category": "Identity"
+      "id": "WF-113",
+      "name": "Monthly security report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF113_monthly_security_report.json",
+      "required_inputs": [
+        "event_id",
+        "month_year"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 114,
-      "name": "Failed Login Monitoring",
-      "file": "SKYNET_v5_WF114_failed_login_monitoring.json",
-      "category": "Detection & Correlation"
+      "id": "WF-114",
+      "name": "Incident report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF114_incident_report.json",
+      "required_inputs": [
+        "event_id",
+        "incident_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 115,
-      "name": "Privileged Account Monitoring",
-      "file": "SKYNET_v5_WF115_privileged_account_monitoring.json",
-      "category": "Detection & Correlation"
+      "id": "WF-115",
+      "name": "Executive report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF115_executive_report.json",
+      "required_inputs": [
+        "event_id",
+        "quarter"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 116,
-      "name": "New Account Detection",
-      "file": "SKYNET_v5_WF116_new_account_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-116",
+      "name": "Compliance report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF116_compliance_report.json",
+      "required_inputs": [
+        "event_id",
+        "framework"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 117,
-      "name": "Suspicious Account Activity",
-      "file": "SKYNET_v5_WF117_suspicious_account_activity.json",
-      "category": "Identity"
+      "id": "WF-117",
+      "name": "Audit report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF117_audit_report.json",
+      "required_inputs": [
+        "event_id",
+        "audit_scope"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 118,
-      "name": "MFA Anomaly Detection",
-      "file": "SKYNET_v5_WF118_mfa_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-118",
+      "name": "Threat-intelligence report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF118_threat_intelligence_report.json",
+      "required_inputs": [
+        "event_id",
+        "intel_period"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 119,
-      "name": "Session Anomaly Detection",
-      "file": "SKYNET_v5_WF119_session_anomaly_detection.json",
-      "category": "Detection & Correlation"
+      "id": "WF-119",
+      "name": "Vulnerability report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF119_vulnerability_report.json",
+      "required_inputs": [
+        "event_id",
+        "scan_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 120,
-      "name": "Identity Risk Scoring",
-      "file": "SKYNET_v5_WF120_identity_risk_scoring.json",
-      "category": "Identity"
+      "id": "WF-120",
+      "name": "SOC KPI report",
+      "domain": "Domain 12: Reporting and Compliance",
+      "category": "Reporting and Compliance",
+      "file": "SKYNET_v5_WF120_soc_kpi_report.json",
+      "required_inputs": [
+        "event_id",
+        "metric_window"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 121,
-      "name": "Audit Log Collection",
-      "file": "SKYNET_v5_WF121_audit_log_collection.json",
-      "category": "Governance & Reporting"
+      "id": "WF-121",
+      "name": "n8n health monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF121_n8n_health_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "instance_url"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 122,
-      "name": "Audit Log Integrity Check",
-      "file": "SKYNET_v5_WF122_audit_log_integrity_check.json",
-      "category": "Governance & Reporting"
+      "id": "WF-122",
+      "name": "API health monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF122_api_health_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "api_endpoint"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 123,
-      "name": "RBAC Audit",
-      "file": "SKYNET_v5_WF123_rbac_audit.json",
-      "category": "Governance & Reporting"
+      "id": "WF-123",
+      "name": "Database health monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF123_database_health_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "db_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 124,
-      "name": "Privileged Action Audit",
-      "file": "SKYNET_v5_WF124_privileged_action_audit.json",
-      "category": "Detection & Correlation"
+      "id": "WF-124",
+      "name": "Queue health monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF124_queue_health_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "queue_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 125,
-      "name": "Compliance Evidence Collection",
-      "file": "SKYNET_v5_WF125_compliance_evidence_collection.json",
-      "category": "Governance & Reporting"
+      "id": "WF-125",
+      "name": "Workflow failure monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF125_workflow_failure_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "failed_wf_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 126,
-      "name": "Security Report Generation",
-      "file": "SKYNET_v5_WF126_security_report_generation.json",
-      "category": "Governance & Reporting"
+      "id": "WF-126",
+      "name": "Workflow latency monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF126_workflow_latency_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "duration_ms"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 127,
-      "name": "Executive SOC Report",
-      "file": "SKYNET_v5_WF127_executive_soc_report.json",
-      "category": "Governance & Reporting"
+      "id": "WF-127",
+      "name": "Credential-expiration monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF127_credential_expiration_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "credential_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 128,
-      "name": "Daily SOC Summary",
-      "file": "SKYNET_v5_WF128_daily_soc_summary.json",
-      "category": "Governance & Reporting"
+      "id": "WF-128",
+      "name": "Threat-feed health monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF128_threat_feed_health_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "feed_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 129,
-      "name": "Weekly SOC Summary",
-      "file": "SKYNET_v5_WF129_weekly_soc_summary.json",
-      "category": "Governance & Reporting"
+      "id": "WF-129",
+      "name": "Storage monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF129_storage_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "disk_mount"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 130,
-      "name": "Monthly SOC Report",
-      "file": "SKYNET_v5_WF130_monthly_soc_report.json",
-      "category": "Governance & Reporting"
+      "id": "WF-130",
+      "name": "Backup monitoring",
+      "domain": "Domain 13: Platform Health",
+      "category": "Platform Health",
+      "file": "SKYNET_v5_WF130_backup_monitoring.json",
+      "required_inputs": [
+        "event_id",
+        "backup_timestamp"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 131,
-      "name": "n8n Workflow Health",
-      "file": "SKYNET_v5_WF131_n8n_workflow_health.json",
-      "category": "Platform Operations"
+      "id": "WF-131",
+      "name": "IOC hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF131_ioc_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "hunt_indicator"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 132,
-      "name": "SKYNET API Health",
-      "file": "SKYNET_v5_WF132_skynet_api_health.json",
-      "category": "Platform Operations"
+      "id": "WF-132",
+      "name": "Malware hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF132_malware_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "yara_rule"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 133,
-      "name": "Database Health",
-      "file": "SKYNET_v5_WF133_database_health.json",
-      "category": "Platform Operations"
+      "id": "WF-133",
+      "name": "Suspicious-process hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF133_suspicious_process_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "process_regex"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 134,
-      "name": "Message Queue Health",
-      "file": "SKYNET_v5_WF134_message_queue_health.json",
-      "category": "Platform Operations"
+      "id": "WF-134",
+      "name": "PowerShell hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF134_powershell_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "script_block"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 135,
-      "name": "Threat Intel Connector Health",
-      "file": "SKYNET_v5_WF135_threat_intel_connector_health.json",
-      "category": "Core SOC"
+      "id": "WF-135",
+      "name": "Authentication hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF135_authentication_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "logon_type"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 136,
-      "name": "MCP Server Health",
-      "file": "SKYNET_v5_WF136_mcp_server_health.json",
-      "category": "Infrastructure"
+      "id": "WF-136",
+      "name": "Lateral-movement hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF136_lateral_movement_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "pipe_name"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 137,
-      "name": "AI Agent Health",
-      "file": "SKYNET_v5_WF137_ai_agent_health.json",
-      "category": "AI Operations"
+      "id": "WF-137",
+      "name": "Persistence hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF137_persistence_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "registry_key"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 138,
-      "name": "Model/API Failure Handling",
-      "file": "SKYNET_v5_WF138_model_api_failure_handling.json",
-      "category": "Platform Operations"
+      "id": "WF-138",
+      "name": "Privilege-escalation hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF138_privilege_escalation_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "token_privilege"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 139,
-      "name": "Workflow Failure Recovery",
-      "file": "SKYNET_v5_WF139_workflow_failure_recovery.json",
-      "category": "SOAR & Response"
+      "id": "WF-139",
+      "name": "Data-exfiltration hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF139_data_exfiltration_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "byte_threshold"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 140,
-      "name": "Disaster Recovery Trigger",
-      "file": "SKYNET_v5_WF140_disaster_recovery_trigger.json",
-      "category": "SOAR & Response"
+      "id": "WF-140",
+      "name": "AI-assisted threat hunting",
+      "domain": "Domain 14: Threat Hunting",
+      "category": "Threat Hunting",
+      "file": "SKYNET_v5_WF140_ai_assisted_threat_hunting.json",
+      "required_inputs": [
+        "event_id",
+        "hypothesis"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 141,
-      "name": "Global IOC Correlation",
-      "file": "SKYNET_v5_WF141_global_ioc_correlation.json",
-      "category": "Threat Intelligence"
+      "id": "WF-141",
+      "name": "AI alert triage",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF141_ai_alert_triage.json",
+      "required_inputs": [
+        "event_id",
+        "alert_context"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 142,
-      "name": "Cross-Endpoint Correlation",
-      "file": "SKYNET_v5_WF142_cross_endpoint_correlation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-142",
+      "name": "AI event analysis",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF142_ai_event_analysis.json",
+      "required_inputs": [
+        "event_id",
+        "telemetry_stream"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 143,
-      "name": "Cross-User Correlation",
-      "file": "SKYNET_v5_WF143_cross_user_correlation.json",
-      "category": "Detection & Correlation"
+      "id": "WF-143",
+      "name": "AI correlation analysis",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF143_ai_correlation_analysis.json",
+      "required_inputs": [
+        "event_id",
+        "event_graph"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 144,
-      "name": "Cross-Asset Attack Chain",
-      "file": "SKYNET_v5_WF144_cross_asset_attack_chain.json",
-      "category": "Core SOC"
+      "id": "WF-144",
+      "name": "AI investigation assistant",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF144_ai_investigation_assistant.json",
+      "required_inputs": [
+        "event_id",
+        "case_id"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 145,
-      "name": "Attack Graph Generation",
-      "file": "SKYNET_v5_WF145_attack_graph_generation.json",
-      "category": "Core SOC"
+      "id": "WF-145",
+      "name": "AI incident classification",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF145_ai_incident_classification.json",
+      "required_inputs": [
+        "event_id",
+        "incident_summary"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 146,
-      "name": "Autonomous Investigation",
-      "file": "SKYNET_v5_WF146_autonomous_investigation.json",
-      "category": "Core SOC"
+      "id": "WF-146",
+      "name": "AI response recommendation",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF146_ai_response_recommendation.json",
+      "required_inputs": [
+        "event_id",
+        "blast_radius"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 147,
-      "name": "Autonomous Evidence Collection",
-      "file": "SKYNET_v5_WF147_autonomous_evidence_collection.json",
-      "category": "Core SOC"
+      "id": "WF-147",
+      "name": "AI threat-hunting assistant",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF147_ai_threat_hunting_assistant.json",
+      "required_inputs": [
+        "event_id",
+        "hypothesis_text"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 148,
-      "name": "Autonomous Detection Tuning",
-      "file": "SKYNET_v5_WF148_autonomous_detection_tuning.json",
-      "category": "Detection & Correlation"
+      "id": "WF-148",
+      "name": "AI report generation",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF148_ai_report_generation.json",
+      "required_inputs": [
+        "event_id",
+        "dataset"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 149,
-      "name": "Autonomous Threat Hunt",
-      "file": "SKYNET_v5_WF149_autonomous_threat_hunt.json",
-      "category": "Threat Hunting"
+      "id": "WF-149",
+      "name": "AI workflow optimization",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF149_ai_workflow_optimization.json",
+      "required_inputs": [
+        "event_id",
+        "execution_profile"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     },
     {
       "number": 150,
-      "name": "Autonomous SOC Daily Operations",
-      "file": "SKYNET_v5_WF150_autonomous_soc_daily_operations.json",
-      "category": "Core SOC"
+      "id": "WF-150",
+      "name": "AI SOC orchestration",
+      "domain": "Domain 15: AI Operations",
+      "category": "AI Operations",
+      "file": "SKYNET_v5_WF150_ai_soc_orchestration.json",
+      "required_inputs": [
+        "event_id",
+        "soc_state"
+      ],
+      "security_controls": [
+        "No embedded credentials",
+        "Input envelope validation",
+        "Evidence preservation",
+        "Approval gating where applicable"
+      ]
     }
   ]
 }

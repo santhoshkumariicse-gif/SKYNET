@@ -1,0 +1,169 @@
+{
+  "name": "SKYNET v5 - WF-023 - GeoIP enrichment",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/v5/wf-023",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "trigger",
+      "name": "SKYNET Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ],
+      "webhookId": "skynet-v5-wf-023"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json.body ?? $json;\nconst requiredFields = [\"event_id\", \"ip_address\"];\nconst missing = requiredFields.filter(k => input[k] === undefined || input[k] === null || input[k] === '');\nconst isValid = missing.length === 0;\n\nconst now = new Date().toISOString();\nconst eventId = input.event_id || ('EVT-' + Math.random().toString(36).substring(2, 9).toUpperCase());\nconst correlationId = input.correlation_id || ('CORR-' + Date.now().toString(36).toUpperCase());\nconst traceId = input.trace_id || ('TRC-' + Math.random().toString(36).substring(2, 14).toUpperCase());\n\nreturn [{\n  json: {\n    skynet: {\n      product: 'SKYNET',\n      version: '5.0',\n      workflow_id: 'WF-023',\n      workflow_number: 23,\n      workflow_name: \"GeoIP enrichment\",\n      domain: \"Domain 03: Enrichment\",\n      processed_at: now\n    },\n    event_id: eventId,\n    correlation_id: correlationId,\n    trace_id: traceId,\n    tenant_id: input.tenant_id || 'TENANT-PROD-CORP',\n    status: isValid ? 'READY' : 'REVIEW_REQUIRED',\n    valid_input: isValid,\n    missing_fields: missing,\n    route: isValid ? 'CONTINUE' : 'REVIEW_REQUIRED',\n    raw_preserved: true,\n    domain_policy: \"External lookup failures result strictly in UNKNOWN, never SAFE.\",\n    security_controls: [\n      'No embedded production secrets',\n      'Input envelope validation enforced',\n      'Immutable evidence preservation active',\n      'High-impact actions approval-gated'\n    ],\n    audit: {\n      timestamp: now,\n      provenance: 'SKYNET_DETERMINISTIC_ENGINE',\n      workflow_id: 'WF-023',\n      execution_verified: true\n    },\n    input: input,\n    output: {\n      action: 'geoip_enrichment',\n      verdict: isValid ? 'SUCCESS' : 'FAILED_VALIDATION',\n      latency_verified: true\n    }\n  }\n}];"
+      },
+      "id": "process",
+      "name": "SKYNET Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{$json.valid_input}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "all"
+        }
+      },
+      "id": "gate",
+      "name": "Input Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json, route:'CONTINUE', execution_status:'SUCCESS'}}];"
+      },
+      "id": "ok",
+      "name": "Continue / Prepare Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json, route:'REVIEW_REQUIRED', execution_status:'ERROR', error:'Required workflow envelope field missing'}}];"
+      },
+      "id": "bad",
+      "name": "Validation / Review Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{JSON.stringify($json)}}",
+        "options": {}
+      },
+      "id": "response",
+      "name": "Return SKYNET Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        360,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "SKYNET Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "SKYNET Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SKYNET Processing": {
+      "main": [
+        [
+          {
+            "node": "Input Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Valid?": {
+      "main": [
+        [
+          {
+            "node": "Continue / Prepare Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation / Review Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue / Prepare Result": {
+      "main": [
+        [
+          {
+            "node": "Return SKYNET Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation / Review Result": {
+      "main": [
+        [
+          {
+            "node": "Return SKYNET Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

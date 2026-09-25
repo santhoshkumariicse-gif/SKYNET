@@ -53,6 +53,7 @@ async def get_incident(incident_id: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Incident not found")
     return incident
 
+@router.put("/{incident_id}", response_model=IncidentOut)
 @router.patch("/{incident_id}", response_model=IncidentOut)
 async def update_incident(incident_id: str, req: IncidentUpdate, db: AsyncSession = Depends(get_db)):
     stmt = (

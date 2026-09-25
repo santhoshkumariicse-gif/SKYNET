@@ -13,12 +13,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
     if not token:
-        # Fallback to dev admin for frictionless local testing if authorization header is omitted
-        stmt = select(User).where(User.username == "admin")
-        res = await db.execute(stmt)
-        admin = res.scalars().first()
-        if admin:
-            return admin
+        # Fallback to admin only in non-production local development if user exists
+        if settings.ENVIRONMENT != "production":
+            stmt = select(User).where(User.username == "admin")
+            res = await db.execute(stmt)
+            admin = res.scalars().first()
+            if admin:
+                return admin
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
 
     payload = decode_token(token)
@@ -32,6 +33,58 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
     return user
+
+
+def require_roles(*allowed_roles: str):
+    """Enforces Role-Based Access Control (RBAC) at the API level."""
+    async def role_checker(
+        current_user: User = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db)
+    ) -> User:
+        role_stmt = select(Role).where(Role.id == current_user.role_id)
+        role_res = await db.execute(role_stmt)
+        role = role_res.scalars().first()
+        if not role:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No role assigned to user")
+
+        if role.name == "ADMIN" or "*" in (role.permissions or []):
+            return current_user
+
+        if role.name in allowed_roles:
+            return current_user
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied: Requires role in {allowed_roles}. Current role: {role.name}"
+        )
+    return role_checker
+
+
+def require_permissions(*required_permissions: str):
+    """Enforces fine-grained permission checks."""
+    async def perm_checker(
+        current_user: User = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db)
+    ) -> User:
+        role_stmt = select(Role).where(Role.id == current_user.role_id)
+        role_res = await db.execute(role_stmt)
+        role = role_res.scalars().first()
+        if not role:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No role assigned to user")
+
+        if role.name == "ADMIN" or "*" in (role.permissions or []):
+            return current_user
+
+        user_perms = set(role.permissions or [])
+        if all(p in user_perms for p in required_permissions):
+            return current_user
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied: Missing required permissions: {required_permissions}"
+        )
+    return perm_checker
+
 
 @router.post("/login", response_model=Token)
 async def login(req: LoginRequest, db: AsyncSession = Depends(get_db)):

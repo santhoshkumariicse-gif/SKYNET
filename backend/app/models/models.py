@@ -119,6 +119,12 @@ class AuditLog(Base):
     resource_id = Column(String(128), nullable=False)
     payload = Column(JSON, default=dict)
     client_ip = Column(String(45), default="127.0.0.1")
+    hmac_signature = Column(String(64), nullable=True, index=True)
+    correlation_id = Column(String(64), nullable=True, index=True)
+    workflow_id = Column(String(64), nullable=True)
+    old_value = Column(Text, nullable=True)
+    new_value = Column(Text, nullable=True)
+    result = Column(String(32), default="SUCCESS")
     created_at = Column(DateTime(timezone=True), default=get_utc_now, index=True)
 
 class IOCRecord(Base):

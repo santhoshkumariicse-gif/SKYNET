@@ -13,16 +13,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.db.session import get_db
-from app.models.models import Approval, Endpoint, AuditLog, IOCRecord
+from app.models.models import Approval, Endpoint, AuditLog, IOCRecord, User
+from app.api.v1.auth import require_roles
+from app.core.security import generate_audit_hmac
 from app.services.telemetry_service import websocket_subscribers
 
 router = APIRouter(prefix="/approvals", tags=["Human-in-the-Loop Approvals"])
 
 
 def sign_approval_token(action_id: str, target: str) -> str:
-    msg = f"{action_id}:{target}:{datetime.now(timezone.utc).strftime('%Y-%m-%d-%H')}".encode()
-    key = settings.SECRET_KEY.encode()
-    return hmac.new(key, msg, hashlib.sha256).hexdigest()
+    now_str = datetime.now(timezone.utc).isoformat()
+    return generate_audit_hmac(
+        actor="HUMAN_SOC_APPROVER",
+        action="APPROVAL_TOKEN_SIGN",
+        resource_type="APPROVAL",
+        resource_id=f"{action_id}:{target}",
+        timestamp_str=now_str
+    )
 
 
 @router.get("")
@@ -41,7 +48,11 @@ async def get_approvals(
 
 
 @router.post("/{approval_id}/approve")
-async def approve_action(approval_id: str, db: AsyncSession = Depends(get_db)):
+async def approve_action(
+    approval_id: str,
+    current_user: User = Depends(require_roles("ADMIN", "INCIDENT_RESPONDER", "SOC_ANALYST")),
+    db: AsyncSession = Depends(get_db)
+):
     stmt = select(Approval).where(Approval.id == approval_id)
     res = await db.execute(stmt)
     approval = res.scalars().first()
@@ -81,16 +92,29 @@ async def approve_action(approval_id: str, db: AsyncSession = Depends(get_db)):
 
     # Update approval state
     approval.status = "APPROVED"
-    approval.approved_by = "admin (SOC LEAD)"
+    approval.approved_by = current_user.username
     approval.approved_at = now
     approval.signed_token = token
 
+    # Generate matching HMAC signature for the Audit Log row
+    audit_sig = generate_audit_hmac(
+        actor=current_user.username,
+        action=f"APPROVAL_EXECUTED_{approval.action_type}",
+        resource_type="CONTAINMENT",
+        resource_id=approval.target
+    )
+
     # Write Cryptographic Audit Log
     db.add(AuditLog(
-        actor="admin (SOC LEAD)",
+        actor=current_user.username,
         action=f"APPROVAL_EXECUTED_{approval.action_type}",
         resource_type="CONTAINMENT",
         resource_id=approval.target,
+        hmac_signature=audit_sig,
+        workflow_id="WF-101",
+        old_value="PENDING_APPROVAL",
+        new_value="APPROVED_CONTAINED",
+        result="SUCCESS",
         payload={
             "approval_id": approval.id,
             "action": approval.action_type,

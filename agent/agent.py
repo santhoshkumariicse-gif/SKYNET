@@ -112,6 +112,25 @@ class SkynetEndpointAgent:
             "network_tx_mb": 4.8
         }
 
+    def detect_wazuh_agent(self) -> Dict[str, Any]:
+        """Detects if a Wazuh Agent daemon is running on this host."""
+        status = {"installed": False, "running": False, "agent_id": None}
+        win_path = r"C:\Program Files (x86)\ossec-agent"
+        linux_path = "/var/ossec"
+        if os.path.exists(win_path) or os.path.exists(linux_path):
+            status["installed"] = True
+            
+        if HAS_PSUTIL:
+            try:
+                for p in psutil.process_iter(['name']):
+                    name = (p.info.get('name') or '').lower()
+                    if 'wazuh' in name or 'ossec' in name:
+                        status["running"] = True
+                        break
+            except Exception:
+                pass
+        return status
+
     def collect_live_processes(self, limit: int = 5) -> List[Dict[str, Any]]:
         """Samples currently running processes on the host."""
         events = []

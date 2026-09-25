@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { name: 'ASSETS', path: '/assets', icon: Server },
   { name: 'INTEL', path: '/intelligence', icon: Globe },
   { name: 'SOAR', path: '/soar', icon: Zap },
+  { name: 'WAZUH', path: '/wazuh', icon: Shield, badge: 'XDR' },
   { name: 'AUTO', path: '/automation', icon: GitBranch },
   { name: 'APPROV', path: '/approvals', icon: CheckSquare, badge: '3', badgeColor: 'var(--color-high)' },
   { name: 'AUDIT', path: '/audit', icon: ClipboardList },

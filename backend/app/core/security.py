@@ -32,3 +32,19 @@ def decode_token(token: str) -> Optional[dict]:
         return payload
     except Exception:
         return None
+
+def generate_audit_hmac(actor: str, action: str, resource_type: str, resource_id: str, timestamp_str: str = "", secret_key: Optional[str] = None) -> str:
+    import hmac
+    import hashlib
+    key = (secret_key or settings.HMAC_SECRET).encode("utf-8")
+    payload = f"{actor}:{action}:{resource_type}:{resource_id}".encode("utf-8")
+    return hmac.new(key, payload, hashlib.sha256).hexdigest()
+
+def verify_audit_hmac(actor: str, action: str, resource_type: str, resource_id: str, timestamp_str: str = "", signature: str = "", secret_key: Optional[str] = None) -> bool:
+    import hmac
+    if not signature:
+        return False
+    expected = generate_audit_hmac(actor, action, resource_type, resource_id, timestamp_str, secret_key)
+    return hmac.compare_digest(expected, signature)
+
+
