@@ -1,0 +1,184 @@
+{
+  "name": "SKYNET v5 - WF018 - CVE Intelligence",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/v5/wf-018",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "trigger",
+      "name": "SKYNET Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        0
+      ],
+      "webhookId": "skynet-v5-wf-018"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input=$json.body??$json;\nconst missing=['event_id'].filter(k=>input[k]===undefined||input[k]===null||input[k]==='');\nreturn [{json:{\nskynet:{product:'SKYNET',version:'5.0',workflow_number:18,workflow_name:\"CVE Intelligence\",category:\"Threat Intelligence\",processed_at:new Date().toISOString()},\nstatus:missing.length?'REVIEW_REQUIRED':'READY',valid_input:!missing.length,missing_fields:missing,\npurpose:\"Automate the SKYNET v5 cve intelligence process with validation, provenance, auditability and approval-gated high-impact actions.\",\nprocessing:['Validate and normalize input','Preserve source evidence and provenance','Apply workflow-specific routing or analysis','Return auditable output without destructive side effects'],\nsecurity_controls:['No embedded credentials','Input validation','Evidence preservation','High-impact actions remain approval-gated'],\nhuman_approval:\"Not required for analytical output; downstream high-impact actions remain approval-gated.\",\nintegration_status:'EXTERNAL_INTEGRATIONS_REQUIRED',input,output_schema:'SKYNET-v5-workflow-result'\n}}];"
+      },
+      "id": "process",
+      "name": "SKYNET Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{$json.valid_input}}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "all"
+        }
+      },
+      "id": "gate",
+      "name": "Input Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,route:'CONTINUE'}}];"
+      },
+      "id": "ok",
+      "name": "Continue / Prepare Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,route:'REVIEW_REQUIRED',error:'Required workflow envelope field missing'}}];"
+      },
+      "id": "bad",
+      "name": "Validation / Review Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "response",
+      "name": "Return SKYNET Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        360,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "SKYNET Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "SKYNET Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SKYNET Processing": {
+      "main": [
+        [
+          {
+            "node": "Input Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input Valid?": {
+      "main": [
+        [
+          {
+            "node": "Continue / Prepare Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation / Review Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue / Prepare Result": {
+      "main": [
+        [
+          {
+            "node": "Return SKYNET Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation / Review Result": {
+      "main": [
+        [
+          {
+            "node": "Return SKYNET Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "skynet-v5-wf-018",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    "SKYNET",
+    "v5",
+    "n8n",
+    "Threat Intelligence"
+  ]
+}

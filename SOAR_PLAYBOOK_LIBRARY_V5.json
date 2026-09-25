@@ -1,0 +1,14 @@
+{
+  "document_name": "SOAR Playbook Library",
+  "version": "5.0",
+  "playbooks": [
+    "Ransomware Response",
+    "Malware Containment",
+    "Account Compromise",
+    "Phishing Investigation",
+    "Suspicious PowerShell",
+    "Data Exfiltration"
+  ],
+  "workflow_engine": "n8n",
+  "approval_system": true
+}

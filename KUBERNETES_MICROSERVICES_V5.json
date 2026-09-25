@@ -1,0 +1,37 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Kubernetes Architecture",
+    "version": "5.0",
+    "type": "Microservices Design"
+  },
+  "microservices": [
+    "Ingestion Service",
+    "Normalization Service",
+    "Detection Service",
+    "Correlation Service",
+    "Threat Intelligence Service",
+    "Case Management Service",
+    "SOAR Service",
+    "Identity Service",
+    "Reporting Service",
+    "AI Orchestration Service"
+  ],
+  "communication": {
+    "async": "Kafka",
+    "sync": "gRPC",
+    "api_gateway": "Kong"
+  },
+  "service_mesh": {
+    "enabled": true,
+    "technology": "Istio"
+  },
+  "observability": {
+    "metrics": "Prometheus",
+    "logs": "Loki",
+    "tracing": "Jaeger"
+  },
+  "autoscaling": {
+    "horizontal": true,
+    "vertical": true
+  }
+}

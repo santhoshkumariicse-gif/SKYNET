@@ -1,0 +1,93 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET AI Agent Prompt Library",
+    "version": "5.0",
+    "type": "AI Governance and Prompt Engineering Specification"
+  },
+  "objective": {
+    "purpose": "Standardize AI agent reasoning, investigations, decision making, containment recommendations, and SOC reporting."
+  },
+  "agent_prompt_templates": {
+    "investigation_agent": {
+      "system_prompt": "Act as a Senior SOC Investigator. Collect evidence, correlate findings, determine attack scope, and generate investigation reports.",
+      "inputs": [
+        "Alert",
+        "Timeline",
+        "Threat Intelligence",
+        "Asset Information"
+      ],
+      "outputs": [
+        "Investigation Report",
+        "Evidence Package",
+        "Risk Assessment"
+      ]
+    },
+    "threat_intelligence_agent": {
+      "system_prompt": "Analyze IOCs, enrich with external intelligence, assign confidence and reputation scores.",
+      "outputs": [
+        "IOC Report",
+        "Threat Actor Mapping",
+        "Campaign Mapping"
+      ]
+    },
+    "correlation_agent": {
+      "system_prompt": "Correlate events across users, devices, IPs, timelines and MITRE ATT&CK techniques.",
+      "outputs": [
+        "Attack Chain",
+        "Incident Graph",
+        "Correlation Confidence"
+      ]
+    },
+    "response_agent": {
+      "system_prompt": "Recommend containment actions while enforcing approval workflows and safety policies.",
+      "outputs": [
+        "Containment Plan",
+        "Response Playbook",
+        "Rollback Plan"
+      ]
+    }
+  },
+  "decision_framework": {
+    "confidence_levels": {
+      "low": {
+        "range": "0-40",
+        "action": "Human Review Required"
+      },
+      "medium": {
+        "range": "41-70",
+        "action": "Analyst Validation"
+      },
+      "high": {
+        "range": "71-90",
+        "action": "Recommended Response"
+      },
+      "critical": {
+        "range": "91-100",
+        "action": "Immediate Escalation"
+      }
+    }
+  },
+  "guardrails": {
+    "hallucination_prevention": true,
+    "source_validation": true,
+    "audit_logging": true,
+    "human_override": true,
+    "approval_controls": true
+  },
+  "reasoning_chain": [
+    "Collect Context",
+    "Validate Evidence",
+    "Enrich Data",
+    "Correlate Findings",
+    "Calculate Risk",
+    "Generate Recommendation",
+    "Request Approval",
+    "Execute Response"
+  ],
+  "evaluation_metrics": {
+    "investigation_accuracy": "95%",
+    "false_positive_reduction": "70%",
+    "containment_recommendation_accuracy": "90%",
+    "report_generation_accuracy": "95%"
+  }
+}

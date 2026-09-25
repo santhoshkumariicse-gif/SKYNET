@@ -1,0 +1,17 @@
+{
+  "document_name": "UEBA Engine",
+  "version": "5.0",
+  "behavior_models": [
+    "User Behavior",
+    "Device Behavior",
+    "Application Behavior"
+  ],
+  "detections": [
+    "Impossible Travel",
+    "New Device",
+    "Rare Login",
+    "Privilege Abuse",
+    "Abnormal Access"
+  ],
+  "risk_scoring": true
+}

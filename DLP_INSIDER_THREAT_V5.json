@@ -1,0 +1,45 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET DLP & Insider Threat Platform",
+    "version": "5.0",
+    "type": "Data Protection Specification"
+  },
+  "objective": {
+    "purpose": "Detect, investigate and prevent unauthorized access, movement or theft of sensitive information."
+  },
+  "data_classification": {
+    "levels": [
+      "Public",
+      "Internal",
+      "Confidential",
+      "Restricted"
+    ]
+  },
+  "dlp_controls": {
+    "email_monitoring": true,
+    "cloud_monitoring": true,
+    "endpoint_monitoring": true,
+    "usb_monitoring": true,
+    "printing_monitoring": true
+  },
+  "insider_threat_detection": {
+    "behavior_analytics": true,
+    "privileged_user_monitoring": true,
+    "mass_download_detection": true,
+    "unusual_access_detection": true
+  },
+  "correlation": {
+    "sources": [
+      "Identity",
+      "Endpoint",
+      "Network",
+      "Cloud"
+    ]
+  },
+  "response_actions": [
+    "Block Transfer",
+    "Notify Security",
+    "Quarantine Device",
+    "Escalate Incident"
+  ]
+}

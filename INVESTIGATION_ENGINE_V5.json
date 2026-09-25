@@ -1,0 +1,94 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Autonomous Investigation Engine",
+    "version": "5.0",
+    "type": "Investigation Engine Specification"
+  },
+  "purpose": {
+    "objective": "Automatically investigate detections and incidents without requiring manual Tier-1 analyst intervention."
+  },
+  "investigation_workflow": {
+    "stages": [
+      "Alert Received",
+      "Entity Extraction",
+      "Context Collection",
+      "Evidence Collection",
+      "Threat Intelligence Enrichment",
+      "Timeline Construction",
+      "MITRE Mapping",
+      "Risk Scoring",
+      "Incident Generation",
+      "Report Generation"
+    ]
+  },
+  "entity_types": [
+    "User",
+    "Host",
+    "IP Address",
+    "Domain",
+    "URL",
+    "File Hash",
+    "Process",
+    "Command Line",
+    "Application",
+    "Cloud Resource"
+  ],
+  "evidence_sources": {
+    "endpoint": [
+      "Sysmon",
+      "Windows Event Logs",
+      "EDR Telemetry",
+      "Process Trees",
+      "Registry Activity"
+    ],
+    "network": [
+      "Firewall Logs",
+      "NetFlow",
+      "Zeek",
+      "Suricata"
+    ],
+    "identity": [
+      "Active Directory",
+      "Entra ID",
+      "Okta"
+    ],
+    "cloud": [
+      "AWS CloudTrail",
+      "Azure Activity Logs",
+      "GCP Audit Logs"
+    ]
+  },
+  "timeline_engine": {
+    "automatic_generation": true,
+    "correlation_dimensions": [
+      "Time",
+      "User",
+      "Host",
+      "IP",
+      "Process",
+      "IOC"
+    ]
+  },
+  "risk_scoring": {
+    "factors": [
+      "Threat Intelligence Score",
+      "MITRE Severity",
+      "Asset Criticality",
+      "User Privilege Level",
+      "Historical Incidents",
+      "Behavioral Anomaly Score"
+    ]
+  },
+  "outputs": {
+    "investigation_report": true,
+    "evidence_package": true,
+    "attack_timeline": true,
+    "recommended_actions": true,
+    "incident_record": true
+  },
+  "success_metrics": {
+    "investigation_completion_rate": "90%",
+    "timeline_accuracy": "95%",
+    "ioc_enrichment_coverage": "100%"
+  }
+}

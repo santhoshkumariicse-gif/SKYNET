@@ -1,0 +1,36 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Security Data Fabric",
+    "version": "5.0",
+    "type": "Data Intelligence Architecture"
+  },
+  "objective": {
+    "purpose": "Unify all security, infrastructure, business and threat data into a single intelligence layer."
+  },
+  "data_domains": [
+    "Endpoint",
+    "Identity",
+    "Cloud",
+    "Network",
+    "Threat Intelligence",
+    "Business Context",
+    "Vulnerability Data"
+  ],
+  "knowledge_mesh": {
+    "graph_engine": "Neo4j",
+    "vector_engine": "Qdrant",
+    "event_store": "ClickHouse"
+  },
+  "capabilities": [
+    "Cross-Domain Correlation",
+    "Asset Context Enrichment",
+    "Threat Actor Attribution",
+    "Attack Path Reconstruction",
+    "Security RAG"
+  ],
+  "ai_access": {
+    "all_agents_connected": true,
+    "graph_rag": true,
+    "context_memory": true
+  }
+}

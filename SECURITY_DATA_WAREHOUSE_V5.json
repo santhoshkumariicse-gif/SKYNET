@@ -1,0 +1,32 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Security Analytics Warehouse",
+    "version": "5.0",
+    "type": "Analytics Architecture"
+  },
+  "objective": {
+    "purpose": "Provide petabyte-scale security analytics and historical investigations."
+  },
+  "storage_layers": {
+    "hot": "ClickHouse",
+    "warm": "Object Storage",
+    "cold": "Archive Storage"
+  },
+  "analytics": {
+    "behavior_analytics": true,
+    "trend_analysis": true,
+    "risk_analytics": true,
+    "executive_metrics": true
+  },
+  "investigation_features": {
+    "timeline_reconstruction": true,
+    "cross_domain_search": true,
+    "entity_centric_search": true,
+    "attack_path_analysis": true
+  },
+  "reporting": {
+    "real_time_dashboards": true,
+    "scheduled_reports": true,
+    "executive_scorecards": true
+  }
+}

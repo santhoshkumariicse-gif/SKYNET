@@ -1,0 +1,25 @@
+{
+  "document_name": "MCP Server Architecture",
+  "version": "5.0",
+  "purpose": "Standardized tool and data access for AI agents",
+  "mcp_servers": [
+    "Threat Intelligence MCP",
+    "VirusTotal MCP",
+    "OpenCTI MCP",
+    "MISP MCP",
+    "ServiceNow MCP",
+    "Jira MCP",
+    "Defender MCP",
+    "CrowdStrike MCP",
+    "AWS Security MCP",
+    "Azure Security MCP"
+  ],
+  "capabilities": [
+    "Tool Discovery",
+    "Authentication",
+    "Authorization",
+    "Rate Limiting",
+    "Audit Logging",
+    "Agent Access Control"
+  ]
+}

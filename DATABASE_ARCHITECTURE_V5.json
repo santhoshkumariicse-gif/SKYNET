@@ -1,0 +1,121 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Database Architecture",
+    "version": "5.0",
+    "type": "Database Design Specification"
+  },
+  "databases": {
+    "postgresql": {
+      "purpose": "Transactional Data"
+    },
+    "clickhouse": {
+      "purpose": "Security Telemetry Storage"
+    },
+    "neo4j": {
+      "purpose": "Knowledge Graph"
+    },
+    "qdrant": {
+      "purpose": "Vector Memory"
+    },
+    "redis": {
+      "purpose": "Cache and Session Store"
+    }
+  },
+  "postgresql_tables": {
+    "users": [
+      "id",
+      "username",
+      "email",
+      "role",
+      "status",
+      "created_at"
+    ],
+    "incidents": [
+      "incident_id",
+      "title",
+      "severity",
+      "status",
+      "owner",
+      "created_at"
+    ],
+    "alerts": [
+      "alert_id",
+      "incident_id",
+      "severity",
+      "source",
+      "created_at"
+    ],
+    "audit_logs": [
+      "id",
+      "actor",
+      "action",
+      "target",
+      "timestamp"
+    ],
+    "playbooks": [
+      "playbook_id",
+      "name",
+      "version",
+      "status"
+    ]
+  },
+  "clickhouse_tables": {
+    "security_events": {
+      "columns": [
+        "event_id",
+        "timestamp",
+        "source",
+        "event_type",
+        "host",
+        "user",
+        "raw_data"
+      ]
+    },
+    "network_events": {
+      "columns": [
+        "flow_id",
+        "src_ip",
+        "dst_ip",
+        "protocol",
+        "bytes",
+        "timestamp"
+      ]
+    },
+    "process_events": {
+      "columns": [
+        "process_name",
+        "command_line",
+        "hash",
+        "host",
+        "timestamp"
+      ]
+    }
+  },
+  "qdrant_collections": {
+    "investigations": {
+      "embedding_model": "bge-large-en"
+    },
+    "threat_reports": {
+      "embedding_model": "bge-large-en"
+    },
+    "playbooks": {
+      "embedding_model": "bge-large-en"
+    }
+  },
+  "retention_policy": {
+    "hot_storage_days": 90,
+    "warm_storage_days": 365,
+    "archive_years": 7
+  },
+  "backup_strategy": {
+    "daily_backup": true,
+    "cross_region_backup": true,
+    "immutable_storage": true
+  },
+  "compliance": [
+    "ISO 27001",
+    "SOC 2",
+    "NIST",
+    "PCI-DSS"
+  ]
+}

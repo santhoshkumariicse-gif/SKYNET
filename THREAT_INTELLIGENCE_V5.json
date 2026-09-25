@@ -1,0 +1,88 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Threat Intelligence Platform",
+    "version": "5.0",
+    "type": "Threat Intelligence Specification"
+  },
+  "purpose": {
+    "objective": "Provide real-time IOC enrichment, threat scoring, threat actor mapping, and campaign correlation."
+  },
+  "supported_ioc_types": [
+    "IPv4",
+    "IPv6",
+    "Domain",
+    "URL",
+    "SHA256",
+    "SHA1",
+    "MD5",
+    "Email Address",
+    "File Name",
+    "Registry Key"
+  ],
+  "external_feeds": {
+    "commercial": [
+      "VirusTotal",
+      "Recorded Future",
+      "CrowdStrike Intelligence",
+      "Microsoft Threat Intelligence"
+    ],
+    "open_source": [
+      "AbuseIPDB",
+      "AlienVault OTX",
+      "URLHaus",
+      "MalwareBazaar",
+      "OpenPhish",
+      "Feodo Tracker"
+    ],
+    "platforms": [
+      "MISP",
+      "OpenCTI"
+    ]
+  },
+  "ioc_enrichment_pipeline": {
+    "steps": [
+      "IOC Extraction",
+      "IOC Validation",
+      "Feed Lookup",
+      "Threat Scoring",
+      "Threat Actor Correlation",
+      "Campaign Mapping",
+      "Knowledge Graph Update"
+    ]
+  },
+  "threat_scoring": {
+    "score_range": "0-100",
+    "risk_levels": {
+      "0-20": "Informational",
+      "21-40": "Low",
+      "41-60": "Medium",
+      "61-80": "High",
+      "81-100": "Critical"
+    }
+  },
+  "threat_actor_mapping": {
+    "supported": true,
+    "examples": [
+      "APT29",
+      "Lazarus",
+      "FIN7",
+      "APT41"
+    ]
+  },
+  "knowledge_graph_integration": {
+    "database": "Neo4j",
+    "relationships": [
+      "IOC_TO_INCIDENT",
+      "IOC_TO_THREAT_ACTOR",
+      "IOC_TO_CAMPAIGN",
+      "IOC_TO_MALWARE"
+    ]
+  },
+  "outputs": {
+    "ioc_score": true,
+    "reputation_report": true,
+    "campaign_mapping": true,
+    "threat_actor_mapping": true,
+    "mitre_mapping": true
+  }
+}

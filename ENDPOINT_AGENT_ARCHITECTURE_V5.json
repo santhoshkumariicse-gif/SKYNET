@@ -1,0 +1,88 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Endpoint Agent Architecture",
+    "version": "5.0",
+    "type": "Endpoint Telemetry & Response Specification"
+  },
+  "objective": {
+    "purpose": "Provide enterprise-grade telemetry collection, threat detection, and response capabilities across Windows, Linux, and macOS."
+  },
+  "supported_platforms": [
+    "Windows 10/11",
+    "Windows Server",
+    "Ubuntu",
+    "CentOS",
+    "RHEL",
+    "Debian",
+    "macOS"
+  ],
+  "agent_components": {
+    "telemetry_collector": {
+      "functions": [
+        "Event Collection",
+        "Process Monitoring",
+        "File Monitoring",
+        "Registry Monitoring",
+        "Network Monitoring"
+      ]
+    },
+    "local_detection_engine": {
+      "functions": [
+        "YARA Scanning",
+        "Behavior Analysis",
+        "IOC Matching",
+        "Threat Scoring"
+      ]
+    },
+    "response_module": {
+      "functions": [
+        "Kill Process",
+        "Isolate Host",
+        "Quarantine File",
+        "Collect Forensics"
+      ]
+    },
+    "integrity_module": {
+      "functions": [
+        "Tamper Detection",
+        "Agent Validation",
+        "Configuration Verification"
+      ]
+    }
+  },
+  "telemetry_collected": {
+    "process": [
+      "Process Creation",
+      "Parent Process",
+      "Command Line",
+      "Hash"
+    ],
+    "network": [
+      "DNS Requests",
+      "TCP Connections",
+      "UDP Connections",
+      "Remote IPs"
+    ],
+    "file": [
+      "File Creation",
+      "Modification",
+      "Deletion"
+    ],
+    "identity": [
+      "Logon Events",
+      "Failed Logons",
+      "Privilege Changes"
+    ]
+  },
+  "security_features": {
+    "signed_agent": true,
+    "encrypted_communication": true,
+    "certificate_authentication": true,
+    "tamper_protection": true
+  },
+  "performance_targets": {
+    "cpu_usage": "<2%",
+    "memory_usage": "<150MB",
+    "event_latency": "<2 seconds"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Version 5.0 Multi-Agent AI Architecture",
+    "version": "5.0",
+    "type": "AI Architecture Specification"
+  },
+  "agent_orchestrator": {
+    "framework": "LangGraph",
+    "llm_gateway": "LiteLLM",
+    "memory_layer": [
+      "Qdrant",
+      "Neo4j",
+      "PostgreSQL"
+    ]
+  },
+  "agents": {
+    "telemetry_agent": {
+      "responsibilities": [
+        "Collect telemetry",
+        "Validate integrity",
+        "Route events",
+        "Tag sources"
+      ],
+      "inputs": [
+        "Endpoint Events",
+        "Cloud Events",
+        "Network Events"
+      ],
+      "outputs": [
+        "Normalized Events"
+      ]
+    },
+    "detection_agent": {
+      "responsibilities": [
+        "Run Sigma rules",
+        "Run YARA scans",
+        "Perform anomaly detection",
+        "Generate detections"
+      ],
+      "outputs": [
+        "Detection Findings"
+      ]
+    },
+    "correlation_agent": {
+      "responsibilities": [
+        "Link events",
+        "Build attack chains",
+        "Create incidents"
+      ],
+      "correlation_types": [
+        "User",
+        "Host",
+        "IP",
+        "IOC",
+        "MITRE",
+        "Time"
+      ]
+    },
+    "investigation_agent": {
+      "responsibilities": [
+        "Collect evidence",
+        "Build timelines",
+        "Identify impacted assets",
+        "Generate findings"
+      ],
+      "deliverables": [
+        "Timeline",
+        "Evidence Package",
+        "Investigation Report"
+      ]
+    },
+    "threat_intelligence_agent": {
+      "responsibilities": [
+        "IOC enrichment",
+        "Threat scoring",
+        "Threat actor mapping"
+      ],
+      "integrations": [
+        "VirusTotal",
+        "AbuseIPDB",
+        "MISP",
+        "OpenCTI",
+        "URLHaus",
+        "MalwareBazaar"
+      ]
+    },
+    "response_agent": {
+      "responsibilities": [
+        "Execute playbooks",
+        "Request approvals",
+        "Contain threats"
+      ],
+      "actions": [
+        "Block IP",
+        "Disable Account",
+        "Isolate Host",
+        "Notify Teams"
+      ]
+    },
+    "reporting_agent": {
+      "responsibilities": [
+        "Generate incident reports",
+        "Generate executive summaries",
+        "Generate compliance reports"
+      ]
+    },
+    "learning_agent": {
+      "responsibilities": [
+        "Analyze false positives",
+        "Improve detections",
+        "Recommend new rules"
+      ]
+    }
+  },
+  "memory_architecture": {
+    "short_term_memory": "Redis",
+    "investigation_memory": "Qdrant",
+    "relationship_memory": "Neo4j",
+    "persistent_memory": "PostgreSQL"
+  },
+  "reasoning_pipeline": {
+    "steps": [
+      "Receive Event",
+      "Detect Threat",
+      "Correlate Evidence",
+      "Enrich IOC",
+      "Investigate",
+      "Assign Severity",
+      "Recommend Response",
+      "Generate Report"
+    ]
+  },
+  "human_approval_model": {
+    "low_risk": {
+      "approval_required": false
+    },
+    "medium_risk": {
+      "approval_required": true
+    },
+    "high_risk": {
+      "approval_required": true,
+      "dual_approval": true
+    },
+    "critical_risk": {
+      "approval_required": true,
+      "incident_commander_required": true
+    }
+  },
+  "safety_controls": {
+    "prompt_validation": true,
+    "tool_authorization": true,
+    "response_auditing": true,
+    "decision_logging": true,
+    "rollback_support": true
+  },
+  "acceptance_criteria": {
+    "investigation_automation": ">=85%",
+    "ioc_enrichment": "100%",
+    "timeline_generation": "100%",
+    "report_generation": "100%",
+    "false_positive_reduction": ">=70%"
+  }
+}

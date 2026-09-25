@@ -1,0 +1,269 @@
+{
+  "document_11": {
+    "document_metadata": {
+      "document_name": "SKYNET API Gateway and Service API Specification",
+      "version": "5.0",
+      "type": "API Architecture Specification"
+    },
+    "api_gateway": {
+      "technology": "Kong Enterprise",
+      "authentication": [
+        "OAuth2",
+        "OIDC",
+        "SAML"
+      ],
+      "authorization": "RBAC",
+      "rate_limiting": true,
+      "request_validation": true,
+      "api_versioning": true
+    },
+    "core_services": {
+      "authentication_service": {
+        "base_path": "/api/v1/auth",
+        "endpoints": [
+          "POST /login",
+          "POST /logout",
+          "POST /refresh",
+          "GET /me"
+        ]
+      },
+      "asset_service": {
+        "base_path": "/api/v1/assets",
+        "endpoints": [
+          "GET /assets",
+          "GET /assets/{id}",
+          "POST /assets",
+          "PUT /assets/{id}"
+        ]
+      },
+      "alert_service": {
+        "base_path": "/api/v1/alerts",
+        "endpoints": [
+          "GET /alerts",
+          "GET /alerts/{id}",
+          "POST /alerts",
+          "PATCH /alerts/{id}"
+        ]
+      },
+      "incident_service": {
+        "base_path": "/api/v1/incidents",
+        "endpoints": [
+          "GET /incidents",
+          "POST /incidents",
+          "PATCH /incidents/{id}",
+          "POST /incidents/{id}/close"
+        ]
+      },
+      "threat_intelligence_service": {
+        "base_path": "/api/v1/threat-intel",
+        "endpoints": [
+          "POST /lookup/ip",
+          "POST /lookup/domain",
+          "POST /lookup/hash",
+          "POST /lookup/url"
+        ]
+      },
+      "soar_service": {
+        "base_path": "/api/v1/response",
+        "endpoints": [
+          "POST /block-ip",
+          "POST /disable-user",
+          "POST /isolate-host",
+          "POST /execute-playbook"
+        ]
+      }
+    },
+    "websocket_services": {
+      "real_time_alerts": "/ws/alerts",
+      "real_time_incidents": "/ws/incidents",
+      "real_time_investigations": "/ws/investigations"
+    },
+    "audit_logging": {
+      "enabled": true,
+      "fields": [
+        "user",
+        "action",
+        "timestamp",
+        "resource",
+        "old_value",
+        "new_value"
+      ]
+    },
+    "security_controls": {
+      "jwt_signing": true,
+      "token_rotation": true,
+      "mfa_support": true,
+      "api_rate_limiting": true,
+      "request_signatures": true
+    }
+  },
+  "document_12": {
+    "document_metadata": {
+      "document_name": "SKYNET Kubernetes Deployment and Infrastructure",
+      "version": "5.0",
+      "type": "Infrastructure Specification"
+    },
+    "deployment_model": {
+      "architecture": "Cloud Native",
+      "orchestration": "Kubernetes",
+      "container_runtime": "containerd"
+    },
+    "environments": {
+      "development": {
+        "cluster_size": 3
+      },
+      "staging": {
+        "cluster_size": 5
+      },
+      "production": {
+        "cluster_size": 9
+      }
+    },
+    "core_platforms": {
+      "postgresql": {
+        "mode": "HA Cluster",
+        "replicas": 3
+      },
+      "clickhouse": {
+        "mode": "Distributed Cluster",
+        "replicas": 3
+      },
+      "neo4j": {
+        "mode": "Causal Cluster",
+        "replicas": 3
+      },
+      "kafka": {
+        "brokers": 5
+      },
+      "redis": {
+        "replicas": 3
+      }
+    },
+    "high_availability": {
+      "automatic_failover": true,
+      "multi_zone": true,
+      "load_balancing": true,
+      "self_healing": true
+    },
+    "disaster_recovery": {
+      "cross_region_replication": true,
+      "immutable_backups": true,
+      "backup_frequency": "Daily",
+      "rto": "1 Hour",
+      "rpo": "15 Minutes"
+    },
+    "monitoring": {
+      "prometheus": true,
+      "grafana": true,
+      "opentelemetry": true,
+      "alertmanager": true
+    },
+    "security": {
+      "network_policies": true,
+      "pod_security": true,
+      "secret_management": "HashiCorp Vault",
+      "image_scanning": true
+    }
+  },
+  "document_13": {
+    "document_metadata": {
+      "document_name": "SKYNET SOC Operations Framework",
+      "version": "5.0",
+      "type": "SOC Operations Specification"
+    },
+    "incident_lifecycle": [
+      "New",
+      "Acknowledged",
+      "Investigating",
+      "Escalated",
+      "Containment",
+      "Resolved",
+      "Closed"
+    ],
+    "severity_levels": {
+      "informational": 1,
+      "low": 2,
+      "medium": 3,
+      "high": 4,
+      "critical": 5
+    },
+    "soc_roles": {
+      "l1_analyst": {
+        "responsibilities": [
+          "Review incidents",
+          "Validate AI findings",
+          "Escalate incidents"
+        ]
+      },
+      "l2_analyst": {
+        "responsibilities": [
+          "Advanced investigation",
+          "Threat hunting",
+          "Detection tuning"
+        ]
+      },
+      "incident_responder": {
+        "responsibilities": [
+          "Containment",
+          "Eradication",
+          "Recovery"
+        ]
+      },
+      "soc_manager": {
+        "responsibilities": [
+          "Metrics",
+          "Approvals",
+          "Governance"
+        ]
+      }
+    },
+    "incident_structure": {
+      "fields": [
+        "incident_id",
+        "title",
+        "description",
+        "severity",
+        "priority",
+        "status",
+        "affected_assets",
+        "affected_users",
+        "iocs",
+        "timeline",
+        "evidence",
+        "response_actions",
+        "analyst_notes",
+        "resolution"
+      ]
+    },
+    "sla_targets": {
+      "critical": {
+        "acknowledgement": "5 Minutes",
+        "investigation": "15 Minutes"
+      },
+      "high": {
+        "acknowledgement": "15 Minutes",
+        "investigation": "30 Minutes"
+      },
+      "medium": {
+        "acknowledgement": "1 Hour",
+        "investigation": "4 Hours"
+      }
+    },
+    "documentation_requirements": {
+      "mandatory": [
+        "Timeline",
+        "Evidence",
+        "IOC Analysis",
+        "Severity Justification",
+        "Resolution Notes"
+      ]
+    },
+    "metrics": {
+      "mttd": true,
+      "mttr": true,
+      "false_positive_rate": true,
+      "incident_volume": true,
+      "response_success_rate": true
+    }
+  }
+}

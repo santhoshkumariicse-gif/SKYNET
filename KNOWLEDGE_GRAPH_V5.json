@@ -1,0 +1,104 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Knowledge Graph Architecture",
+    "version": "5.0",
+    "type": "Graph Intelligence Specification"
+  },
+  "purpose": {
+    "objective": "Create a security knowledge graph that models relationships between users, hosts, identities, processes, incidents, IOCs, malware, campaigns, and threat actors."
+  },
+  "database": {
+    "technology": "Neo4j Enterprise",
+    "cluster_mode": true,
+    "replication": true
+  },
+  "node_types": {
+    "User": {
+      "properties": [
+        "user_id",
+        "username",
+        "email",
+        "department",
+        "risk_score"
+      ]
+    },
+    "Host": {
+      "properties": [
+        "hostname",
+        "ip_address",
+        "asset_criticality",
+        "os",
+        "risk_score"
+      ]
+    },
+    "Process": {
+      "properties": [
+        "process_name",
+        "pid",
+        "command_line",
+        "hash"
+      ]
+    },
+    "Incident": {
+      "properties": [
+        "incident_id",
+        "severity",
+        "status",
+        "created_at"
+      ]
+    },
+    "IOC": {
+      "properties": [
+        "ioc_type",
+        "ioc_value",
+        "reputation_score"
+      ]
+    },
+    "ThreatActor": {
+      "properties": [
+        "name",
+        "country",
+        "confidence_score"
+      ]
+    },
+    "Campaign": {
+      "properties": [
+        "campaign_name",
+        "first_seen",
+        "last_seen"
+      ]
+    }
+  },
+  "relationships": [
+    "USER_LOGGED_INTO_HOST",
+    "HOST_EXECUTED_PROCESS",
+    "PROCESS_CONNECTED_TO_DOMAIN",
+    "PROCESS_CONNECTED_TO_IP",
+    "IOC_ASSOCIATED_WITH_INCIDENT",
+    "THREAT_ACTOR_USES_IOC",
+    "CAMPAIGN_USES_MALWARE",
+    "USER_INVOLVED_IN_INCIDENT",
+    "HOST_INVOLVED_IN_INCIDENT"
+  ],
+  "graph_queries": [
+    "Show all hosts accessed by a user in the last 30 days",
+    "Show all incidents related to a threat actor",
+    "Show attack path for an incident",
+    "Identify lateral movement paths",
+    "Find compromised assets"
+  ],
+  "attack_graph": {
+    "enabled": true,
+    "supports": [
+      "Attack Path Discovery",
+      "Blast Radius Analysis",
+      "Lateral Movement Detection",
+      "Risk Propagation"
+    ]
+  },
+  "ai_integration": {
+    "graph_rag": true,
+    "investigation_agent_access": true,
+    "correlation_agent_access": true
+  }
+}

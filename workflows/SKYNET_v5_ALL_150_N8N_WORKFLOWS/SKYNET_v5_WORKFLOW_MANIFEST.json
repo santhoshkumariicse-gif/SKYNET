@@ -1,0 +1,907 @@
+{
+  "project": "SKYNET",
+  "version": "5.0",
+  "workflow_count": 150,
+  "workflows": [
+    {
+      "number": 1,
+      "name": "SOC Event Intake, IOC Enrichment & Triage",
+      "file": "SKYNET_v5_WF001_soc_event_intake_ioc_enrichment_triage.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 2,
+      "name": "Event Normalization & Schema Validation",
+      "file": "SKYNET_v5_WF002_event_normalization_schema_validation.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 3,
+      "name": "Duplicate Event Detection",
+      "file": "SKYNET_v5_WF003_duplicate_event_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 4,
+      "name": "Event Deduplication & Suppression",
+      "file": "SKYNET_v5_WF004_event_deduplication_suppression.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 5,
+      "name": "Log Source Health Monitoring",
+      "file": "SKYNET_v5_WF005_log_source_health_monitoring.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 6,
+      "name": "Agent & Endpoint Health Monitoring",
+      "file": "SKYNET_v5_WF006_agent_endpoint_health_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 7,
+      "name": "Event Enrichment",
+      "file": "SKYNET_v5_WF007_event_enrichment.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 8,
+      "name": "Asset Context Enrichment",
+      "file": "SKYNET_v5_WF008_asset_context_enrichment.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 9,
+      "name": "User Context Enrichment",
+      "file": "SKYNET_v5_WF009_user_context_enrichment.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 10,
+      "name": "GeoIP & Network Context Enrichment",
+      "file": "SKYNET_v5_WF010_geoip_network_context_enrichment.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 11,
+      "name": "IP Reputation Enrichment",
+      "file": "SKYNET_v5_WF011_ip_reputation_enrichment.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 12,
+      "name": "Domain Reputation Enrichment",
+      "file": "SKYNET_v5_WF012_domain_reputation_enrichment.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 13,
+      "name": "URL Reputation Enrichment",
+      "file": "SKYNET_v5_WF013_url_reputation_enrichment.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 14,
+      "name": "File Hash Reputation",
+      "file": "SKYNET_v5_WF014_file_hash_reputation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 15,
+      "name": "Malware Intelligence",
+      "file": "SKYNET_v5_WF015_malware_intelligence.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 16,
+      "name": "IOC Correlation",
+      "file": "SKYNET_v5_WF016_ioc_correlation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 17,
+      "name": "Threat Actor Intelligence",
+      "file": "SKYNET_v5_WF017_threat_actor_intelligence.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 18,
+      "name": "CVE Intelligence",
+      "file": "SKYNET_v5_WF018_cve_intelligence.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 19,
+      "name": "Vulnerability Intelligence",
+      "file": "SKYNET_v5_WF019_vulnerability_intelligence.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 20,
+      "name": "Threat Intelligence Feed Synchronization",
+      "file": "SKYNET_v5_WF020_threat_intelligence_feed_synchronization.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 21,
+      "name": "Brute Force Detection",
+      "file": "SKYNET_v5_WF021_brute_force_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 22,
+      "name": "Password Spray Detection",
+      "file": "SKYNET_v5_WF022_password_spray_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 23,
+      "name": "Account Compromise Detection",
+      "file": "SKYNET_v5_WF023_account_compromise_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 24,
+      "name": "Privilege Escalation Detection",
+      "file": "SKYNET_v5_WF024_privilege_escalation_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 25,
+      "name": "PowerShell Detection",
+      "file": "SKYNET_v5_WF025_powershell_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 26,
+      "name": "Suspicious Command-Line Detection",
+      "file": "SKYNET_v5_WF026_suspicious_command_line_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 27,
+      "name": "Malware Detection",
+      "file": "SKYNET_v5_WF027_malware_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 28,
+      "name": "Ransomware Detection",
+      "file": "SKYNET_v5_WF028_ransomware_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 29,
+      "name": "Persistence Detection",
+      "file": "SKYNET_v5_WF029_persistence_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 30,
+      "name": "Defense Evasion Detection",
+      "file": "SKYNET_v5_WF030_defense_evasion_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 31,
+      "name": "Lateral Movement Detection",
+      "file": "SKYNET_v5_WF031_lateral_movement_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 32,
+      "name": "C2 Detection",
+      "file": "SKYNET_v5_WF032_c2_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 33,
+      "name": "Port Scan Detection",
+      "file": "SKYNET_v5_WF033_port_scan_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 34,
+      "name": "Network Anomaly Detection",
+      "file": "SKYNET_v5_WF034_network_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 35,
+      "name": "Data Exfiltration Detection",
+      "file": "SKYNET_v5_WF035_data_exfiltration_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 36,
+      "name": "Phishing Detection",
+      "file": "SKYNET_v5_WF036_phishing_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 37,
+      "name": "Suspicious Login Detection",
+      "file": "SKYNET_v5_WF037_suspicious_login_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 38,
+      "name": "Impossible Travel Detection",
+      "file": "SKYNET_v5_WF038_impossible_travel_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 39,
+      "name": "Multiple IOC Correlation",
+      "file": "SKYNET_v5_WF039_multiple_ioc_correlation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 40,
+      "name": "Multi-Stage Attack Correlation",
+      "file": "SKYNET_v5_WF040_multi_stage_attack_correlation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 41,
+      "name": "Alert Creation",
+      "file": "SKYNET_v5_WF041_alert_creation.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 42,
+      "name": "Alert Severity Calculation",
+      "file": "SKYNET_v5_WF042_alert_severity_calculation.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 43,
+      "name": "Alert Risk Scoring",
+      "file": "SKYNET_v5_WF043_alert_risk_scoring.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 44,
+      "name": "Alert Deduplication",
+      "file": "SKYNET_v5_WF044_alert_deduplication.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 45,
+      "name": "Alert Suppression",
+      "file": "SKYNET_v5_WF045_alert_suppression.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 46,
+      "name": "Alert Enrichment",
+      "file": "SKYNET_v5_WF046_alert_enrichment.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 47,
+      "name": "Alert Assignment",
+      "file": "SKYNET_v5_WF047_alert_assignment.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 48,
+      "name": "Alert Escalation",
+      "file": "SKYNET_v5_WF048_alert_escalation.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 49,
+      "name": "Alert SLA Monitoring",
+      "file": "SKYNET_v5_WF049_alert_sla_monitoring.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 50,
+      "name": "Alert Closure Validation",
+      "file": "SKYNET_v5_WF050_alert_closure_validation.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 51,
+      "name": "Incident Creation",
+      "file": "SKYNET_v5_WF051_incident_creation.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 52,
+      "name": "Incident Classification",
+      "file": "SKYNET_v5_WF052_incident_classification.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 53,
+      "name": "Incident Prioritization",
+      "file": "SKYNET_v5_WF053_incident_prioritization.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 54,
+      "name": "Incident Timeline Generation",
+      "file": "SKYNET_v5_WF054_incident_timeline_generation.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 55,
+      "name": "Evidence Collection",
+      "file": "SKYNET_v5_WF055_evidence_collection.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 56,
+      "name": "Incident Correlation",
+      "file": "SKYNET_v5_WF056_incident_correlation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 57,
+      "name": "Incident Escalation",
+      "file": "SKYNET_v5_WF057_incident_escalation.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 58,
+      "name": "Incident SLA Monitoring",
+      "file": "SKYNET_v5_WF058_incident_sla_monitoring.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 59,
+      "name": "Incident Status Synchronization",
+      "file": "SKYNET_v5_WF059_incident_status_synchronization.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 60,
+      "name": "Incident Closure",
+      "file": "SKYNET_v5_WF060_incident_closure.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 61,
+      "name": "Suspicious Host Response",
+      "file": "SKYNET_v5_WF061_suspicious_host_response.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 62,
+      "name": "Endpoint Isolation Approval",
+      "file": "SKYNET_v5_WF062_endpoint_isolation_approval.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 63,
+      "name": "Account Disable Approval",
+      "file": "SKYNET_v5_WF063_account_disable_approval.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 64,
+      "name": "Credential Reset Workflow",
+      "file": "SKYNET_v5_WF064_credential_reset_workflow.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 65,
+      "name": "Malicious IP Blocking",
+      "file": "SKYNET_v5_WF065_malicious_ip_blocking.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 66,
+      "name": "Malicious Domain Blocking",
+      "file": "SKYNET_v5_WF066_malicious_domain_blocking.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 67,
+      "name": "Malicious URL Blocking",
+      "file": "SKYNET_v5_WF067_malicious_url_blocking.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 68,
+      "name": "Hash Blocking",
+      "file": "SKYNET_v5_WF068_hash_blocking.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 69,
+      "name": "Process Termination Approval",
+      "file": "SKYNET_v5_WF069_process_termination_approval.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 70,
+      "name": "Malware Quarantine",
+      "file": "SKYNET_v5_WF070_malware_quarantine.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 71,
+      "name": "Phishing Email Response",
+      "file": "SKYNET_v5_WF071_phishing_email_response.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 72,
+      "name": "Firewall Rule Request",
+      "file": "SKYNET_v5_WF072_firewall_rule_request.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 73,
+      "name": "IOC Distribution",
+      "file": "SKYNET_v5_WF073_ioc_distribution.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 74,
+      "name": "Containment Verification",
+      "file": "SKYNET_v5_WF074_containment_verification.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 75,
+      "name": "Recovery Verification",
+      "file": "SKYNET_v5_WF075_recovery_verification.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 76,
+      "name": "MITRE Technique Mapping",
+      "file": "SKYNET_v5_WF076_mitre_technique_mapping.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 77,
+      "name": "ATT&CK Coverage Analysis",
+      "file": "SKYNET_v5_WF077_att_ck_coverage_analysis.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 78,
+      "name": "Threat Hunt Creation",
+      "file": "SKYNET_v5_WF078_threat_hunt_creation.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 79,
+      "name": "Threat Hunt Execution",
+      "file": "SKYNET_v5_WF079_threat_hunt_execution.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 80,
+      "name": "Suspicious Process Hunt",
+      "file": "SKYNET_v5_WF080_suspicious_process_hunt.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 81,
+      "name": "Persistence Hunt",
+      "file": "SKYNET_v5_WF081_persistence_hunt.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 82,
+      "name": "Credential Access Hunt",
+      "file": "SKYNET_v5_WF082_credential_access_hunt.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 83,
+      "name": "Lateral Movement Hunt",
+      "file": "SKYNET_v5_WF083_lateral_movement_hunt.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 84,
+      "name": "C2 Hunt",
+      "file": "SKYNET_v5_WF084_c2_hunt.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 85,
+      "name": "Exfiltration Hunt",
+      "file": "SKYNET_v5_WF085_exfiltration_hunt.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 86,
+      "name": "AI Alert Summarization",
+      "file": "SKYNET_v5_WF086_ai_alert_summarization.json",
+      "category": "Alert Management"
+    },
+    {
+      "number": 87,
+      "name": "AI Incident Summarization",
+      "file": "SKYNET_v5_WF087_ai_incident_summarization.json",
+      "category": "Incident Management"
+    },
+    {
+      "number": 88,
+      "name": "AI Investigation Assistant",
+      "file": "SKYNET_v5_WF088_ai_investigation_assistant.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 89,
+      "name": "AI Root-Cause Analysis",
+      "file": "SKYNET_v5_WF089_ai_root_cause_analysis.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 90,
+      "name": "AI False-Positive Analysis",
+      "file": "SKYNET_v5_WF090_ai_false_positive_analysis.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 91,
+      "name": "AI Detection Recommendation",
+      "file": "SKYNET_v5_WF091_ai_detection_recommendation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 92,
+      "name": "AI Correlation Recommendation",
+      "file": "SKYNET_v5_WF092_ai_correlation_recommendation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 93,
+      "name": "AI Threat-Hunting Recommendation",
+      "file": "SKYNET_v5_WF093_ai_threat_hunting_recommendation.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 94,
+      "name": "AI Playbook Recommendation",
+      "file": "SKYNET_v5_WF094_ai_playbook_recommendation.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 95,
+      "name": "AI Analyst Briefing",
+      "file": "SKYNET_v5_WF095_ai_analyst_briefing.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 96,
+      "name": "Windows Endpoint Monitoring",
+      "file": "SKYNET_v5_WF096_windows_endpoint_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 97,
+      "name": "Linux Endpoint Monitoring",
+      "file": "SKYNET_v5_WF097_linux_endpoint_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 98,
+      "name": "Android Device Monitoring",
+      "file": "SKYNET_v5_WF098_android_device_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 99,
+      "name": "Server Health Monitoring",
+      "file": "SKYNET_v5_WF099_server_health_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 100,
+      "name": "CPU/GPU Anomaly Detection",
+      "file": "SKYNET_v5_WF100_cpu_gpu_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 101,
+      "name": "Memory Anomaly Detection",
+      "file": "SKYNET_v5_WF101_memory_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 102,
+      "name": "Disk Anomaly Detection",
+      "file": "SKYNET_v5_WF102_disk_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 103,
+      "name": "Network Interface Monitoring",
+      "file": "SKYNET_v5_WF103_network_interface_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 104,
+      "name": "Service Health Monitoring",
+      "file": "SKYNET_v5_WF104_service_health_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 105,
+      "name": "Firmware/Security Update Monitoring",
+      "file": "SKYNET_v5_WF105_firmware_security_update_monitoring.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 106,
+      "name": "Vulnerability Scan Intake",
+      "file": "SKYNET_v5_WF106_vulnerability_scan_intake.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 107,
+      "name": "CVE Enrichment",
+      "file": "SKYNET_v5_WF107_cve_enrichment.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 108,
+      "name": "Asset Vulnerability Correlation",
+      "file": "SKYNET_v5_WF108_asset_vulnerability_correlation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 109,
+      "name": "Critical Vulnerability Escalation",
+      "file": "SKYNET_v5_WF109_critical_vulnerability_escalation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 110,
+      "name": "Patch Verification",
+      "file": "SKYNET_v5_WF110_patch_verification.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 111,
+      "name": "Exposure Risk Calculation",
+      "file": "SKYNET_v5_WF111_exposure_risk_calculation.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 112,
+      "name": "Remediation Tracking",
+      "file": "SKYNET_v5_WF112_remediation_tracking.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 113,
+      "name": "Authentication Monitoring",
+      "file": "SKYNET_v5_WF113_authentication_monitoring.json",
+      "category": "Identity"
+    },
+    {
+      "number": 114,
+      "name": "Failed Login Monitoring",
+      "file": "SKYNET_v5_WF114_failed_login_monitoring.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 115,
+      "name": "Privileged Account Monitoring",
+      "file": "SKYNET_v5_WF115_privileged_account_monitoring.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 116,
+      "name": "New Account Detection",
+      "file": "SKYNET_v5_WF116_new_account_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 117,
+      "name": "Suspicious Account Activity",
+      "file": "SKYNET_v5_WF117_suspicious_account_activity.json",
+      "category": "Identity"
+    },
+    {
+      "number": 118,
+      "name": "MFA Anomaly Detection",
+      "file": "SKYNET_v5_WF118_mfa_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 119,
+      "name": "Session Anomaly Detection",
+      "file": "SKYNET_v5_WF119_session_anomaly_detection.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 120,
+      "name": "Identity Risk Scoring",
+      "file": "SKYNET_v5_WF120_identity_risk_scoring.json",
+      "category": "Identity"
+    },
+    {
+      "number": 121,
+      "name": "Audit Log Collection",
+      "file": "SKYNET_v5_WF121_audit_log_collection.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 122,
+      "name": "Audit Log Integrity Check",
+      "file": "SKYNET_v5_WF122_audit_log_integrity_check.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 123,
+      "name": "RBAC Audit",
+      "file": "SKYNET_v5_WF123_rbac_audit.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 124,
+      "name": "Privileged Action Audit",
+      "file": "SKYNET_v5_WF124_privileged_action_audit.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 125,
+      "name": "Compliance Evidence Collection",
+      "file": "SKYNET_v5_WF125_compliance_evidence_collection.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 126,
+      "name": "Security Report Generation",
+      "file": "SKYNET_v5_WF126_security_report_generation.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 127,
+      "name": "Executive SOC Report",
+      "file": "SKYNET_v5_WF127_executive_soc_report.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 128,
+      "name": "Daily SOC Summary",
+      "file": "SKYNET_v5_WF128_daily_soc_summary.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 129,
+      "name": "Weekly SOC Summary",
+      "file": "SKYNET_v5_WF129_weekly_soc_summary.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 130,
+      "name": "Monthly SOC Report",
+      "file": "SKYNET_v5_WF130_monthly_soc_report.json",
+      "category": "Governance & Reporting"
+    },
+    {
+      "number": 131,
+      "name": "n8n Workflow Health",
+      "file": "SKYNET_v5_WF131_n8n_workflow_health.json",
+      "category": "Platform Operations"
+    },
+    {
+      "number": 132,
+      "name": "SKYNET API Health",
+      "file": "SKYNET_v5_WF132_skynet_api_health.json",
+      "category": "Platform Operations"
+    },
+    {
+      "number": 133,
+      "name": "Database Health",
+      "file": "SKYNET_v5_WF133_database_health.json",
+      "category": "Platform Operations"
+    },
+    {
+      "number": 134,
+      "name": "Message Queue Health",
+      "file": "SKYNET_v5_WF134_message_queue_health.json",
+      "category": "Platform Operations"
+    },
+    {
+      "number": 135,
+      "name": "Threat Intel Connector Health",
+      "file": "SKYNET_v5_WF135_threat_intel_connector_health.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 136,
+      "name": "MCP Server Health",
+      "file": "SKYNET_v5_WF136_mcp_server_health.json",
+      "category": "Infrastructure"
+    },
+    {
+      "number": 137,
+      "name": "AI Agent Health",
+      "file": "SKYNET_v5_WF137_ai_agent_health.json",
+      "category": "AI Operations"
+    },
+    {
+      "number": 138,
+      "name": "Model/API Failure Handling",
+      "file": "SKYNET_v5_WF138_model_api_failure_handling.json",
+      "category": "Platform Operations"
+    },
+    {
+      "number": 139,
+      "name": "Workflow Failure Recovery",
+      "file": "SKYNET_v5_WF139_workflow_failure_recovery.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 140,
+      "name": "Disaster Recovery Trigger",
+      "file": "SKYNET_v5_WF140_disaster_recovery_trigger.json",
+      "category": "SOAR & Response"
+    },
+    {
+      "number": 141,
+      "name": "Global IOC Correlation",
+      "file": "SKYNET_v5_WF141_global_ioc_correlation.json",
+      "category": "Threat Intelligence"
+    },
+    {
+      "number": 142,
+      "name": "Cross-Endpoint Correlation",
+      "file": "SKYNET_v5_WF142_cross_endpoint_correlation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 143,
+      "name": "Cross-User Correlation",
+      "file": "SKYNET_v5_WF143_cross_user_correlation.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 144,
+      "name": "Cross-Asset Attack Chain",
+      "file": "SKYNET_v5_WF144_cross_asset_attack_chain.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 145,
+      "name": "Attack Graph Generation",
+      "file": "SKYNET_v5_WF145_attack_graph_generation.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 146,
+      "name": "Autonomous Investigation",
+      "file": "SKYNET_v5_WF146_autonomous_investigation.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 147,
+      "name": "Autonomous Evidence Collection",
+      "file": "SKYNET_v5_WF147_autonomous_evidence_collection.json",
+      "category": "Core SOC"
+    },
+    {
+      "number": 148,
+      "name": "Autonomous Detection Tuning",
+      "file": "SKYNET_v5_WF148_autonomous_detection_tuning.json",
+      "category": "Detection & Correlation"
+    },
+    {
+      "number": 149,
+      "name": "Autonomous Threat Hunt",
+      "file": "SKYNET_v5_WF149_autonomous_threat_hunt.json",
+      "category": "Threat Hunting"
+    },
+    {
+      "number": 150,
+      "name": "Autonomous SOC Daily Operations",
+      "file": "SKYNET_v5_WF150_autonomous_soc_daily_operations.json",
+      "category": "Core SOC"
+    }
+  ]
+}

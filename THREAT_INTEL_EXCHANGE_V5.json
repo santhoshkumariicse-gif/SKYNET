@@ -1,0 +1,42 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Threat Intelligence Exchange",
+    "version": "5.0",
+    "type": "Threat Intelligence Platform"
+  },
+  "objective": {
+    "purpose": "Aggregate, normalize and distribute global threat intelligence."
+  },
+  "sources": [
+    "VirusTotal",
+    "AbuseIPDB",
+    "AlienVault OTX",
+    "MISP",
+    "OpenCTI",
+    "CISA",
+    "MITRE",
+    "Vendor Intelligence Feeds"
+  ],
+  "ioc_types": [
+    "IP",
+    "Domain",
+    "URL",
+    "Hash",
+    "Email",
+    "Certificate",
+    "File Name"
+  ],
+  "processing": {
+    "deduplication": true,
+    "confidence_scoring": true,
+    "expiration_handling": true,
+    "source_weighting": true
+  },
+  "distribution": {
+    "agents": true,
+    "detections": true,
+    "correlation_engine": true,
+    "response_engine": true
+  },
+  "real_time_updates": true
+}

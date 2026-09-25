@@ -1,0 +1,18 @@
+{
+  "document_name": "Zero Trust Architecture",
+  "version": "5.0",
+  "principles": [
+    "Never Trust",
+    "Always Verify",
+    "Least Privilege",
+    "Continuous Validation"
+  ],
+  "roles": [
+    "SOC Analyst",
+    "Senior Analyst",
+    "Threat Hunter",
+    "IR Lead",
+    "SOC Manager",
+    "Administrator"
+  ]
+}

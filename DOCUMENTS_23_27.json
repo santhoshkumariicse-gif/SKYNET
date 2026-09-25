@@ -1,0 +1,237 @@
+{
+  "document_23": {
+    "document_metadata": {
+      "document_name": "SKYNET Asset Management & CMDB",
+      "version": "5.0",
+      "type": "Asset Intelligence Specification"
+    },
+    "objective": {
+      "purpose": "Maintain a real-time inventory of all assets, users, applications, services and cloud resources."
+    },
+    "asset_types": [
+      "Endpoints",
+      "Servers",
+      "Containers",
+      "Virtual Machines",
+      "Applications",
+      "Databases",
+      "Network Devices",
+      "Cloud Resources",
+      "Users"
+    ],
+    "cmdb": {
+      "real_time_sync": true,
+      "asset_relationships": true,
+      "ownership_mapping": true,
+      "business_context": true
+    },
+    "integrations": [
+      "ServiceNow CMDB",
+      "ManageEngine",
+      "Azure",
+      "AWS",
+      "VMware"
+    ],
+    "risk_scoring": {
+      "factors": [
+        "Criticality",
+        "Exposure",
+        "Vulnerabilities",
+        "Threat Activity"
+      ]
+    }
+  },
+  "document_24": {
+    "document_metadata": {
+      "document_name": "SKYNET Exposure Management Platform",
+      "version": "5.0",
+      "type": "Vulnerability Management Specification"
+    },
+    "objective": {
+      "purpose": "Continuously discover vulnerabilities and prioritize remediation."
+    },
+    "integrations": [
+      "Nessus",
+      "Qualys",
+      "Rapid7",
+      "OpenVAS",
+      "Microsoft Defender"
+    ],
+    "vulnerability_lifecycle": [
+      "Discovery",
+      "Validation",
+      "Prioritization",
+      "Assignment",
+      "Remediation",
+      "Verification",
+      "Closure"
+    ],
+    "prioritization": {
+      "inputs": [
+        "CVSS",
+        "EPSS",
+        "Asset Criticality",
+        "Threat Intelligence",
+        "Exploit Availability"
+      ]
+    },
+    "attack_surface_management": {
+      "external_assets": true,
+      "shadow_it_detection": true,
+      "internet_exposure_analysis": true
+    },
+    "executive_metrics": [
+      "Mean Time To Remediate",
+      "Critical Vulnerabilities",
+      "Risk Reduction Score"
+    ]
+  },
+  "document_25": {
+    "document_metadata": {
+      "document_name": "SKYNET AI Governance Framework",
+      "version": "5.0",
+      "type": "AI Security Specification"
+    },
+    "objective": {
+      "purpose": "Secure and govern all AI agents, models, MCP servers and autonomous workflows."
+    },
+    "model_registry": {
+      "enabled": true,
+      "tracks": [
+        "Model Version",
+        "Training Data",
+        "Risk Level",
+        "Owner"
+      ]
+    },
+    "supported_models": [
+      "OpenAI",
+      "Anthropic",
+      "Gemini",
+      "Llama",
+      "Mistral"
+    ],
+    "mcp_ecosystem": {
+      "supported_servers": [
+        "Threat Intelligence MCP",
+        "VirusTotal MCP",
+        "OpenCTI MCP",
+        "MISP MCP",
+        "ServiceNow MCP",
+        "Jira MCP",
+        "Microsoft Defender MCP"
+      ]
+    },
+    "ai_security": {
+      "prompt_injection_protection": true,
+      "tool_authorization": true,
+      "data_leakage_prevention": true,
+      "output_validation": true
+    },
+    "auditability": {
+      "decision_logging": true,
+      "reasoning_trace": true,
+      "approval_tracking": true
+    },
+    "agent_governance": {
+      "max_privilege_control": true,
+      "role_based_tool_access": true,
+      "human_override": true
+    }
+  },
+  "document_26": {
+    "document_metadata": {
+      "document_name": "SKYNET DLP & Insider Threat Platform",
+      "version": "5.0",
+      "type": "Data Protection Specification"
+    },
+    "objective": {
+      "purpose": "Detect, investigate and prevent unauthorized access, movement or theft of sensitive information."
+    },
+    "data_classification": {
+      "levels": [
+        "Public",
+        "Internal",
+        "Confidential",
+        "Restricted"
+      ]
+    },
+    "dlp_controls": {
+      "email_monitoring": true,
+      "cloud_monitoring": true,
+      "endpoint_monitoring": true,
+      "usb_monitoring": true,
+      "printing_monitoring": true
+    },
+    "insider_threat_detection": {
+      "behavior_analytics": true,
+      "privileged_user_monitoring": true,
+      "mass_download_detection": true,
+      "unusual_access_detection": true
+    },
+    "correlation": {
+      "sources": [
+        "Identity",
+        "Endpoint",
+        "Network",
+        "Cloud"
+      ]
+    },
+    "response_actions": [
+      "Block Transfer",
+      "Notify Security",
+      "Quarantine Device",
+      "Escalate Incident"
+    ]
+  },
+  "document_27": {
+    "document_metadata": {
+      "document_name": "SKYNET Autonomous SOC Command Center",
+      "version": "5.0",
+      "type": "SOC Command Architecture"
+    },
+    "objective": {
+      "purpose": "Serve as the central command layer coordinating all AI agents, investigations, detections and responses."
+    },
+    "command_center": {
+      "real_time_visibility": true,
+      "global_incident_view": true,
+      "multi_tenant_support": true,
+      "executive_dashboard": true
+    },
+    "ai_control_plane": {
+      "orchestrator": "LangGraph",
+      "agent_registry": true,
+      "task_scheduler": true,
+      "workflow_engine": true
+    },
+    "agent_roles": [
+      "Detection Agent",
+      "Investigation Agent",
+      "Threat Intel Agent",
+      "Response Agent",
+      "Compliance Agent",
+      "Reporting Agent",
+      "Learning Agent"
+    ],
+    "autonomous_operations": {
+      "tier1_soc_automation": "90%",
+      "incident_documentation": "100%",
+      "ioc_enrichment": "100%",
+      "initial_triage": "95%",
+      "severity_assignment": "90%"
+    },
+    "human_control": {
+      "critical_actions_require_approval": true,
+      "emergency_override": true,
+      "incident_commander_mode": true
+    },
+    "global_metrics": {
+      "mttd": true,
+      "mttr": true,
+      "automation_rate": true,
+      "false_positive_reduction": true,
+      "analyst_hours_saved": true
+    }
+  }
+}

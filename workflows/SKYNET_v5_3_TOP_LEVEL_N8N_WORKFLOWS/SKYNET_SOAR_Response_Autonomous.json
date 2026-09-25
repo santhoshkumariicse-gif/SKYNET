@@ -1,0 +1,341 @@
+{
+  "name": "SKYNET SOAR \u2014 Response & Autonomous Operations",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/soar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "soar-webhook",
+      "name": "SOAR Incident Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const x=$json.body ?? $json;\nconst action=x.requested_action||x.action||'none';\nconst highImpact=['isolate_endpoint','disable_account','reset_credentials','block_ip','block_domain','quarantine_file','kill_process','change_firewall'];\nconst approval_required=highImpact.includes(action);\nreturn [{json:{...x,soar:{stage:'soar',policy:{action,approval_required,high_impact:highImpact.includes(action),decision:approval_required?'approval_required':'auto_allowed'}}}}];"
+      },
+      "id": "soar-policy",
+      "name": "Policy & Safety Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.soar.policy.approval_required}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "soar-approval",
+      "name": "Human Approval Required?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soar:{...$json.soar,execution:{status:'awaiting_approval',approval_id:'APR-'+Date.now()}}}}];"
+      },
+      "id": "soar-queue",
+      "name": "Approval Queue / Awaiting Authorization",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -140
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.soar.policy.action}}",
+        "rules": [
+          {
+            "operation": "equals",
+            "value2": "isolate_endpoint"
+          },
+          {
+            "operation": "equals",
+            "value2": "disable_account"
+          },
+          {
+            "operation": "equals",
+            "value2": "block_ip"
+          },
+          {
+            "operation": "equals",
+            "value2": "block_domain"
+          },
+          {
+            "operation": "equals",
+            "value2": "quarantine_file"
+          },
+          {
+            "operation": "equals",
+            "value2": "kill_process"
+          },
+          {
+            "operation": "equals",
+            "value2": "change_firewall"
+          }
+        ],
+        "fallbackOutput": "extra"
+      },
+      "id": "soar-execute",
+      "name": "Controlled Response Dispatcher",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        660,
+        120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const action=$json.soar?.policy?.action||'none';\nreturn [{json:{...$json,soar:{...$json.soar,execution:{status:'queued_for_connector',action,connector:'not_configured'}}}}];"
+      },
+      "id": "soar-action",
+      "name": "Action Execution Placeholder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        900,
+        120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soar:{...$json.soar,verification:{status:'pending_connector_verification',checks:[]},recovery:{rollback_available:false}}}}];"
+      },
+      "id": "soar-verify",
+      "name": "Post-Action Verification & Recovery",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soar:{...$json.soar,audit:{timestamp:new Date().toISOString(),actor:'SKYNET',immutable_log_required:true}}}}];"
+      },
+      "id": "soar-audit",
+      "name": "Audit & Final Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "soar-response",
+      "name": "SOAR Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        0
+      ],
+      "disabled": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "SOAR Incident Intake": {
+      "main": [
+        [
+          {
+            "node": "Policy & Safety Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Policy & Safety Gate": {
+      "main": [
+        [
+          {
+            "node": "Human Approval Required?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Approval Required?": {
+      "main": [
+        [
+          {
+            "node": "Approval Queue / Awaiting Authorization",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Controlled Response Dispatcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Queue / Awaiting Authorization": {
+      "main": [
+        [
+          {
+            "node": "SOAR Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Controlled Response Dispatcher": {
+      "main": [
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Action Execution Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Execution Placeholder": {
+      "main": [
+        [
+          {
+            "node": "Post-Action Verification & Recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post-Action Verification & Recovery": {
+      "main": [
+        [
+          {
+            "node": "Audit & Final Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audit & Final Report": {
+      "main": [
+        [
+          {
+            "node": "SOAR Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d8332720-501d-412b-be0f-226f0d3c8521",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "SKYNET"
+    },
+    {
+      "name": "v5"
+    },
+    {
+      "name": "SOAR"
+    }
+  ]
+}

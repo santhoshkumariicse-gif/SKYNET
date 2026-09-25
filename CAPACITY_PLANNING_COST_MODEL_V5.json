@@ -1,0 +1,65 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Capacity Planning Model",
+    "version": "5.0",
+    "type": "Capacity and Cost Architecture"
+  },
+  "deployment_tiers": {
+    "starter": {
+      "assets": 1000,
+      "eps": 5000,
+      "daily_storage": "100GB"
+    },
+    "enterprise": {
+      "assets": 50000,
+      "eps": 100000,
+      "daily_storage": "10TB"
+    },
+    "global": {
+      "assets": 1000000,
+      "eps": 500000,
+      "daily_storage": "100TB"
+    }
+  },
+  "compute_requirements": {
+    "kubernetes_nodes": {
+      "minimum": 9,
+      "recommended": 25,
+      "enterprise": 100
+    }
+  },
+  "database_scaling": {
+    "postgresql": {
+      "replicas": 3
+    },
+    "clickhouse": {
+      "shards": 12,
+      "replicas": 3
+    },
+    "neo4j": {
+      "cluster_nodes": 5
+    },
+    "qdrant": {
+      "cluster_nodes": 5
+    }
+  },
+  "storage_model": {
+    "hot_storage_days": 90,
+    "warm_storage_days": 365,
+    "archive_years": 7
+  },
+  "cost_drivers": [
+    "Log Volume",
+    "Retention",
+    "AI Inference",
+    "Threat Intelligence",
+    "Storage",
+    "Network Traffic"
+  ],
+  "optimization": {
+    "tiered_storage": true,
+    "event_sampling": false,
+    "compression": true,
+    "cold_archiving": true
+  }
+}

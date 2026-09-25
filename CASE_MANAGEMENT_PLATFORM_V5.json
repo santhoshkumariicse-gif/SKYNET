@@ -1,0 +1,70 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Enterprise Case Management Platform",
+    "version": "5.0",
+    "type": "Case Management Specification"
+  },
+  "objective": {
+    "purpose": "Provide complete SOC case lifecycle management with automated investigation tracking, evidence handling, and analyst collaboration."
+  },
+  "case_lifecycle": [
+    "Created",
+    "Assigned",
+    "Investigating",
+    "Escalated",
+    "Contained",
+    "Resolved",
+    "Closed"
+  ],
+  "case_structure": {
+    "fields": [
+      "case_id",
+      "incident_id",
+      "title",
+      "description",
+      "severity",
+      "priority",
+      "owner",
+      "status",
+      "affected_assets",
+      "affected_users",
+      "timeline",
+      "evidence",
+      "ioc_list",
+      "mitre_mapping",
+      "recommendations",
+      "resolution"
+    ]
+  },
+  "evidence_management": {
+    "supported_types": [
+      "Logs",
+      "Network Packets",
+      "Memory Dumps",
+      "Screenshots",
+      "Process Trees",
+      "Threat Reports"
+    ],
+    "chain_of_custody": true,
+    "hash_verification": true,
+    "immutable_storage": true
+  },
+  "collaboration": {
+    "comments": true,
+    "task_assignment": true,
+    "analyst_mentions": true,
+    "real_time_updates": true
+  },
+  "auditability": {
+    "case_changes": true,
+    "ownership_tracking": true,
+    "action_history": true,
+    "evidence_history": true
+  },
+  "integrations": [
+    "ServiceNow",
+    "Jira",
+    "Teams",
+    "Slack"
+  ]
+}

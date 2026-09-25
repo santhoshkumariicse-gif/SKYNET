@@ -1,0 +1,59 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Database Architecture",
+    "version": "5.0",
+    "type": "Database Design"
+  },
+  "databases": {
+    "postgresql": {
+      "purpose": [
+        "Users",
+        "RBAC",
+        "Cases",
+        "Incidents",
+        "Assets"
+      ]
+    },
+    "clickhouse": {
+      "purpose": [
+        "Security Events",
+        "Telemetry",
+        "Logs"
+      ]
+    },
+    "neo4j": {
+      "purpose": [
+        "Attack Paths",
+        "Relationships",
+        "Knowledge Graph"
+      ]
+    },
+    "qdrant": {
+      "purpose": [
+        "Embeddings",
+        "RAG",
+        "AI Memory"
+      ]
+    },
+    "redis": {
+      "purpose": [
+        "Caching",
+        "Sessions",
+        "Queues"
+      ]
+    }
+  },
+  "core_tables": [
+    "users",
+    "roles",
+    "permissions",
+    "assets",
+    "events",
+    "alerts",
+    "incidents",
+    "cases",
+    "evidence",
+    "playbooks",
+    "audit_logs"
+  ]
+}

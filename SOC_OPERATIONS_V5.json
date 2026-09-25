@@ -1,0 +1,101 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET SOC Operations Framework",
+    "version": "5.0",
+    "type": "SOC Operations Specification"
+  },
+  "incident_lifecycle": [
+    "New",
+    "Acknowledged",
+    "Investigating",
+    "Escalated",
+    "Containment",
+    "Resolved",
+    "Closed"
+  ],
+  "severity_levels": {
+    "informational": 1,
+    "low": 2,
+    "medium": 3,
+    "high": 4,
+    "critical": 5
+  },
+  "soc_roles": {
+    "l1_analyst": {
+      "responsibilities": [
+        "Review incidents",
+        "Validate AI findings",
+        "Escalate incidents"
+      ]
+    },
+    "l2_analyst": {
+      "responsibilities": [
+        "Advanced investigation",
+        "Threat hunting",
+        "Detection tuning"
+      ]
+    },
+    "incident_responder": {
+      "responsibilities": [
+        "Containment",
+        "Eradication",
+        "Recovery"
+      ]
+    },
+    "soc_manager": {
+      "responsibilities": [
+        "Metrics",
+        "Approvals",
+        "Governance"
+      ]
+    }
+  },
+  "incident_structure": {
+    "fields": [
+      "incident_id",
+      "title",
+      "description",
+      "severity",
+      "priority",
+      "status",
+      "affected_assets",
+      "affected_users",
+      "iocs",
+      "timeline",
+      "evidence",
+      "response_actions",
+      "analyst_notes",
+      "resolution"
+    ]
+  },
+  "sla_targets": {
+    "critical": {
+      "acknowledgement": "5 Minutes",
+      "investigation": "15 Minutes"
+    },
+    "high": {
+      "acknowledgement": "15 Minutes",
+      "investigation": "30 Minutes"
+    },
+    "medium": {
+      "acknowledgement": "1 Hour",
+      "investigation": "4 Hours"
+    }
+  },
+  "documentation_requirements": {
+    "mandatory": [
+      "Timeline",
+      "Evidence",
+      "IOC Analysis",
+      "Severity Justification",
+      "Resolution Notes"
+    ]
+  },
+  "metrics": {
+    "mttd": true,
+    "mttr": true,
+    "false_positive_rate": true,
+    "incident_volume": true,
+    "response_success_rate": true
+  }
+}

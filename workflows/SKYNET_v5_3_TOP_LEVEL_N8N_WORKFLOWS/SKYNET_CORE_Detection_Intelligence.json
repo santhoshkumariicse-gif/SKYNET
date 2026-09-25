@@ -1,0 +1,337 @@
+{
+  "name": "SKYNET CORE \u2014 Detection & Intelligence",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/core",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "core-webhook",
+      "name": "CORE Event Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$json.body ?? $json;\nconst required=['event_type','timestamp'];\nconst missing=required.filter(k=>e[k]===undefined||e[k]===null);\nreturn [{json:{...e,skynet:{stage:'core',valid:missing.length===0,missing,received_at:new Date().toISOString()}}}];"
+      },
+      "id": "core-validate",
+      "name": "Validate & Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.skynet.valid}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "core-valid",
+      "name": "Valid Event?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.event_type}}",
+        "rules": [
+          {
+            "operation": "contains",
+            "value2": "auth"
+          },
+          {
+            "operation": "contains",
+            "value2": "network"
+          },
+          {
+            "operation": "contains",
+            "value2": "endpoint"
+          },
+          {
+            "operation": "contains",
+            "value2": "cloud"
+          },
+          {
+            "operation": "contains",
+            "value2": "malware"
+          }
+        ],
+        "fallbackOutput": "extra"
+      },
+      "id": "core-route",
+      "name": "Detection Domain Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$json;\nreturn [{json:{...e,skynet:{...e.skynet,ti:{status:'placeholder',providers:[],ioc_hits:[]}}}}];"
+      },
+      "id": "core-ti",
+      "name": "Threat Intelligence & IOC Enrichment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -260
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$json;\nconst text=JSON.stringify(e).toLowerCase();\nconst indicators=['ransomware','malware','credential theft','impossible travel','command and control','c2'];\nconst hits=indicators.filter(x=>text.includes(x));\nreturn [{json:{...e,skynet:{...e.skynet,detection:{matched:hits.length>0,rules:[],hits}}}}];"
+      },
+      "id": "core-detect",
+      "name": "Detection & Rule Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -60
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const d=$json.skynet?.detection||{};\nconst risk=d.hits?.length ? Math.min(100,40+d.hits.length*15) : 10;\nreturn [{json:{...$json,skynet:{...$json.skynet,correlation:{related_events:[],window:'configurable'},risk:{score:risk,band:risk>=80?'critical':risk>=60?'high':risk>=30?'medium':'low'}}}}];"
+      },
+      "id": "core-correlate",
+      "name": "Correlation & Risk Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        900,
+        140
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const s=$json.skynet||{};\nreturn [{json:{...$json,alert:{\nalert_id:'SKYNET-'+Date.now(),\nsource:'SKYNET CORE',\nrisk:s.risk||{score:0,band:'low'},\nmitre:{tactics:[],techniques:[]},\nevidence:[],\nrecommended_next_step:'Investigate in SKYNET SOC'\n}}}];"
+      },
+      "id": "core-mitre",
+      "name": "MITRE Mapping & Alert Builder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "core-response",
+      "name": "CORE Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {ok:false,error:'Invalid event',missing:$json.skynet.missing} }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "core-invalid",
+      "name": "Reject Invalid Event",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ],
+      "disabled": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CORE Event Intake": {
+      "main": [
+        [
+          {
+            "node": "Validate & Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Normalize": {
+      "main": [
+        [
+          {
+            "node": "Valid Event?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Event?": {
+      "main": [
+        [
+          {
+            "node": "Detection Domain Router",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject Invalid Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detection Domain Router": {
+      "main": [
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Threat Intelligence & IOC Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Threat Intelligence & IOC Enrichment": {
+      "main": [
+        [
+          {
+            "node": "Detection & Rule Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detection & Rule Engine": {
+      "main": [
+        [
+          {
+            "node": "Correlation & Risk Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correlation & Risk Scoring": {
+      "main": [
+        [
+          {
+            "node": "MITRE Mapping & Alert Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MITRE Mapping & Alert Builder": {
+      "main": [
+        [
+          {
+            "node": "CORE Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "41da6df9-2171-4c4b-a210-a277ffc40b3a",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "SKYNET"
+    },
+    {
+      "name": "v5"
+    },
+    {
+      "name": "CORE"
+    }
+  ]
+}

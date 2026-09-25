@@ -1,0 +1,169 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Version 5.0 System Architecture",
+    "version": "5.0",
+    "type": "Architecture Specification"
+  },
+  "architecture_principles": [
+    "Cloud Native",
+    "Microservices",
+    "Event Driven",
+    "AI First",
+    "Zero Trust",
+    "High Availability",
+    "Scalable by Design"
+  ],
+  "core_layers": {
+    "telemetry_layer": {
+      "components": [
+        "Windows Agent",
+        "Linux Agent",
+        "Sysmon Collector",
+        "Firewall Connector",
+        "Cloud Connector",
+        "SaaS Connector"
+      ]
+    },
+    "ingestion_layer": {
+      "components": [
+        "Kafka",
+        "Kafka Connect",
+        "Logstash",
+        "FluentBit"
+      ]
+    },
+    "processing_layer": {
+      "components": [
+        "Normalization Service",
+        "Parser Service",
+        "Enrichment Service",
+        "Schema Mapper"
+      ]
+    },
+    "detection_layer": {
+      "components": [
+        "Sigma Engine",
+        "YARA Engine",
+        "Behavior Analytics Engine",
+        "Anomaly Detection Engine"
+      ]
+    },
+    "correlation_layer": {
+      "components": [
+        "Correlation Engine",
+        "Incident Builder",
+        "Attack Chain Engine"
+      ]
+    },
+    "ai_layer": {
+      "components": [
+        "Investigation Agent",
+        "Threat Intel Agent",
+        "Response Agent",
+        "Reporting Agent",
+        "Learning Agent"
+      ]
+    },
+    "response_layer": {
+      "components": [
+        "SOAR Engine",
+        "Playbook Engine",
+        "Approval Engine"
+      ]
+    },
+    "presentation_layer": {
+      "components": [
+        "SOC Dashboard",
+        "Case Management",
+        "Threat Intelligence Portal",
+        "Reporting Portal"
+      ]
+    }
+  },
+  "data_stores": {
+    "postgresql": {
+      "purpose": "Transactional Data",
+      "stores": [
+        "Users",
+        "Incidents",
+        "Cases",
+        "Configurations",
+        "Audit Logs"
+      ]
+    },
+    "clickhouse": {
+      "purpose": "Telemetry Storage",
+      "stores": [
+        "Security Events",
+        "Logs",
+        "Network Data",
+        "Endpoint Data"
+      ]
+    },
+    "neo4j": {
+      "purpose": "Knowledge Graph",
+      "stores": [
+        "Users",
+        "Hosts",
+        "Processes",
+        "Domains",
+        "Threat Actors",
+        "Incidents"
+      ]
+    },
+    "qdrant": {
+      "purpose": "Vector Memory",
+      "stores": [
+        "Investigation Context",
+        "Threat Reports",
+        "Knowledge Base"
+      ]
+    },
+    "redis": {
+      "purpose": "Caching and Queues"
+    }
+  },
+  "messaging": {
+    "platform": "Apache Kafka",
+    "topics": [
+      "raw-events",
+      "normalized-events",
+      "detections",
+      "alerts",
+      "incidents",
+      "threat-intel",
+      "response-actions",
+      "audit-events"
+    ]
+  },
+  "api_gateway": {
+    "technology": "Kong",
+    "features": [
+      "Authentication",
+      "Authorization",
+      "Rate Limiting",
+      "Request Validation"
+    ]
+  },
+  "authentication": {
+    "provider": "Keycloak",
+    "protocols": [
+      "OIDC",
+      "OAuth2",
+      "SAML"
+    ]
+  },
+  "deployment": {
+    "orchestrator": "Kubernetes",
+    "observability": [
+      "Prometheus",
+      "Grafana",
+      "OpenTelemetry"
+    ]
+  },
+  "high_availability": {
+    "multi_node": true,
+    "cross_region_replication": true,
+    "automatic_failover": true
+  }
+}

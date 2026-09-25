@@ -1,0 +1,197 @@
+{
+  "document_20": {
+    "document_metadata": {
+      "document_name": "SKYNET Enterprise Case Management Platform",
+      "version": "5.0",
+      "type": "Case Management Specification"
+    },
+    "objective": {
+      "purpose": "Provide complete SOC case lifecycle management with automated investigation tracking, evidence handling, and analyst collaboration."
+    },
+    "case_lifecycle": [
+      "Created",
+      "Assigned",
+      "Investigating",
+      "Escalated",
+      "Contained",
+      "Resolved",
+      "Closed"
+    ],
+    "case_structure": {
+      "fields": [
+        "case_id",
+        "incident_id",
+        "title",
+        "description",
+        "severity",
+        "priority",
+        "owner",
+        "status",
+        "affected_assets",
+        "affected_users",
+        "timeline",
+        "evidence",
+        "ioc_list",
+        "mitre_mapping",
+        "recommendations",
+        "resolution"
+      ]
+    },
+    "evidence_management": {
+      "supported_types": [
+        "Logs",
+        "Network Packets",
+        "Memory Dumps",
+        "Screenshots",
+        "Process Trees",
+        "Threat Reports"
+      ],
+      "chain_of_custody": true,
+      "hash_verification": true,
+      "immutable_storage": true
+    },
+    "collaboration": {
+      "comments": true,
+      "task_assignment": true,
+      "analyst_mentions": true,
+      "real_time_updates": true
+    },
+    "auditability": {
+      "case_changes": true,
+      "ownership_tracking": true,
+      "action_history": true,
+      "evidence_history": true
+    },
+    "integrations": [
+      "ServiceNow",
+      "Jira",
+      "Teams",
+      "Slack"
+    ]
+  },
+  "document_21": {
+    "document_metadata": {
+      "document_name": "SKYNET Threat Hunting Platform",
+      "version": "5.0",
+      "type": "Threat Hunting Specification"
+    },
+    "objective": {
+      "purpose": "Enable proactive identification of threats not detected by standard signatures and rules."
+    },
+    "hunting_methods": {
+      "hypothesis_driven": true,
+      "ioc_driven": true,
+      "behavior_driven": true,
+      "threat_actor_driven": true
+    },
+    "data_sources": [
+      "Endpoint Events",
+      "Network Telemetry",
+      "Identity Logs",
+      "Cloud Logs",
+      "Threat Intelligence"
+    ],
+    "attack_path_analysis": {
+      "enabled": true,
+      "graph_engine": "Neo4j",
+      "capabilities": [
+        "Lateral Movement Detection",
+        "Privilege Escalation Paths",
+        "Compromised Asset Discovery",
+        "Blast Radius Analysis"
+      ]
+    },
+    "hunt_queries": {
+      "language": "SKYQL",
+      "examples": [
+        "Suspicious PowerShell Across Hosts",
+        "Beaconing Communications",
+        "Rare Parent Child Processes",
+        "Abnormal Privilege Escalations"
+      ]
+    },
+    "ai_hunting_assistant": {
+      "enabled": true,
+      "functions": [
+        "Generate Hunt Queries",
+        "Identify Anomalies",
+        "Summarize Findings",
+        "Recommend Detections"
+      ]
+    },
+    "outputs": [
+      "Hunt Report",
+      "Detection Recommendation",
+      "New Correlation Rule",
+      "Threat Intelligence Update"
+    ]
+  },
+  "document_22": {
+    "document_metadata": {
+      "document_name": "SKYNET Governance & Compliance Platform",
+      "version": "5.0",
+      "type": "Governance Specification"
+    },
+    "objective": {
+      "purpose": "Provide executive visibility, compliance reporting, audit readiness, and security governance."
+    },
+    "executive_dashboards": {
+      "metrics": [
+        "MTTD",
+        "MTTR",
+        "Incident Volume",
+        "False Positive Rate",
+        "Containment Success Rate",
+        "Asset Risk Score"
+      ]
+    },
+    "compliance_frameworks": [
+      "ISO 27001",
+      "SOC 2",
+      "NIST CSF",
+      "PCI DSS",
+      "HIPAA",
+      "CIS Controls"
+    ],
+    "automated_reports": {
+      "daily": [
+        "SOC Summary",
+        "Critical Incidents"
+      ],
+      "weekly": [
+        "Threat Landscape",
+        "Detection Performance"
+      ],
+      "monthly": [
+        "Compliance Report",
+        "Executive Security Report"
+      ]
+    },
+    "risk_management": {
+      "asset_risk_scoring": true,
+      "business_impact_analysis": true,
+      "control_gap_analysis": true
+    },
+    "audit_framework": {
+      "immutable_logs": true,
+      "evidence_retention": true,
+      "chain_of_custody": true,
+      "audit_exports": true
+    },
+    "governance_controls": {
+      "change_approval": true,
+      "response_approval": true,
+      "role_based_access": true,
+      "segregation_of_duties": true
+    },
+    "executive_ai_assistant": {
+      "enabled": true,
+      "functions": [
+        "Executive Summaries",
+        "Board Reports",
+        "Compliance Mapping",
+        "Risk Recommendations"
+      ]
+    }
+  }
+}

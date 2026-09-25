@@ -1,0 +1,20 @@
+{
+  "document_name": "Autonomous Incident Response",
+  "version": "5.0",
+  "response_levels": {
+    "low": "Fully Automated",
+    "medium": "Approval Optional",
+    "high": "Manager Approval",
+    "critical": "IR Commander Approval"
+  },
+  "actions": [
+    "Host Isolation",
+    "Account Disablement",
+    "Process Termination",
+    "Firewall Blocking",
+    "Domain Blocking",
+    "Session Revocation"
+  ],
+  "rollback_supported": true,
+  "audit_logging": true
+}

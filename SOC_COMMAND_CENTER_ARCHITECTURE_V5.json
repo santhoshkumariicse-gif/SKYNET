@@ -1,0 +1,17 @@
+{
+  "document_name": "SOC Command Center",
+  "version": "5.0",
+  "dashboards": [
+    "Global Threat Dashboard",
+    "Executive Dashboard",
+    "SOC Operations Dashboard",
+    "Compliance Dashboard"
+  ],
+  "real_time_features": [
+    "Live Alerts",
+    "Incident Tracking",
+    "Threat Campaign Monitoring",
+    "Global Asset Visibility"
+  ],
+  "war_room_mode": true
+}

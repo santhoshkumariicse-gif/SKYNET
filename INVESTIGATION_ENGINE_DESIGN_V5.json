@@ -1,0 +1,18 @@
+{
+  "document_name": "Investigation Engine",
+  "version": "5.0",
+  "workflow": [
+    "Alert",
+    "Context Collection",
+    "Evidence Gathering",
+    "Timeline Construction",
+    "IOC Analysis",
+    "MITRE Mapping",
+    "Case Creation"
+  ],
+  "outputs": [
+    "Investigation Report",
+    "Risk Score",
+    "Incident Recommendation"
+  ]
+}

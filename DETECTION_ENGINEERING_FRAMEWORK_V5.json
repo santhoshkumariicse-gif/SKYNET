@@ -1,0 +1,20 @@
+{
+  "document_name": "Detection Engineering Framework",
+  "version": "5.0",
+  "detection_types": [
+    "Sigma Rules",
+    "YARA Rules",
+    "Behavioral Analytics",
+    "UEBA",
+    "Threat Intelligence Matching",
+    "ML Detections"
+  ],
+  "rule_lifecycle": [
+    "Design",
+    "Validation",
+    "Testing",
+    "Deployment",
+    "Monitoring",
+    "Optimization"
+  ]
+}

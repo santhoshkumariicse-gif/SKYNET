@@ -1,0 +1,117 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Detection Engineering Framework",
+    "version": "5.0",
+    "type": "Detection Engineering Specification"
+  },
+  "objective": {
+    "purpose": "Provide enterprise-grade threat detection using Sigma, YARA, ATT&CK mapping, behavioral analytics and threat intelligence."
+  },
+  "detection_sources": {
+    "rule_based": [
+      "Sigma Rules",
+      "Custom Correlation Rules"
+    ],
+    "signature_based": [
+      "YARA",
+      "IOC Matching"
+    ],
+    "behavior_based": [
+      "UEBA",
+      "Anomaly Detection",
+      "Behavior Analytics"
+    ]
+  },
+  "sigma_framework": {
+    "repository": "Internal Sigma Repository",
+    "categories": [
+      "Windows",
+      "Linux",
+      "Cloud",
+      "Network",
+      "Identity"
+    ]
+  },
+  "yara_framework": {
+    "malware_detection": true,
+    "ransomware_detection": true,
+    "custom_rules_supported": true
+  },
+  "mitre_attack": {
+    "supported": true,
+    "mapping": {
+      "tactics": true,
+      "techniques": true,
+      "sub_techniques": true
+    }
+  },
+  "supported_detections": {
+    "credential_access": [
+      "Mimikatz",
+      "Credential Dumping",
+      "LSASS Access"
+    ],
+    "execution": [
+      "Suspicious PowerShell",
+      "Encoded Commands",
+      "Script Execution"
+    ],
+    "persistence": [
+      "Registry Run Keys",
+      "Scheduled Tasks",
+      "Service Creation"
+    ],
+    "privilege_escalation": [
+      "Token Manipulation",
+      "UAC Bypass",
+      "Admin Group Changes"
+    ],
+    "command_and_control": [
+      "Beaconing",
+      "DNS Tunneling",
+      "C2 Communication"
+    ],
+    "exfiltration": [
+      "Large Data Transfer",
+      "Cloud Upload Abuse",
+      "Archive Collection"
+    ]
+  },
+  "correlation_rules": {
+    "account_compromise": {
+      "sequence": [
+        "Multiple Failed Logins",
+        "Successful Login",
+        "Privilege Escalation"
+      ]
+    },
+    "ransomware": {
+      "sequence": [
+        "Mass File Changes",
+        "Shadow Copy Deletion",
+        "Encryption Activity"
+      ]
+    },
+    "data_exfiltration": {
+      "sequence": [
+        "Sensitive File Access",
+        "Compression Activity",
+        "External Transfer"
+      ]
+    }
+  },
+  "detection_lifecycle": [
+    "Threat Research",
+    "Rule Development",
+    "Testing",
+    "Validation",
+    "Deployment",
+    "Monitoring",
+    "Tuning"
+  ],
+  "quality_metrics": {
+    "detection_coverage": "95%",
+    "false_positive_rate": "<5%",
+    "mean_detection_time": "<30 seconds"
+  }
+}

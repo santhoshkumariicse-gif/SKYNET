@@ -1,0 +1,23 @@
+{
+  "document_name": "AI Agent Communication Protocol",
+  "version": "5.0",
+  "protocol": "Agent Message Bus",
+  "transport": [
+    "Kafka",
+    "gRPC"
+  ],
+  "message_types": [
+    "Task",
+    "Investigation",
+    "Alert",
+    "Recommendation",
+    "Approval"
+  ],
+  "agents": [
+    "Detection Agent",
+    "Investigation Agent",
+    "Threat Intel Agent",
+    "Response Agent",
+    "Compliance Agent"
+  ]
+}

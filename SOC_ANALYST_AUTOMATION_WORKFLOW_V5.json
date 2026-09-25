@@ -1,0 +1,25 @@
+{
+  "document_name": "SOC Analyst Automation Workflow",
+  "version": "5.0",
+  "automation_pipeline": [
+    "Alert Reception",
+    "Context Gathering",
+    "Threat Intelligence Enrichment",
+    "Timeline Generation",
+    "MITRE Mapping",
+    "Risk Scoring",
+    "Case Creation",
+    "Response Recommendation",
+    "Documentation"
+  ],
+  "automation_levels": {
+    "tier1_soc": "90%",
+    "tier2_soc": "40%",
+    "tier3_soc": "15%"
+  },
+  "human_review_required": [
+    "Critical Incidents",
+    "Destructive Actions",
+    "Legal Decisions"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "document_metadata": {
+    "document_name": "SKYNET Asset Management & CMDB",
+    "version": "5.0",
+    "type": "Asset Intelligence Specification"
+  },
+  "objective": {
+    "purpose": "Maintain a real-time inventory of all assets, users, applications, services and cloud resources."
+  },
+  "asset_types": [
+    "Endpoints",
+    "Servers",
+    "Containers",
+    "Virtual Machines",
+    "Applications",
+    "Databases",
+    "Network Devices",
+    "Cloud Resources",
+    "Users"
+  ],
+  "cmdb": {
+    "real_time_sync": true,
+    "asset_relationships": true,
+    "ownership_mapping": true,
+    "business_context": true
+  },
+  "integrations": [
+    "ServiceNow CMDB",
+    "ManageEngine",
+    "Azure",
+    "AWS",
+    "VMware"
+  ],
+  "risk_scoring": {
+    "factors": [
+      "Criticality",
+      "Exposure",
+      "Vulnerabilities",
+      "Threat Activity"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "document_name": "Disaster Recovery Architecture",
+  "version": "5.0",
+  "strategies": [
+    "Active Active",
+    "Active Passive",
+    "Geo Redundancy"
+  ],
+  "targets": {
+    "rto": "15 Minutes",
+    "rpo": "5 Minutes"
+  },
+  "backup": {
+    "daily": true,
+    "immutable": true,
+    "encrypted": true
+  },
+  "testing": {
+    "quarterly_dr_tests": true
+  }
+}

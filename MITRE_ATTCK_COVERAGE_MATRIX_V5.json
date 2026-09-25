@@ -1,0 +1,23 @@
+{
+  "document_name": "MITRE ATT&CK Coverage Matrix",
+  "version": "5.0",
+  "coverage": {
+    "Reconnaissance": true,
+    "Initial Access": true,
+    "Execution": true,
+    "Persistence": true,
+    "Privilege Escalation": true,
+    "Defense Evasion": true,
+    "Credential Access": true,
+    "Discovery": true,
+    "Lateral Movement": true,
+    "Collection": true,
+    "Exfiltration": true,
+    "Impact": true
+  },
+  "mapping": {
+    "detections": true,
+    "alerts": true,
+    "incidents": true
+  }
+}

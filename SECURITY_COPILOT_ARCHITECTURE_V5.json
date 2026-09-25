@@ -1,0 +1,25 @@
+{
+  "document_name": "Security Copilot",
+  "version": "5.0",
+  "interfaces": [
+    "Web UI",
+    "SOC Console",
+    "Teams",
+    "Slack",
+    "API"
+  ],
+  "capabilities": [
+    "Natural Language Investigation",
+    "Threat Hunting",
+    "IOC Lookup",
+    "Incident Summaries",
+    "Detection Recommendations",
+    "Executive Reports"
+  ],
+  "llm_models": [
+    "GPT",
+    "Claude",
+    "Gemini",
+    "Llama"
+  ]
+}

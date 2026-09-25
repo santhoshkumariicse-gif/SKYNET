@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # PostgreSQL (Transactional Store: Users, Incidents, Evidence)
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: skynet-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-skynet_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skynet_secure_password_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-skynet_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skynet_admin -d skynet_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # Redis 7 (In-Memory Cache, Rate Limiting & Blacklists)
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: skynet-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-skynet_redis_2026}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "skynet_redis_2026", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # ClickHouse (Columnar Telemetry & Event Analytics)
+  # -------------------------------------------------------------
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3-alpine
+    container_name: skynet-clickhouse
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: skynet
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-default}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-skynet_ch_password_2026}
+    ports:
+      - "8123:8123" # HTTP API
+      - "9000:9000" # Native TCP
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  # -------------------------------------------------------------
+  # SKYNET FastAPI Core Backend
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skynet-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql+asyncpg://skynet_admin:skynet_secure_password_2026@postgres:5432/skynet_db
+      - REDIS_URL=redis://:skynet_redis_2026@redis:6379/0
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=skynet_ch_password_2026
+      - SECRET_KEY=${SECRET_KEY:-skynet_super_secret_jwt_key_enterprise_2026_prod}
+      - AGENT_API_KEY=${AGENT_API_KEY:-skynet_agent_default_secret_token_2026}
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+
+  # -------------------------------------------------------------
+  # SKYNET Frontend Dashboard (Next.js)
+  # -------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skynet-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8000/api/v1/ws/live-events
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:
+  clickhouse_data:

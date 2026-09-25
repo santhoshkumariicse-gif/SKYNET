@@ -1,0 +1,18 @@
+{
+  "document_name": "Security Data Model",
+  "version": "5.0",
+  "schemas": [
+    "OCSF",
+    "Elastic ECS"
+  ],
+  "entities": [
+    "User",
+    "Host",
+    "IP",
+    "Process",
+    "File",
+    "Domain",
+    "Alert",
+    "Incident"
+  ]
+}

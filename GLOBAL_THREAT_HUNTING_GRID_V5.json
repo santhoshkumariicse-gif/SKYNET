@@ -1,0 +1,22 @@
+{
+  "document_name": "Global Threat Hunting Grid",
+  "version": "5.0",
+  "hunt_sources": [
+    "Endpoint",
+    "Identity",
+    "Network",
+    "Cloud",
+    "Threat Intelligence"
+  ],
+  "hunt_types": [
+    "IOC Driven",
+    "Behavior Driven",
+    "Campaign Driven",
+    "Threat Actor Driven"
+  ],
+  "outputs": [
+    "Threat Report",
+    "Detection Rule",
+    "Risk Assessment"
+  ]
+}

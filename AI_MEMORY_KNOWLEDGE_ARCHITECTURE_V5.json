@@ -1,0 +1,23 @@
+{
+  "document_name": "AI Memory Architecture",
+  "version": "5.0",
+  "memory_layers": {
+    "short_term": "Redis",
+    "session_memory": "PostgreSQL",
+    "long_term": "Qdrant",
+    "knowledge_graph": "Neo4j"
+  },
+  "memory_types": [
+    "Incidents",
+    "Investigations",
+    "Threat Intelligence",
+    "Playbooks",
+    "Detection Rules"
+  ],
+  "features": [
+    "Context Retrieval",
+    "Historical Learning",
+    "Graph RAG",
+    "Case Recall"
+  ]
+}

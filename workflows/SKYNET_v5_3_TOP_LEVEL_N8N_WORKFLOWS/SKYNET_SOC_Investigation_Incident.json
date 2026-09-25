@@ -1,0 +1,260 @@
+{
+  "name": "SKYNET SOC \u2014 Investigation & Incident Operations",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/soc",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "soc-webhook",
+      "name": "SOC Alert Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const a=$json.body ?? $json;\nconst score=a.alert?.risk?.score ?? 0;\nreturn [{json:{...a,soc:{stage:'soc',triage:{dedup_key:a.alert?.alert_id||a.event_id||Date.now(),priority:score>=80?'P1':score>=60?'P2':score>=30?'P3':'P4'}}}}];"
+      },
+      "id": "soc-triage",
+      "name": "Alert Triage & Deduplication",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const s=$json.soc||{};\nreturn [{json:{...$json,soc:{...s,ai_investigation:{\nstatus:'placeholder',\nhypothesis:'Requires configured AI provider',\nquestions:[],\nconfidence:null\n}}}}];"
+      },
+      "id": "soc-ai",
+      "name": "AI Investigation Analyst",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soc:{...$json.soc,evidence:{sources:[],artifacts:[],timeline:[]}}}}];"
+      },
+      "id": "soc-evidence",
+      "name": "Evidence & Timeline Builder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const p=$json.soc?.triage?.priority||'P4';\nreturn [{json:{...$json,incident:{\nincident_id:'INC-'+Date.now(),\nstatus:'open',\npriority:p,\nclassification:'unclassified',\nseverity:p==='P1'?'critical':p==='P2'?'high':p==='P3'?'medium':'low'\n}}}];"
+      },
+      "id": "soc-incident",
+      "name": "Incident Creation & Classification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.incident.priority === 'P1' || $json.incident.priority === 'P2'}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "soc-escalate",
+      "name": "Escalation / Threat Hunt Decision",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soc:{...$json.soc,escalation:{required:true,reason:'High-priority incident'},hunt:{queries:[],scope:[]}}}}];"
+      },
+      "id": "soc-hunt",
+      "name": "Threat Hunt & Escalation Package",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{...$json,soc:{...$json.soc,report:{executive_summary:'Generated from structured case data',analyst_notes:[],audit_refs:[]}}}}];"
+      },
+      "id": "soc-document",
+      "name": "Case Documentation & Reporting",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        120
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "soc-response",
+      "name": "SOC Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        0
+      ],
+      "disabled": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "SOC Alert Intake": {
+      "main": [
+        [
+          {
+            "node": "Alert Triage & Deduplication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Triage & Deduplication": {
+      "main": [
+        [
+          {
+            "node": "AI Investigation Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Investigation Analyst": {
+      "main": [
+        [
+          {
+            "node": "Evidence & Timeline Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evidence & Timeline Builder": {
+      "main": [
+        [
+          {
+            "node": "Incident Creation & Classification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Creation & Classification": {
+      "main": [
+        [
+          {
+            "node": "Escalation / Threat Hunt Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escalation / Threat Hunt Decision": {
+      "main": [
+        [
+          {
+            "node": "Threat Hunt & Escalation Package",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Case Documentation & Reporting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Threat Hunt & Escalation Package": {
+      "main": [
+        [
+          {
+            "node": "Case Documentation & Reporting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case Documentation & Reporting": {
+      "main": [
+        [
+          {
+            "node": "SOC Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b442baff-885b-4771-b7a4-826d3c44c365",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "SKYNET"
+    },
+    {
+      "name": "v5"
+    },
+    {
+      "name": "SOC"
+    }
+  ]
+}

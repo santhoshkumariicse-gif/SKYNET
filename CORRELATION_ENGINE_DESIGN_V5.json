@@ -1,0 +1,18 @@
+{
+  "document_name": "Correlation Engine",
+  "version": "5.0",
+  "correlation_dimensions": [
+    "User",
+    "Host",
+    "IP",
+    "Time",
+    "MITRE Technique",
+    "IOC"
+  ],
+  "engines": [
+    "Rule-Based",
+    "Graph-Based",
+    "Behavior-Based",
+    "ML-Based"
+  ]
+}
