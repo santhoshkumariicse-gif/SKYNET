@@ -29,3 +29,50 @@ async def list_iocs(
     res = await db.execute(stmt)
     records = res.scalars().all()
     return records
+
+
+from pydantic import BaseModel
+
+class AddBlocklistRequest(BaseModel):
+    ioc_value: str
+    ioc_type: Optional[str] = "IP"
+    reason: Optional[str] = "Manual perimeter blocklist addition"
+
+@router.post("/blocklist")
+async def add_to_blocklist(req: AddBlocklistRequest, db: AsyncSession = Depends(get_db)):
+    """Adds an indicator directly to the firewall drop blocklist and logs to audit trail."""
+    from app.models.models import AuditLog
+    val = req.ioc_value.strip()
+
+    stmt = select(IOCRecord).where(IOCRecord.ioc_value == val)
+    res = await db.execute(stmt)
+    record = res.scalars().first()
+
+    if not record:
+        record = IOCRecord(
+            ioc_type=req.ioc_type.upper(),
+            ioc_value=val,
+            threat_score=100,
+            malware_family="Firewall Blocklist",
+            source="SOC Analyst",
+            tags=["blocklist", "perimeter-drop"]
+        )
+        db.add(record)
+    else:
+        record.threat_score = 100
+        record.tags = list(set((record.tags or []) + ["blocklist", "perimeter-drop"]))
+
+    # Write Audit Log
+    db.add(AuditLog(
+        actor="admin (SOC LEAD)",
+        action="IOC_BLOCKLIST_ADDED",
+        resource_type="IOC",
+        resource_id=val,
+        payload={"reason": req.reason, "ioc_type": req.ioc_type},
+        client_ip="127.0.0.1"
+    ))
+
+    await db.commit()
+    await db.refresh(record)
+    return {"status": "BLOCKED", "threat_score": 100, "message": f"Added {val} to perimeter blocklist", "record": record}
+

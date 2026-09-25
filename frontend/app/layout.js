@@ -14,18 +14,18 @@ export default function RootLayout({ children }) {
         <div style={{ display: 'flex', minHeight: '100vh' }}>
           <Sidebar />
           <div style={{
-            marginLeft: '260px',
+            marginLeft: '72px',
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
             minWidth: 0,
-            backgroundColor: 'var(--bg-primary)',
+            backgroundColor: 'var(--bg-base)',
           }}>
             <Header />
             <main style={{
               flex: 1,
-              padding: '24px 32px',
-              maxWidth: '1600px',
+              padding: '16px 20px',
+              maxWidth: '1920px',
               width: '100%',
               margin: '0 auto',
             }}>

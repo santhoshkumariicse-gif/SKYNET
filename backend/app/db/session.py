@@ -5,7 +5,7 @@ from sqlalchemy import select
 from loguru import logger
 from app.core.config import settings
 from app.core.security import get_password_hash
-from app.models.models import Base, Role, User, IOCRecord, Endpoint, Alert, Incident, Evidence
+from app.models.models import Base, Role, User, IOCRecord, Endpoint, Alert, Incident, Evidence, AuditLog, Approval, SavedHunt
 
 # Resolve DB URL with graceful fallback to local SQLite
 DB_URL = settings.DATABASE_URL
@@ -265,8 +265,86 @@ async def init_db():
                         client_ip="127.0.0.1"
                     ))
 
+            # Seed Default Pending Approvals (Human-in-the-Loop Safeguards)
+            sample_approvals = [
+                (
+                    "ISOLATE_HOST",
+                    "WS-182",
+                    "192.168.1.188",
+                    "INC-10482",
+                    96,
+                    "Active outbound C2 beacon communication detected to 185.220.101.5 on port 443 with credential theft attempt.",
+                    "17 correlated events, 4 Sigma rules matched, Procdump LSASS hash match.",
+                    "SIGMA-WIN-001 & IOC-MATCH",
+                    "Autonomous Tier-1 SOAR Engine",
+                    "Disable physical and virtual network adapters on WS-182 except for encrypted agent management channel.",
+                    "Re-enable adapters via agent command Enable-NetAdapter upon forensic sign-off."
+                ),
+                (
+                    "DISABLE_ACCOUNT",
+                    "USER-421 (finance_lead)",
+                    "Active Directory / Entra ID",
+                    "INC-10482",
+                    88,
+                    "Compromised identity: 7 consecutive failed authentications followed by impossible travel anomaly from RU.",
+                    "Event 4625 burst, Okta push timeout rejected, Kerberos ticket requested from anomalous IP.",
+                    "SIGMA-WIN-007 (Brute Force Anomaly)",
+                    "UEBA Behavioral Anomaly Engine",
+                    "Revoke active Kerberos TGT and invalidate Microsoft Entra ID refresh tokens immediately.",
+                    "Admin account unlock and password reset with hardware MFA re-enrollment."
+                ),
+                (
+                    "BLOCK_IP",
+                    "185.220.101.5:443",
+                    "Perimeter Palo Alto & AWS Security Groups",
+                    "INC-10482",
+                    94,
+                    "Threat Intelligence IOC match: Confirmed Cobalt Strike C2 server with VirusTotal 68/88 malicious rating.",
+                    "Outbound TCP connection attempts and DNS sinkhole match for update-microsoft-verify.top.",
+                    "IOC-MATCH-001 (Cobalt Strike C2)",
+                    "Threat Intelligence Ingestion Pipeline",
+                    "Inject DROP rule at top of perimeter ingress/egress firewall ACL policy.",
+                    "Remove IP from dynamic firewall address-group."
+                )
+            ]
+            for act_type, tgt, tgt_ip, inc_id, risk, reason, evid, det, req_by, exact, rollback in sample_approvals:
+                res_apv = await session.execute(select(Approval).where(Approval.target == tgt, Approval.status == "PENDING"))
+                if not res_apv.scalars().first():
+                    session.add(Approval(
+                        action_type=act_type,
+                        target=tgt,
+                        target_ip=tgt_ip,
+                        incident_id=inc_id,
+                        risk_score=risk,
+                        reason=reason,
+                        evidence=evid,
+                        detection=det,
+                        requested_by=req_by,
+                        exact_action=exact,
+                        rollback_plan=rollback,
+                        status="PENDING"
+                    ))
+
+            # Seed Default Saved Hunts
+            sample_hunts = [
+                ("Cobalt Strike C2 Hunting", 'process.name = "powershell.exe" AND network.destination_ip IN threat_intel.malicious_ips', "T1071.001"),
+                ("LSASS Memory Dumping Sweep", 'process.command_line LIKE "%lsass%" OR process.name = "procdump64.exe"', "T1003.001"),
+                ("Ransomware Shadow Deletion", 'process.name = "vssadmin.exe" AND process.command_line LIKE "%delete shadows%"', "T1490"),
+                ("Privileged Account Logon Bursts", 'event.code = 4625 AND user.is_privileged = true GROUP BY user.name HAVING count() > 5', "T1110"),
+            ]
+            for hname, qry, mitre_t in sample_hunts:
+                res_hnt = await session.execute(select(SavedHunt).where(SavedHunt.name == hname))
+                if not res_hnt.scalars().first():
+                    session.add(SavedHunt(
+                        name=hname,
+                        query=qry,
+                        mitre_technique=mitre_t,
+                        author="admin"
+                    ))
+
             await session.commit()
             logger.info("Database initialization and seed records completed successfully.")
         except Exception as e:
             logger.error(f"Database initialization error: {e}")
             await session.rollback()
+

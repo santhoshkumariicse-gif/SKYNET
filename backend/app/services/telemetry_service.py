@@ -8,7 +8,6 @@ from app.schemas.schemas import TelemetryBatch, TelemetryEvent
 from app.detection.sigma_engine import sigma_engine
 from app.detection.ioc_matcher import ioc_matcher
 from app.services.correlation_service import correlation_service
-from app.ai_agents.investigation_agent import investigation_agent
 
 # In-memory WebSocket broadcast subscribers
 websocket_subscribers: List[Any] = []
@@ -132,6 +131,7 @@ class TelemetryService:
         await session.commit()
 
         # 3. Trigger Autonomous AI Investigation for any affected incidents
+        from app.ai_agents.investigation_agent import investigation_agent
         for inc_id in set(incidents_affected):
             try:
                 dossier = await investigation_agent.investigate_incident(session, inc_id)

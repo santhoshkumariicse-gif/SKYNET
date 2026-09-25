@@ -1,0 +1,24 @@
+# ==============================================================================
+# SKYNET v5.0 — Autonomous Endpoint Security Agent Configuration
+# ==============================================================================
+
+# API Gateway Endpoint (FastAPI Core)
+gateway_url: "http://localhost:8000/api/v1"
+
+# Shared HMAC Authentication Token
+agent_key: "skynet_agent_default_secret_token_2026"
+
+# Endpoint Identity (Defaults to system hostname if omitted)
+hostname: "SEC-WS-001"
+device_type: "Workstation" # Workstation, Server, Laptop
+os_name: "Windows"
+os_version: "11 Pro x64"
+
+# Interval Timers (in seconds)
+heartbeat_interval_sec: 10
+process_monitor_interval_sec: 15
+
+# Security & Tamper Protection
+enable_sha256_hashing: true
+max_events_per_batch: 50
+ssl_verify: false

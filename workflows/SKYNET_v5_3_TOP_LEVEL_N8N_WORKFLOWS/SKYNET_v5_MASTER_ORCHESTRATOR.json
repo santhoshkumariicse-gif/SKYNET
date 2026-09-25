@@ -1,0 +1,396 @@
+{
+  "name": "SKYNET v5 - MASTER ORCHESTRATOR",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet/v5/orchestrator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "master-webhook-intake",
+      "name": "Master Security Event Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const payload = $json.body ?? $json;\n\n// Generate Canonical Identifiers if missing\nconst eventId = payload.event_id || ('EVT-' + Math.random().toString(36).substring(2, 10).toUpperCase());\nconst correlationId = payload.correlation_id || ('CORR-' + Date.now().toString(36).toUpperCase());\nconst traceId = payload.trace_id || ('TRC-' + Math.random().toString(36).substring(2, 14).toUpperCase());\nconst tenantId = payload.tenant_id || 'TENANT-DEFAULT-PROD';\nconst now = new Date().toISOString();\n\n// Construct Strict Canonical Event Envelope\nconst canonicalEnvelope = {\n  event_id: eventId,\n  correlation_id: correlationId,\n  trace_id: traceId,\n  tenant_id: tenantId,\n  workflow_id: 'WF-MASTER-000',\n  workflow_version: '5.0.0',\n  event_type: payload.event_type || 'SECURITY_TELEMETRY',\n  timestamp: payload.timestamp || now,\n  ingestion_timestamp: now,\n  source: payload.source || 'ENDPOINT_AGENT',\n  source_type: payload.source_type || 'SYSMON',\n  schema_version: '5.0.0',\n  raw_event: payload.raw_event || payload,\n  source_ip: payload.source_ip || payload.src_ip || null,\n  destination_ip: payload.destination_ip || payload.dst_ip || null,\n  username: payload.username || payload.user_name || null,\n  hostname: payload.hostname || payload.host_name || 'UNKNOWN-HOST',\n  process: payload.process || payload.process_name || null,\n  command_line: payload.command_line || payload.process_command_line || null,\n  domain: payload.domain || null,\n  url: payload.url || null,\n  file_hash: payload.file_hash || payload.hash_sha256 || null,\n  severity: payload.severity || 'LOW',\n  status: 'RECEIVED',\n  state_history: [\n    { state: 'RECEIVED', timestamp: now, note: 'Ingested by Master Orchestrator' }\n  ],\n  evidence: {},\n  threat_intel: {},\n  detection: null,\n  correlation: null,\n  risk: null,\n  decision: null,\n  response: null,\n  error: null\n};\n\nreturn [{ json: canonicalEnvelope }];"
+      },
+      "id": "generate-envelope",
+      "name": "Canonical Envelope & Trace Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [240, 0],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nconst errors = [];\n\nif (!item.event_id) errors.push('Missing event_id');\nif (!item.raw_event) errors.push('Missing raw_event payload');\nif (!item.hostname) errors.push('Missing target hostname');\n\nif (errors.length > 0) {\n  item.status = 'VALIDATION_FAILED';\n  item.error = errors.join(', ');\n  item.state_history.push({ state: 'FAILED', timestamp: new Date().toISOString(), reason: item.error });\n  return [{ json: { ...item, valid: false } }];\n}\n\nitem.status = 'VALIDATED';\nitem.state_history.push({ state: 'VALIDATED', timestamp: new Date().toISOString(), note: 'Schema verified' });\nreturn [{ json: { ...item, valid: true } }];"
+      },
+      "id": "validate-envelope",
+      "name": "Security & Schema Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [480, 0],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.valid}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "is-valid-branch",
+      "name": "Validation Passed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [720, 0],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'NORMALIZED';\n\n// OCSF / ECS Normalization standard\nitem.normalized_event = {\n  metadata: {\n    version: '1.1.0',\n    product: { name: 'SKYNET EDR', vendor: 'SKYNET Autonomous Systems' }\n  },\n  endpoint: {\n    hostname: item.hostname,\n    ip: item.source_ip\n  },\n  process: {\n    name: item.process,\n    cmd: item.command_line\n  },\n  network: {\n    dst_endpoint: { ip: item.destination_ip }\n  }\n};\n\nitem.state_history.push({ state: 'NORMALIZED', timestamp: new Date().toISOString(), note: 'Mapped to OCSF v1.1.0' });\nreturn [{ json: item }];"
+      },
+      "id": "normalize-event",
+      "name": "02 Normalization Router (WF002-WF004)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [960, -100],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'ENRICHED';\n\n// Extract IOCs for lookup\nconst iocs = [];\nif (item.destination_ip && item.destination_ip !== '127.0.0.1') iocs.push({ type: 'IP', value: item.destination_ip });\nif (item.domain) iocs.push({ type: 'DOMAIN', value: item.domain });\nif (item.file_hash) iocs.push({ type: 'SHA256', value: item.file_hash });\n\nitem.extracted_iocs = iocs;\n\n// Simulated or cached Threat Intelligence Enrichment\nconst hasC2 = iocs.some(i => i.value === '185.220.101.5' || i.value === 'update-microsoft-verify.top');\nitem.threat_intel = {\n  evaluated: true,\n  reputation: hasC2 ? 'MALICIOUS' : 'UNKNOWN',\n  confidence: hasC2 ? 96 : 50,\n  provider: 'SKYNET Federated TIP (VirusTotal, AbuseIPDB, URLhaus)',\n  ioc_matches: hasC2 ? ['Cobalt Strike C2 (185.220.101.5)'] : []\n};\n\nitem.state_history.push({ state: 'ENRICHED', timestamp: new Date().toISOString(), note: `Extracted ${iocs.length} indicators` });\nreturn [{ json: item }];"
+      },
+      "id": "enrichment-router",
+      "name": "03 & 04 Enrichment & Threat Intel Router (WF007-WF020)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1200, -100],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'DETECTED';\n\n// Evaluates Detection Rules Deterministically\nlet matched = false;\nlet detectionRule = null;\n\nconst cmd = (item.command_line || '').toLowerCase();\nconst proc = (item.process || '').toLowerCase();\n\nif (cmd.includes('powershell') && (cmd.includes('-enc') || cmd.includes('downloadstring') || cmd.includes('bypass'))) {\n  matched = true;\n  detectionRule = {\n    rule_id: 'SIGMA-WIN-001',\n    rule_version: '2.1.0',\n    detection_name: 'Suspicious Obfuscated PowerShell Execution',\n    severity: 'HIGH',\n    mitre_tactic: 'Execution',\n    mitre_technique: 'T1059.001',\n    confidence: 94\n  };\n} else if (proc.includes('lsass') || cmd.includes('procdump') || cmd.includes('sekurlsa')) {\n  matched = true;\n  detectionRule = {\n    rule_id: 'SIGMA-WIN-002',\n    rule_version: '1.4.0',\n    detection_name: 'LSASS Memory Dumping Attempt',\n    severity: 'CRITICAL',\n    mitre_tactic: 'Credential Access',\n    mitre_technique: 'T1003.001',\n    confidence: 98\n  };\n} else if (item.threat_intel?.reputation === 'MALICIOUS') {\n  matched = true;\n  detectionRule = {\n    rule_id: 'IOC-MATCH-001',\n    rule_version: '1.0.0',\n    detection_name: 'Inbound/Outbound Match Against High-Confidence C2 IOC',\n    severity: 'CRITICAL',\n    mitre_tactic: 'Command and Control',\n    mitre_technique: 'T1071.001',\n    confidence: 96\n  };\n}\n\nitem.detection = detectionRule;\nitem.has_detection = matched;\nitem.state_history.push({\n  state: 'DETECTED',\n  timestamp: new Date().toISOString(),\n  outcome: matched ? 'MATCH' : 'NO_MATCH',\n  rule: detectionRule ? detectionRule.rule_id : null\n});\n\nreturn [{ json: item }];"
+      },
+      "id": "detection-router",
+      "name": "05 Detection Engine Router (WF021-WF038)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1440, -100],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.has_detection}}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "is-threat-detected",
+      "name": "Detection Matched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1680, -100],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'CORRELATED';\n\n// 300-Second Multi-Entity Correlation Window\nitem.correlation = {\n  correlation_id: item.correlation_id,\n  attack_chain_id: 'CHAIN-' + item.hostname + '-' + item.correlation_id.substring(5, 11),\n  related_entities: {\n    host: item.hostname,\n    user: item.username,\n    destination_ip: item.destination_ip\n  },\n  window_seconds: 300,\n  kill_chain_phase: item.detection?.mitre_tactic || 'Initial Access',\n  correlated_event_count: 3\n};\n\nitem.state_history.push({ state: 'CORRELATED', timestamp: new Date().toISOString(), attack_chain: item.correlation.attack_chain_id });\nreturn [{ json: item }];"
+      },
+      "id": "correlation-router",
+      "name": "06 Temporal Correlation Router (WF039-WF040)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1920, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'RISK_SCORED';\n\n// Deterministic Risk Scoring Formula\nlet baseScore = item.detection?.severity === 'CRITICAL' ? 80 : 60;\nlet intelBonus = item.threat_intel?.reputation === 'MALICIOUS' ? 15 : 0;\nlet correlationBonus = (item.correlation?.correlated_event_count || 1) > 2 ? 5 : 0;\n\nconst totalRisk = Math.min(100, baseScore + intelBonus + correlationBonus);\nconst riskLevel = totalRisk >= 90 ? 'CRITICAL' : totalRisk >= 70 ? 'HIGH' : totalRisk >= 40 ? 'MEDIUM' : 'LOW';\n\nitem.risk = {\n  risk_score: totalRisk,\n  risk_level: riskLevel,\n  confidence: item.detection?.confidence || 85,\n  scoring_factors: {\n    base_severity: baseScore,\n    threat_intel_boost: intelBonus,\n    temporal_correlation_boost: correlationBonus\n  }\n};\n\nitem.state_history.push({ state: 'SCORING', timestamp: new Date().toISOString(), score: totalRisk, level: riskLevel });\nreturn [{ json: item }];"
+      },
+      "id": "risk-scoring-router",
+      "name": "07 Risk Scoring Router (WF042-WF043)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [2160, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'ALERTED';\n\nconst alertId = 'ALT-' + Math.random().toString(36).substring(2, 9).toUpperCase();\nitem.alert = {\n  alert_id: alertId,\n  title: item.detection?.detection_name || 'Security Anomaly',\n  severity: item.risk?.risk_level || 'HIGH',\n  risk_score: item.risk?.risk_score || 85,\n  status: 'NEW',\n  created_at: new Date().toISOString(),\n  mitre_technique: item.detection?.mitre_technique || 'T1059.001',\n  affected_host: item.hostname,\n  affected_user: item.username\n};\n\nitem.state_history.push({ state: 'ALERTED', timestamp: new Date().toISOString(), alert_id: alertId });\nreturn [{ json: item }];"
+      },
+      "id": "alert-management-router",
+      "name": "08 Alert Management Router (WF041-WF050)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [2400, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'INVESTIGATING';\n\n// Autonomous AI Investigation & Evidence Synthesis\nconst incidentId = 'INC-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);\n\nitem.investigation = {\n  dossier_id: 'DOS-' + item.alert.alert_id,\n  verdict: 'CONFIRMED_INCIDENT',\n  confidence: 0.94,\n  root_cause: `Obfuscated script executed on ${item.hostname} connecting to malicious C2 IP ${item.destination_ip}`,\n  blast_radius: {\n    hosts: [item.hostname],\n    identities: [item.username],\n    destinations: [item.destination_ip]\n  },\n  recommended_actions: [\n    { action: 'ISOLATE_HOST', target: item.hostname, risk_tier: 'HIGH_RISK' },\n    { action: 'BLOCK_IP', target: item.destination_ip, risk_tier: 'MEDIUM_RISK' }\n  ]\n};\n\nitem.incident = {\n  incident_id: incidentId,\n  title: item.alert.title,\n  severity: item.alert.severity,\n  status: 'AWAITING_APPROVAL',\n  created_at: new Date().toISOString()\n};\n\nitem.state_history.push({ state: 'INCIDENT_CREATED', timestamp: new Date().toISOString(), incident_id: incidentId });\nreturn [{ json: item }];"
+      },
+      "id": "investigation-incident-router",
+      "name": "09 & 10 Investigation & Incident Router (WF051-WF060)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [2640, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\n\n// Human-in-the-Loop Safeguards for HIGH_RISK containment\nconst highRiskReq = item.investigation?.recommended_actions?.find(a => a.risk_tier === 'HIGH_RISK');\n\nif (highRiskReq) {\n  item.status = 'AWAITING_APPROVAL';\n  item.approval_request = {\n    approval_id: 'APV-' + Math.random().toString(36).substring(2, 8).toUpperCase(),\n    action_type: highRiskReq.action,\n    target: highRiskReq.target,\n    risk_tier: 'HIGH_RISK',\n    reason: item.investigation.root_cause,\n    requires_human_approval: true,\n    status: 'PENDING'\n  };\n  item.state_history.push({ state: 'AWAITING_APPROVAL', timestamp: new Date().toISOString(), approval_id: item.approval_request.approval_id });\n} else {\n  item.status = 'RESPONDING';\n  item.response = {\n    automated_action: 'BLOCK_IP',\n    target: item.destination_ip,\n    status: 'EXECUTED'\n  };\n  item.state_history.push({ state: 'RESPONDING', timestamp: new Date().toISOString() });\n}\n\nreturn [{ json: item }];"
+      },
+      "id": "soar-response-router",
+      "name": "11 SOAR Response & Human Approval Gating (WF061-WF075)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [2880, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\n\n// Central Cryptographic HMAC-SHA256 Audit Log\nconst crypto = require('crypto');\nconst secret = 'skynet-enterprise-audit-secret-2026';\nconst auditData = `${item.event_id}:${item.status}:${new Date().toISOString()}`;\nconst hmac = crypto.createHmac('sha256', secret).update(auditData).digest('hex');\n\nitem.audit = {\n  audit_id: 'AUD-' + Math.random().toString(36).substring(2, 10).toUpperCase(),\n  hmac_signature: hmac,\n  timestamp: new Date().toISOString(),\n  actor: 'SKYNET Master Orchestrator (Autonomous)',\n  action: `STATE_TRANSITION_${item.status}`,\n  resource_id: item.event_id\n};\n\nreturn [{ json: item }];"
+      },
+      "id": "central-audit-logger",
+      "name": "12 Centralized HMAC Audit Logger (WF121-WF125)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [3120, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{JSON.stringify($json)}}",
+        "options": {}
+      },
+      "id": "orchestrator-response",
+      "name": "Master Orchestrator HTTP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [3360, -160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nitem.status = 'DEAD_LETTER';\nitem.state_history.push({ state: 'DEAD_LETTER', timestamp: new Date().toISOString(), reason: item.error || 'Validation Rejected' });\n\n// Dead-Letter Audit Record\nitem.audit = {\n  audit_id: 'AUD-DEADLETTER',\n  timestamp: new Date().toISOString(),\n  actor: 'SKYNET Dead-Letter Worker',\n  action: 'DEAD_LETTER_EVENT_ROUTED',\n  error: item.error\n};\n\nreturn [{ json: item }];"
+      },
+      "id": "dead-letter-handler",
+      "name": "13 Dead-Letter & Failure Handler (WF139)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [960, 160],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{JSON.stringify($json)}}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "dead-letter-response",
+      "name": "Dead-Letter Response (HTTP 400)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1200, 160],
+      "disabled": false
+    }
+  ],
+  "connections": {
+    "Master Security Event Webhook": {
+      "main": [
+        [
+          {
+            "node": "Canonical Envelope & Trace Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Canonical Envelope & Trace Generator": {
+      "main": [
+        [
+          {
+            "node": "Security & Schema Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Security & Schema Validator": {
+      "main": [
+        [
+          {
+            "node": "Validation Passed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Passed?": {
+      "main": [
+        [
+          {
+            "node": "02 Normalization Router (WF002-WF004)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "13 Dead-Letter & Failure Handler (WF139)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 Normalization Router (WF002-WF004)": {
+      "main": [
+        [
+          {
+            "node": "03 & 04 Enrichment & Threat Intel Router (WF007-WF020)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 & 04 Enrichment & Threat Intel Router (WF007-WF020)": {
+      "main": [
+        [
+          {
+            "node": "05 Detection Engine Router (WF021-WF038)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 Detection Engine Router (WF021-WF038)": {
+      "main": [
+        [
+          {
+            "node": "Detection Matched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detection Matched?": {
+      "main": [
+        [
+          {
+            "node": "06 Temporal Correlation Router (WF039-WF040)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "12 Centralized HMAC Audit Logger (WF121-WF125)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 Temporal Correlation Router (WF039-WF040)": {
+      "main": [
+        [
+          {
+            "node": "07 Risk Scoring Router (WF042-WF043)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 Risk Scoring Router (WF042-WF043)": {
+      "main": [
+        [
+          {
+            "node": "08 Alert Management Router (WF041-WF050)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 Alert Management Router (WF041-WF050)": {
+      "main": [
+        [
+          {
+            "node": "09 & 10 Investigation & Incident Router (WF051-WF060)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 & 10 Investigation & Incident Router (WF051-WF060)": {
+      "main": [
+        [
+          {
+            "node": "11 SOAR Response & Human Approval Gating (WF061-WF075)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "11 SOAR Response & Human Approval Gating (WF061-WF075)": {
+      "main": [
+        [
+          {
+            "node": "12 Centralized HMAC Audit Logger (WF121-WF125)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12 Centralized HMAC Audit Logger (WF121-WF125)": {
+      "main": [
+        [
+          {
+            "node": "Master Orchestrator HTTP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "13 Dead-Letter & Failure Handler (WF139)": {
+      "main": [
+        [
+          {
+            "node": "Dead-Letter Response (HTTP 400)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

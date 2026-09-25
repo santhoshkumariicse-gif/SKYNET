@@ -36,16 +36,19 @@ TECHNIQUE_COVERAGE = {
     "T1490": {"name": "Inhibit System Recovery", "tactic": "Impact", "covered": True, "rule": "SIGMA-WIN-004"},
     "T1547.001": {"name": "Registry Run Keys", "tactic": "Persistence", "covered": True, "rule": "SIGMA-WIN-005"},
     "T1087": {"name": "Account Discovery", "tactic": "Discovery", "covered": True, "rule": "SIGMA-WIN-006"},
-    "T1204.002": {"name": "Malicious File", "tactic": "Execution", "covered": True, "rule": "IOC-HASH-001"},
-    "T1071.001": {"name": "Web Protocols", "tactic": "Command and Control", "covered": True, "rule": "IOC-IP-001"},
-    "T1566.001": {"name": "Spearphishing Attachment", "tactic": "Initial Access", "covered": True, "rule": "Planned"},
-    "T1078": {"name": "Valid Accounts", "tactic": "Persistence", "covered": True, "rule": "UEBA"},
-    "T1486": {"name": "Data Encrypted for Impact", "tactic": "Impact", "covered": True, "rule": "Behavioral"},
-    "T1021.001": {"name": "Remote Desktop Protocol", "tactic": "Lateral Movement", "covered": True, "rule": "Behavioral"},
-    "T1053.005": {"name": "Scheduled Task", "tactic": "Persistence", "covered": True, "rule": "Planned"},
-    "T1027": {"name": "Obfuscated Files", "tactic": "Defense Evasion", "covered": True, "rule": "SIGMA"},
-    "T1562.001": {"name": "Disable Security Tools", "tactic": "Defense Evasion", "covered": True, "rule": "Planned"},
-    "T1048": {"name": "Exfiltration Over Alternative Protocol", "tactic": "Exfiltration", "covered": True, "rule": "Behavioral"},
+    "T1110.001": {"name": "Password Spray & Brute Force", "tactic": "Credential Access", "covered": True, "rule": "SIGMA-WIN-007"},
+    "T1046": {"name": "Network Service Scanning", "tactic": "Discovery", "covered": True, "rule": "SIGMA-WIN-008"},
+    "T1053.005": {"name": "Scheduled Task", "tactic": "Persistence", "covered": True, "rule": "SIGMA-WIN-009"},
+    "T1562.001": {"name": "Impair Defenses (AMSI/AV)", "tactic": "Defense Evasion", "covered": True, "rule": "SIGMA-WIN-010"},
+    "T1486": {"name": "Data Encrypted for Impact", "tactic": "Impact", "covered": True, "rule": "SIGMA-WIN-011"},
+    "T1021.002": {"name": "SMB / Windows Admin Shares", "tactic": "Lateral Movement", "covered": True, "rule": "SIGMA-WIN-012"},
+    "T1204.002": {"name": "Malicious File Execution", "tactic": "Execution", "covered": True, "rule": "IOC-HASH-001"},
+    "T1071.001": {"name": "Web Protocols (C2)", "tactic": "Command and Control", "covered": True, "rule": "IOC-IP-001"},
+    "T1566.001": {"name": "Spearphishing Attachment", "tactic": "Initial Access", "covered": True, "rule": "IOC-DOMAIN-001"},
+    "T1078": {"name": "Valid Accounts", "tactic": "Persistence", "covered": True, "rule": "UEBA-ANOMALY"},
+    "T1021.001": {"name": "Remote Desktop Protocol", "tactic": "Lateral Movement", "covered": True, "rule": "BEHAVIORAL"},
+    "T1027": {"name": "Obfuscated Files / Commands", "tactic": "Defense Evasion", "covered": True, "rule": "SIGMA-OBF"},
+    "T1048": {"name": "Exfiltration Over Alt Protocol", "tactic": "Exfiltration", "covered": True, "rule": "BEHAVIORAL"},
     "T1557": {"name": "Adversary-in-the-Middle", "tactic": "Collection", "covered": False, "rule": None},
     "T1189": {"name": "Drive-by Compromise", "tactic": "Initial Access", "covered": False, "rule": None},
     "T1583": {"name": "Acquire Infrastructure", "tactic": "Resource Development", "covered": False, "rule": None},
@@ -54,6 +57,7 @@ TECHNIQUE_COVERAGE = {
 
 
 @router.get("/coverage")
+@router.get("/matrix")
 async def get_mitre_coverage():
     """Full MITRE ATT&CK coverage matrix."""
     total = len(TECHNIQUE_COVERAGE)

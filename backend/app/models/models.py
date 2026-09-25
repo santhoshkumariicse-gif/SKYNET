@@ -133,3 +133,35 @@ class IOCRecord(Base):
     tags = Column(JSON, default=list)
     first_seen = Column(DateTime(timezone=True), default=get_utc_now)
     last_seen = Column(DateTime(timezone=True), default=get_utc_now)
+
+class Approval(Base):
+    __tablename__ = "approvals"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    action_type = Column(String(64), nullable=False, index=True) # ISOLATE_HOST, DISABLE_ACCOUNT, BLOCK_IP
+    target = Column(String(128), nullable=False)
+    target_ip = Column(String(64), nullable=True)
+    incident_id = Column(String(36), nullable=True)
+    risk_score = Column(Integer, default=90)
+    reason = Column(Text, nullable=False)
+    evidence = Column(Text, nullable=True)
+    detection = Column(String(128), nullable=True)
+    requested_by = Column(String(128), default="Autonomous SOAR Engine")
+    status = Column(String(32), default="PENDING", index=True) # PENDING, APPROVED, DENIED
+    exact_action = Column(Text, nullable=True)
+    rollback_plan = Column(Text, nullable=True)
+    approved_by = Column(String(128), nullable=True)
+    approved_at = Column(DateTime(timezone=True), nullable=True)
+    signed_token = Column(String(64), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=get_utc_now, index=True)
+
+class SavedHunt(Base):
+    __tablename__ = "saved_hunts"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    name = Column(String(128), nullable=False, unique=True)
+    query = Column(Text, nullable=False)
+    mitre_technique = Column(String(32), nullable=True)
+    author = Column(String(64), default="admin")
+    created_at = Column(DateTime(timezone=True), default=get_utc_now)
+

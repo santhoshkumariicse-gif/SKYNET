@@ -14,7 +14,7 @@ from loguru import logger
 from app.core.config import settings
 from app.db.session import init_db
 from app.api.v1 import auth, alerts, incidents, soar, telemetry, threatintel, investigation
-from app.api.v1 import dashboard, assets, mitre, audit_logs
+from app.api.v1 import dashboard, assets, mitre, audit_logs, processes, hunt, approvals, automation
 from app.services.telemetry_service import websocket_subscribers
 
 
@@ -67,6 +67,11 @@ app.include_router(threatintel.router, prefix=api_prefix)
 app.include_router(investigation.router, prefix=api_prefix)
 app.include_router(mitre.router, prefix=api_prefix)
 app.include_router(audit_logs.router, prefix=api_prefix)
+app.include_router(processes.router, prefix=api_prefix)
+app.include_router(hunt.router, prefix=api_prefix)
+app.include_router(approvals.router, prefix=api_prefix)
+app.include_router(automation.router, prefix=api_prefix)
+
 
 
 # --- WebSocket: Live SOC Event Stream ---

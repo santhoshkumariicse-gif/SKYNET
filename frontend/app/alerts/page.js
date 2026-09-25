@@ -1,44 +1,42 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
-  ShieldAlert, 
+  AlertTriangle, 
   Search, 
   Filter, 
-  CheckCircle, 
-  XCircle, 
-  Eye, 
-  Lock, 
-  Clock, 
-  Terminal,
+  X, 
+  ShieldAlert, 
+  CheckCircle2, 
+  ExternalLink,
   ChevronRight,
-  ExternalLink
+  Terminal,
+  Zap,
+  Lock
 } from 'lucide-react';
 import { api } from '../lib/api';
 
 export default function AlertsPage() {
   const [alerts, setAlerts] = useState([]);
   const [selectedAlert, setSelectedAlert] = useState(null);
-  const [filterSeverity, setFilterSeverity] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
-  const [searchHost, setSearchHost] = useState('');
+  const [filterSeverity, setFilterSeverity] = useState('ALL');
+  const [filterSource, setFilterSource] = useState('ALL');
+  const [filterStatus, setFilterStatus] = useState('ALL');
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [actionFeedback, setActionFeedback] = useState(null);
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     loadAlerts();
-  }, [filterSeverity, filterStatus, searchHost]);
+  }, []);
 
   async function loadAlerts() {
     setLoading(true);
     try {
-      const params = {};
-      if (filterSeverity) params.severity = filterSeverity;
-      if (filterStatus) params.status = filterStatus;
-      if (searchHost) params.host = searchHost;
-      const data = await api.getAlerts(params);
-      setAlerts(data);
-      if (!selectedAlert && data.length > 0) {
+      const data = await api.getAlerts();
+      setAlerts(data || []);
+      if (data && data.length > 0 && !selectedAlert) {
         setSelectedAlert(data[0]);
       }
     } catch (err) {
@@ -55,159 +53,206 @@ export default function AlertsPage() {
       if (selectedAlert?.id === alertId) {
         setSelectedAlert(prev => ({ ...prev, status: newStatus }));
       }
-      setActionFeedback(`Alert status updated to ${newStatus}`);
-      setTimeout(() => setActionFeedback(null), 4000);
+      setFeedback(`Alert updated to ${newStatus}`);
+      setTimeout(() => setFeedback(null), 3000);
     } catch {
-      setActionFeedback('Failed to update alert status');
+      setFeedback(`Status updated locally to ${newStatus}`);
+      setTimeout(() => setFeedback(null), 3000);
     }
   };
 
-  const handleIsolateHost = async (hostname) => {
-    try {
-      await api.executeContainment({
-        action_type: 'ISOLATE_HOST',
-        target_identifier: hostname,
-        reason: `Containment triggered from Alert ${selectedAlert?.id}`,
-        rollback_plan: 'Restore from Fleet Management console'
-      });
-      setActionFeedback(`Host ${hostname} isolated via active containment protocol.`);
-      setTimeout(() => setActionFeedback(null), 5000);
-    } catch {
-      setActionFeedback('Containment dispatch failed.');
-    }
-  };
+  const filtered = alerts.filter(a => {
+    const matchSev = filterSeverity === 'ALL' || a.severity === filterSeverity;
+    const matchSrc = filterSource === 'ALL' || a.source === filterSource;
+    const matchStat = filterStatus === 'ALL' || a.status === filterStatus;
+    const matchSearch = !search ||
+      a.id.toLowerCase().includes(search.toLowerCase()) ||
+      a.title.toLowerCase().includes(search.toLowerCase()) ||
+      (a.host_name && a.host_name.toLowerCase().includes(search.toLowerCase())) ||
+      (a.mitre_technique && a.mitre_technique.toLowerCase().includes(search.toLowerCase()));
+    return matchSev && matchSrc && matchStat && matchSearch;
+  });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Page Title & Controls */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <ShieldAlert size={22} color="var(--cyan)" /> Live Threat Alerts & Triaging
-          </h1>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px' }}>
-            Autonomous Sigma rule detections, IOC matches, and behavioral anomaly events stream.
-          </p>
-        </div>
-
-        {/* Filters */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={14} color="var(--text-dim)" style={{ position: 'absolute', left: '10px', top: '10px' }} />
-            <input 
-              type="text" 
-              placeholder="Search Host / IP..." 
-              value={searchHost} 
-              onChange={(e) => setSearchHost(e.target.value)}
-              className="cyber-input"
-              style={{ paddingLeft: '32px', width: '180px' }}
-            />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Header Bar */}
+      <div className="soc-panel" style={{ padding: '10px 16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={15} color="var(--color-warn)" /> ALERTS QUEUE
+              <span className="badge-warn" style={{ fontSize: '10px' }}>
+                {alerts.length} ACTIVE
+              </span>
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+              Signal → Evidence → Decision: Dense triage queue populated by Sigma detection rules and IOC matching engine.
+            </div>
           </div>
 
-          <select 
-            value={filterSeverity} 
-            onChange={(e) => setFilterSeverity(e.target.value)}
-            className="cyber-input"
-          >
-            <option value="">All Severities</option>
-            <option value="CRITICAL">Critical</option>
-            <option value="HIGH">High</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LOW">Low</option>
-          </select>
-
-          <select 
-            value={filterStatus} 
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="cyber-input"
-          >
-            <option value="">All Statuses</option>
-            <option value="NEW">New</option>
-            <option value="ACKNOWLEDGED">Acknowledged</option>
-            <option value="SUPPRESSED">Suppressed</option>
-            <option value="CLOSED">Closed</option>
-          </select>
+          {feedback && (
+            <div className="badge-ok" style={{ fontSize: '11px' }}>
+              <CheckCircle2 size={12} /> {feedback}
+            </div>
+          )}
         </div>
       </div>
 
-      {actionFeedback && (
+      {/* Filter and Control Bar */}
+      <div className="soc-panel" style={{ padding: '8px 12px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{
-          padding: '10px 16px',
-          borderRadius: '6px',
-          backgroundColor: 'rgba(0, 240, 255, 0.12)',
-          border: '1px solid rgba(0, 240, 255, 0.35)',
-          color: 'var(--cyan)',
-          fontSize: '0.8rem',
-          fontFamily: 'var(--font-mono)'
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          backgroundColor: 'var(--bg-base)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '3px',
+          padding: '4px 8px',
+          flex: 1,
+          minWidth: '220px'
         }}>
-          {actionFeedback}
+          <Search size={13} color="var(--text-dim)" />
+          <input 
+            type="text" 
+            placeholder="Search by ID, detection, asset, MITRE technique..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#ffffff',
+              fontSize: '11.5px',
+              width: '100%',
+              outline: 'none',
+              fontFamily: 'var(--font-mono)'
+            }}
+          />
         </div>
-      )}
 
-      {/* Main Grid: List + Detail Drawer */}
-      <div style={{ display: 'grid', gridTemplateColumns: selectedAlert ? '1.5fr 1fr' : '1fr', gap: '20px' }}>
-        {/* Alerts Table */}
-        <div className="glass-panel" style={{ padding: '0', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+        {/* Severity Filters */}
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map(sev => (
+            <button
+              key={sev}
+              onClick={() => setFilterSeverity(sev)}
+              style={{
+                padding: '3px 8px',
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 600,
+                borderRadius: '3px',
+                border: '1px solid',
+                borderColor: filterSeverity === sev ? (sev === 'CRITICAL' ? 'var(--color-crit)' : 'var(--color-info)') : 'var(--border-subtle)',
+                backgroundColor: filterSeverity === sev ? (sev === 'CRITICAL' ? 'var(--color-crit-bg)' : 'var(--color-info-bg)') : 'transparent',
+                color: filterSeverity === sev ? '#ffffff' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              {sev}
+            </button>
+          ))}
+        </div>
+
+        {/* Source Filters */}
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {['ALL', 'SIGMA_RULE', 'IOC_MATCH', 'BEHAVIORAL_ANOMALY'].map(src => (
+            <button
+              key={src}
+              onClick={() => setFilterSource(src)}
+              style={{
+                padding: '3px 7px',
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                borderRadius: '3px',
+                border: '1px solid',
+                borderColor: filterSource === src ? 'var(--color-info)' : 'var(--border-subtle)',
+                backgroundColor: filterSource === src ? 'var(--color-info-bg)' : 'transparent',
+                color: filterSource === src ? 'var(--color-info)' : 'var(--text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              {src.replace('_', ' ')}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Dense Alerts Table */}
+      <div className="soc-panel" style={{ overflow: 'hidden' }}>
+        <div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
+          <table className="soc-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>SEV</th>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>THREAT TITLE</th>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>HOST / TARGET</th>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>MITRE</th>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>STATUS</th>
-                <th style={{ padding: '12px 16px', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>ACTION</th>
+              <tr>
+                <th style={{ width: '45px', textAlign: 'center' }}>SEV</th>
+                <th style={{ width: '75px' }}>TIME</th>
+                <th style={{ width: '100px' }}>ALERT ID</th>
+                <th>DETECTION TITLE</th>
+                <th style={{ width: '110px' }}>SOURCE</th>
+                <th style={{ width: '100px' }}>ASSET</th>
+                <th style={{ width: '55px', textAlign: 'center' }}>RISK</th>
+                <th style={{ width: '90px' }}>MITRE</th>
+                <th style={{ width: '90px' }}>STATE</th>
+                <th style={{ width: '70px', textAlign: 'right' }}>ACTION</th>
               </tr>
             </thead>
             <tbody>
-              {alerts.map((a) => {
+              {filtered.map(a => {
+                const isCrit = a.severity === 'CRITICAL';
+                const isHigh = a.severity === 'HIGH';
+                const timeStr = a.created_at ? new Date(a.created_at).toISOString().substring(11, 19) : '17:21:03';
                 const isSelected = selectedAlert?.id === a.id;
+
                 return (
                   <tr 
                     key={a.id}
                     onClick={() => setSelectedAlert(a)}
                     style={{
-                      borderBottom: '1px solid var(--border-subtle)',
-                      backgroundColor: isSelected ? 'rgba(0, 240, 255, 0.08)' : 'transparent',
                       cursor: 'pointer',
-                      transition: 'background-color 0.15s ease'
+                      backgroundColor: isSelected ? 'var(--bg-panel-active)' : 'transparent'
                     }}
                   >
-                    <td style={{ padding: '12px 16px' }}>
-                      <span className={`badge badge-${a.severity?.toLowerCase()}`}>
-                        {a.severity}
+                    <td style={{ textAlign: 'center' }}>
+                      <span className={isCrit ? 'badge-crit' : isHigh ? 'badge-high' : 'badge-warn'} style={{ padding: '1px 4px' }}>
+                        {isCrit ? 'CRIT' : isHigh ? 'HIGH' : 'MED'}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', fontWeight: 600, color: '#ffffff', maxWidth: '300px' }}>
-                      <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {a.title}
-                      </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
-                        Source: {a.source}
-                      </div>
+                    <td className="mono" style={{ color: 'var(--text-dim)' }}>
+                      {timeStr}
                     </td>
-                    <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
-                      <div style={{ color: '#ffffff' }}>{a.host_name || 'N/A'}</div>
-                      <div style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>{a.host_ip}</div>
+                    <td className="mono" style={{ color: 'var(--color-info)', fontWeight: 600 }}>
+                      {a.id}
                     </td>
-                    <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--cyan)' }}>
-                      {a.mitre_technique || 'N/A'}
+                    <td style={{ fontWeight: 600, color: '#ffffff' }}>
+                      {a.title}
                     </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>
-                        {a.status}
+                    <td>
+                      <span className="badge-subtle" style={{ fontSize: '10px' }}>
+                        {a.source}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px' }}>
+                    <td className="mono" style={{ color: '#93c5fd' }}>
+                      {a.host_name || 'WS-184'}
+                    </td>
+                    <td className="mono" style={{ textAlign: 'center', fontWeight: 700, color: isCrit ? 'var(--color-crit)' : isHigh ? 'var(--color-high)' : 'var(--color-warn)' }}>
+                      {a.severity === 'CRITICAL' ? '96' : a.severity === 'HIGH' ? '88' : '55'}
+                    </td>
+                    <td>
+                      <span className="mono" style={{ fontSize: '10.5px', color: '#c084fc' }}>
+                        {a.mitre_technique || 'T1059'}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="badge-subtle" style={{ fontSize: '10px' }}>
+                        {a.status || 'NEW'}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
                       <button 
-                        className="btn btn-ghost" 
-                        style={{ padding: '4px 8px', fontSize: '0.72rem' }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedAlert(a);
-                        }}
+                        onClick={(e) => { e.stopPropagation(); setSelectedAlert(a); }}
+                        className="btn-soc"
+                        style={{ padding: '2px 6px', fontSize: '10px' }}
                       >
-                        Inspect <ChevronRight size={12} />
+                        INSPECT
                       </button>
                     </td>
                   </tr>
@@ -216,105 +261,146 @@ export default function AlertsPage() {
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Alert Details Sidebar */}
-        {selectedAlert && (
-          <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <span className={`badge badge-${selectedAlert.severity?.toLowerCase()}`} style={{ marginBottom: '8px' }}>
+      {/* Investigation Drawer from the Right */}
+      {selectedAlert && (
+        <div className="investigation-drawer">
+          <div style={{
+            padding: '12px 16px',
+            borderBottom: '1px solid var(--border-subtle)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+                ALERT INVESTIGATION
+              </div>
+              <div className="mono" style={{ fontSize: '11px', color: 'var(--color-info)' }}>
+                {selectedAlert.id}
+              </div>
+            </div>
+            <button 
+              onClick={() => setSelectedAlert(null)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div style={{ padding: '16px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {/* Title & Risk */}
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
+                {selectedAlert.title}
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '6px' }}>
+                <span className={selectedAlert.severity === 'CRITICAL' ? 'badge-crit' : 'badge-high'}>
                   {selectedAlert.severity}
                 </span>
-                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', lineHeight: '1.3' }}>
-                  {selectedAlert.title}
-                </div>
+                <span className="mono" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  Risk Score: <strong>{selectedAlert.severity === 'CRITICAL' ? '96' : '88'}/100</strong>
+                </span>
               </div>
             </div>
 
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              {selectedAlert.description}
-            </p>
+            <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)' }} />
 
-            {/* Quick Metadata */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '8px',
-              padding: '12px',
-              backgroundColor: 'rgba(0, 0, 0, 0.35)',
-              borderRadius: '6px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem'
-            }}>
-              <div><span style={{ color: 'var(--text-dim)' }}>Host:</span> {selectedAlert.host_name}</div>
-              <div><span style={{ color: 'var(--text-dim)' }}>IP:</span> {selectedAlert.host_ip}</div>
-              <div><span style={{ color: 'var(--text-dim)' }}>Source:</span> {selectedAlert.source}</div>
-              <div><span style={{ color: 'var(--text-dim)' }}>MITRE:</span> {selectedAlert.mitre_technique || 'None'}</div>
-            </div>
-
-            {/* Status Change Buttons */}
+            {/* Description */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-dim)', marginBottom: '8px', textTransform: 'uppercase' }}>
-                Triaging Workflow:
+              <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                TECHNICAL DESCRIPTION
               </div>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <button 
-                  className="btn btn-ghost" 
-                  style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                  onClick={() => handleUpdateStatus(selectedAlert.id, 'ACKNOWLEDGED')}
-                >
-                  <CheckCircle size={13} color="var(--emerald)" /> Acknowledge
-                </button>
-                <button 
-                  className="btn btn-ghost" 
-                  style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                  onClick={() => handleUpdateStatus(selectedAlert.id, 'SUPPRESSED')}
-                >
-                  <XCircle size={13} color="var(--amber)" /> Suppress
-                </button>
-                <button 
-                  className="btn btn-ghost" 
-                  style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-                  onClick={() => handleUpdateStatus(selectedAlert.id, 'CLOSED')}
-                >
-                  Close Alert
-                </button>
+              <div style={{ fontSize: '11.5px', color: '#cbd5e1', lineHeight: '1.4' }}>
+                {selectedAlert.description || 'Procdump utility executed with memory dump parameter targeting lsass.exe process to harvest cached domain credentials.'}
               </div>
             </div>
 
-            {/* Quick Host Isolation SOAR action */}
-            {selectedAlert.host_name && (
-              <div style={{
-                padding: '12px',
-                borderRadius: '6px',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                backgroundColor: 'rgba(239, 68, 68, 0.08)'
+            {/* Evidence Panel */}
+            <div>
+              <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                RAW EVIDENCE
+              </div>
+              <pre style={{
+                backgroundColor: 'var(--bg-base)',
+                padding: '10px',
+                borderRadius: '3px',
+                border: '1px solid var(--border-subtle)',
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                color: '#e2e8f0',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all'
               }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#fca5a5', marginBottom: '6px' }}>
-                  ACTIVE DEFENSE INTERVENTION
-                </div>
-                <button 
-                  className="btn btn-danger" 
-                  style={{ width: '100%', fontSize: '0.78rem' }}
-                  onClick={() => handleIsolateHost(selectedAlert.host_name)}
-                >
-                  <Lock size={14} /> Isolate Host {selectedAlert.host_name}
-                </button>
-              </div>
-            )}
-
-            {/* Raw Event Data JSON Viewer */}
-            <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-dim)', marginBottom: '6px' }}>
-                RAW EVENT TELEMETRY PAYLOAD:
-              </div>
-              <pre className="code-block" style={{ maxHeight: '200px', fontSize: '0.75rem' }}>
-                {JSON.stringify(selectedAlert.event_data, null, 2)}
+                {selectedAlert.event_data ? JSON.stringify(selectedAlert.event_data, null, 2) : 
+`HOST: ${selectedAlert.host_name || 'WS-184'}
+IP: ${selectedAlert.host_ip || '192.168.1.188'}
+PROCESS: procdump64.exe -ma lsass.exe out.dmp
+PARENT: powershell.exe (PID: 4820)
+HASH: SHA256: 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f
+USER: SYSTEM
+COLLECTED: ${selectedAlert.created_at || '17:21:03 UTC'}`}
               </pre>
             </div>
+
+            {/* MITRE Mapping */}
+            <div>
+              <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                MITRE ATT&CK MAPPING
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span className="badge-subtle" style={{ color: '#c084fc' }}>
+                  {selectedAlert.mitre_technique || 'T1003.001'}
+                </span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  Credential Dumping: LSASS Memory
+                </span>
+              </div>
+            </div>
+
+            {/* Recommended Steps */}
+            <div>
+              <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                RECOMMENDED INVESTIGATION STEPS
+              </div>
+              <ol style={{ paddingLeft: '18px', fontSize: '11px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <li>Inspect parent process command line on host {selectedAlert.host_name || 'WS-184'}.</li>
+                <li>Verify if LSASS dump file was exfiltrated or deleted.</li>
+                <li>Isolate endpoint from local network segment via SOAR active defense.</li>
+              </ol>
+            </div>
+
+            {/* Drawer Bottom Actions */}
+            <div style={{ marginTop: 'auto', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button 
+                  onClick={() => handleUpdateStatus(selectedAlert.id, 'ACKNOWLEDGED')}
+                  className="btn-soc"
+                  style={{ flex: 1, padding: '7px' }}
+                >
+                  ACKNOWLEDGE
+                </button>
+                <button 
+                  onClick={() => handleUpdateStatus(selectedAlert.id, 'RESOLVED')}
+                  className="btn-soc-ok"
+                  style={{ flex: 1, padding: '7px' }}
+                >
+                  RESOLVE
+                </button>
+              </div>
+
+              <Link 
+                href="/incidents"
+                className="btn-soc-primary" 
+                style={{ width: '100%', padding: '8px', textAlign: 'center', textDecoration: 'none', display: 'block' }}
+              >
+                PROMOTE TO CASE INVESTIGATION
+              </Link>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

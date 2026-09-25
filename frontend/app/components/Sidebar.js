@@ -3,28 +3,36 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  ShieldAlert, 
   Activity, 
-  FileWarning, 
+  Radio, 
+  AlertTriangle, 
+  Briefcase, 
+  Terminal, 
   Server, 
+  Globe, 
   Zap, 
-  Search, 
-  Grid3X3, 
-  ClipboardList,
-  Terminal,
-  Cpu,
-  Radio
+  GitBranch, 
+  CheckSquare, 
+  ClipboardList, 
+  Cpu, 
+  Settings,
+  Shield
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { name: 'SOC Command Center', path: '/', icon: Activity, badge: 'LIVE' },
-  { name: 'Live Threat Alerts', path: '/alerts', icon: ShieldAlert, badge: '5 NEW' },
-  { name: 'Incident Cases & AI', path: '/incidents', icon: FileWarning, badge: 'ACTIVE' },
-  { name: 'Fleet & Assets', path: '/assets', icon: Server },
-  { name: 'SOAR Active Defense', path: '/soar', icon: Zap },
-  { name: 'Threat Intelligence', path: '/threatintel', icon: Search },
-  { name: 'MITRE ATT&CK Matrix', path: '/mitre', icon: Grid3X3 },
-  { name: 'Audit Trail & Forensics', path: '/audit', icon: ClipboardList },
+  { name: 'OVERVIEW', path: '/', icon: Activity },
+  { name: 'LIVE', path: '/live', icon: Radio, pulse: true },
+  { name: 'ALERTS', path: '/alerts', icon: AlertTriangle, badge: '4' },
+  { name: 'CASES', path: '/incidents', icon: Briefcase, badge: '2' },
+  { name: 'HUNT', path: '/hunt', icon: Terminal },
+  { name: 'ASSETS', path: '/assets', icon: Server },
+  { name: 'INTEL', path: '/intelligence', icon: Globe },
+  { name: 'SOAR', path: '/soar', icon: Zap },
+  { name: 'AUTO', path: '/automation', icon: GitBranch },
+  { name: 'APPROV', path: '/approvals', icon: CheckSquare, badge: '3', badgeColor: 'var(--color-high)' },
+  { name: 'AUDIT', path: '/audit', icon: ClipboardList },
+  { name: 'MATRIX', path: '/processes', icon: Cpu },
+  { name: 'CONFIG', path: '/settings', icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -32,10 +40,10 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: '260px',
-      minWidth: '260px',
+      width: '72px',
+      minWidth: '72px',
       height: '100vh',
-      backgroundColor: 'rgba(8, 13, 24, 0.95)',
+      backgroundColor: 'var(--bg-base)',
       borderRight: '1px solid var(--border-subtle)',
       display: 'flex',
       flexDirection: 'column',
@@ -43,132 +51,136 @@ export default function Sidebar() {
       left: 0,
       top: 0,
       zIndex: 50,
-      backdropFilter: 'blur(12px)',
+      userSelect: 'none',
     }}>
-      {/* Brand Header */}
+      {/* Brand Icon */}
       <div style={{
-        padding: '24px 20px',
-        borderBottom: '1px solid var(--border-subtle)',
+        height: '48px',
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
+        justifyContent: 'center',
+        borderBottom: '1px solid var(--border-subtle)',
       }}>
         <div style={{
-          width: '38px',
-          height: '38px',
-          borderRadius: '8px',
-          background: 'linear-gradient(135deg, #00f0ff 0%, #0369a1 100%)',
+          width: '28px',
+          height: '28px',
+          borderRadius: '4px',
+          background: 'linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%)',
+          border: '1px solid #3b82f6',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 0 16px rgba(0, 240, 255, 0.4)',
+          color: '#60a5fa',
         }}>
-          <Terminal size={22} color="#060911" strokeWidth={2.5} />
-        </div>
-        <div>
-          <div style={{
-            fontSize: '1.15rem',
-            fontWeight: 800,
-            letterSpacing: '0.08em',
-            color: '#ffffff',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}>
-            SKYNET <span style={{ color: 'var(--cyan)', fontSize: '0.75rem', fontWeight: 700 }}>v5.0</span>
-          </div>
-          <div style={{
-            fontSize: '0.68rem',
-            color: 'var(--text-dim)',
-            fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.04em'
-          }}>
-            AUTONOMOUS CYBER DEFENSE
-          </div>
+          <Shield size={16} strokeWidth={2.2} />
         </div>
       </div>
 
-      {/* Navigation Links */}
-      <nav style={{ flex: 1, padding: '16px 12px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        <div style={{
-          fontSize: '0.65rem',
-          fontWeight: 700,
-          color: 'var(--text-dim)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          padding: '8px 12px',
-          fontFamily: 'var(--font-mono)',
-        }}>
-          OPERATIONS & SURVEILLANCE
-        </div>
-
+      {/* Navigation Rail Items */}
+      <nav style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1px',
+        padding: '6px 0',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+      }}>
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.path;
+          const isActive = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
 
           return (
             <Link
-              key={item.path}
+              key={item.name}
               href={item.path}
               style={{
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                color: isActive ? '#ffffff' : 'var(--text-muted)',
-                backgroundColor: isActive ? 'rgba(0, 240, 255, 0.12)' : 'transparent',
-                border: isActive ? '1px solid rgba(0, 240, 255, 0.35)' : '1px solid transparent',
+                justifyContent: 'center',
+                padding: '7px 4px 6px 4px',
                 textDecoration: 'none',
-                fontSize: '0.85rem',
-                fontWeight: isActive ? 600 : 500,
-                transition: 'all 0.18s ease',
+                position: 'relative',
+                color: isActive ? 'var(--text-white)' : 'var(--text-muted)',
+                backgroundColor: isActive ? 'var(--bg-panel-active)' : 'transparent',
+                borderLeft: isActive ? '3px solid var(--color-info)' : '3px solid transparent',
+                transition: 'background-color 0.1s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) e.currentTarget.style.backgroundColor = 'var(--bg-panel-hover)';
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Icon size={18} color={isActive ? 'var(--cyan)' : 'var(--text-dim)'} />
-                <span>{item.name}</span>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon size={17} strokeWidth={isActive ? 2.2 : 1.7} color={isActive ? 'var(--text-white)' : 'var(--text-muted)'} />
+                {item.pulse && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-2px',
+                    right: '-4px',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--color-ok)',
+                  }} />
+                )}
+                {item.badge && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-4px',
+                    right: '-8px',
+                    minWidth: '13px',
+                    height: '13px',
+                    padding: '0 2px',
+                    borderRadius: '6px',
+                    backgroundColor: item.badgeColor || 'var(--color-crit)',
+                    color: '#ffffff',
+                    fontSize: '8.5px',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
               </div>
-              {item.badge && (
-                <span style={{
-                  fontSize: '0.62rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 700,
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  backgroundColor: isActive ? 'rgba(0, 240, 255, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                  color: isActive ? 'var(--cyan)' : 'var(--text-muted)',
-                }}>
-                  {item.badge}
-                </span>
-              )}
+              <span style={{
+                fontSize: '8.5px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                marginTop: '3px',
+                fontFamily: 'var(--font-mono)',
+              }}>
+                {item.name}
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Autonomous System Status Footer */}
+      {/* Rail Bottom Status */}
       <div style={{
-        padding: '16px',
-        margin: '12px',
-        backgroundColor: 'rgba(15, 23, 42, 0.65)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: '8px',
+        padding: '8px 4px',
+        borderTop: '1px solid var(--border-subtle)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '4px',
+        fontSize: '8.5px',
+        fontFamily: 'var(--font-mono)',
+        color: 'var(--text-dim)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Radio size={14} color="var(--emerald)" className="animate-pulse" />
-            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--emerald)', fontFamily: 'var(--font-mono)' }}>
-              AI AGENT: ACTIVE
-            </span>
-          </div>
-          <span className="pulse-dot pulse-dot-green"></span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: 'var(--color-ok)' }}>
+          <span style={{ fontSize: '7px' }}>●</span>
+          <span>ONLINE</span>
         </div>
-        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-          SIGMA Engine: <strong style={{ color: '#ffffff' }}>Online</strong>
-          <br />
-          Threat Radar: <strong style={{ color: 'var(--cyan)' }}>Connected</strong>
-        </div>
+        <div>12 SRC</div>
+        <div style={{ color: 'var(--text-muted)', fontWeight: 700 }}>ADM</div>
       </div>
     </aside>
   );

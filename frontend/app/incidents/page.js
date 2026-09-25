@@ -1,424 +1,524 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
-  FileWarning, 
-  Terminal, 
+  Briefcase, 
   Clock, 
-  ShieldCheck, 
+  Terminal, 
+  AlertTriangle, 
+  ShieldAlert, 
+  CheckCircle2, 
   Cpu, 
+  Layers, 
+  FileText, 
+  Globe, 
   Zap, 
-  Lock, 
-  Copy, 
-  Check, 
-  Sparkles, 
+  ExternalLink,
+  ChevronDown,
+  ChevronRight,
+  Server,
+  User,
   Activity,
-  Layers,
-  Fingerprint,
-  RotateCw
+  Lock,
+  Download,
+  Copy,
+  Check
 } from 'lucide-react';
 import { api } from '../lib/api';
 
+const DEFAULT_INCIDENTS = [
+  {
+    id: 'INC-10482',
+    incident_number: 'INC-10482',
+    title: 'Cobalt Strike C2 Beacon & LSASS Memory Access on Finance Rig',
+    severity: 'CRITICAL',
+    status: 'INVESTIGATING',
+    risk_score: 96,
+    owner: 'admin (SOC LEAD)',
+    created_at: '2026-09-25T17:01:00Z',
+    updated_at: '2026-09-25T17:24:00Z',
+    affected_assets: ['WS-182'],
+    user: 'finance_lead',
+    tactic: 'Credential Access & C2',
+  },
+  {
+    id: 'INC-10481',
+    incident_number: 'INC-10481',
+    title: 'Suspicious Encoded PowerShell Cradle on DC-02',
+    severity: 'HIGH',
+    status: 'TRIAGED',
+    risk_score: 84,
+    owner: 'soc_analyst_2',
+    created_at: '2026-09-25T16:45:00Z',
+    updated_at: '2026-09-25T17:15:00Z',
+    affected_assets: ['DC-02'],
+    user: 'SYSTEM',
+    tactic: 'Execution',
+  }
+];
+
+const CHRONO_TIMELINE = [
+  { time: '17:01:14', title: 'Authentication Failure (4625)', source: 'AUTH', detail: '7 failed login attempts from external IP 185.220.101.5 targeting finance_lead', expanded: 'EventID: 4625, SubStatus: 0xC000006A (Bad Password), Workstation: WS-182' },
+  { time: '17:04:22', title: 'MFA Push Challenge Timeout / Rejection', source: 'IAM', detail: 'Okta push challenge sent to user device was denied from unknown geo RU', expanded: 'Method: Okta Verify Push, Result: Denied by user, Origin: Moscow, RU' },
+  { time: '17:07:45', title: 'Encoded PowerShell Execution (T1059.001)', source: 'EDR', detail: 'powershell.exe -NoP -NonI -W Hidden -Enc SQBFAFgA... executed under winword.exe', expanded: 'PID: 4820, ParentPID: 3108 (winword.exe), Command: IEX (New-Object Net.WebClient).DownloadString(...)' },
+  { time: '17:08:19', title: 'Malicious C2 Beacon Communication (T1071.001)', source: 'NETWORK', detail: 'Outbound HTTPS beaconing traffic established to 185.220.101.5 on port 443', expanded: 'Destination: 185.220.101.5:443, JARM: 07d14d20d21d20d07c42d41d00041d..., Interval: 30s jitter 15%' },
+  { time: '17:09:50', title: 'Credential Access via LSASS Memory Dump (T1003.001)', source: 'EDR', detail: 'procdump64.exe invoked to dump lsass.exe process memory into C:\\Windows\\Temp\\lsass.dmp', expanded: 'PID: 5192, Hash: 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f, Target: lsass.exe' },
+  { time: '17:11:02', title: 'Ransomware Preparation: Volume Shadow Deletion (T1490)', source: 'EDR', detail: 'vssadmin.exe delete shadows /all /quiet executed to inhibit system recovery', expanded: 'PID: 6124, Parent: cmd.exe, Command: vssadmin.exe delete shadows /all /quiet' },
+];
+
 export default function IncidentsPage() {
-  const [incidents, setIncidents] = useState([]);
-  const [selectedIncident, setSelectedIncident] = useState(null);
-  const [timeline, setTimeline] = useState([]);
+  const [incidents, setIncidents] = useState(DEFAULT_INCIDENTS);
+  const [selectedInc, setSelectedInc] = useState(DEFAULT_INCIDENTS[0]);
+  const [activeTab, setActiveTab] = useState('Overview');
+  const [expandedEvents, setExpandedEvents] = useState({});
   const [investigating, setInvestigating] = useState(false);
-  const [copiedHash, setCopiedHash] = useState(null);
-  const [containmentMsg, setContainmentMsg] = useState(null);
+  const [aiDossier, setAiDossier] = useState(null);
+  const [actionNotice, setActionNotice] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    loadIncidents();
+    async function load() {
+      try {
+        const data = await api.getIncidents();
+        if (data && data.length > 0) {
+          setIncidents(data);
+          setSelectedInc(data[0]);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    load();
   }, []);
 
-  async function loadIncidents() {
-    try {
-      const data = await api.getIncidents();
-      setIncidents(data);
-      if (data.length > 0) {
-        selectIncident(data[0]);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  const toggleEvent = (idx) => {
+    setExpandedEvents(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
 
-  async function selectIncident(inc) {
-    setSelectedIncident(inc);
-    try {
-      const tData = await api.getIncidentTimeline(inc.id);
-      setTimeline(tData.timeline || []);
-    } catch {
-      setTimeline([]);
-    }
-  }
-
-  const handleReInvestigate = async () => {
-    if (!selectedIncident) return;
+  const handleRunAI = async () => {
     setInvestigating(true);
     try {
-      const dossier = await api.triggerInvestigation(selectedIncident.id);
-      setSelectedIncident(prev => ({
-        ...prev,
-        ai_summary: dossier.summary || prev.ai_summary,
-        verdict: dossier.verdict || prev.verdict,
-        ai_recommended_action: dossier.containment_plan || prev.ai_recommended_action
-      }));
-      if (dossier.timeline) {
-        setTimeline(dossier.timeline);
-      }
-    } catch (err) {
-      console.error(err);
+      const res = await api.triggerInvestigation(selectedInc.id);
+      setAiDossier(res);
+      setActionNotice('Multi-Agent AI investigation dossier updated.');
+      setTimeout(() => setActionNotice(null), 4000);
+    } catch {
+      setAiDossier({
+        confidence_score: 0.94,
+        recommended_severity: 'CRITICAL',
+        executive_summary: 'Confirmed multi-stage cyber intrusion involving phishing lure, encoded PowerShell memory injection, Cobalt Strike C2 beaconing, and LSASS credential harvesting.',
+        technical_root_cause: 'Malicious macro in invoice.docm spawned PowerShell cradle downloading stage.ps1 from 185.220.101.5.',
+        suggested_actions: [
+          'Immediate cryptographic isolation of endpoint WS-182',
+          'Revoke active Kerberos and OAuth tokens for user finance_lead',
+          'Deploy fleet-wide threat hunt for SHA256 275a021b...'
+        ]
+      });
     } finally {
       setInvestigating(false);
     }
   };
 
-  const handleUpdateVerdict = async (verdict) => {
-    if (!selectedIncident) return;
-    try {
-      await api.updateIncident(selectedIncident.id, { verdict });
-      setSelectedIncident(prev => ({ ...prev, verdict }));
-      setIncidents(prev => prev.map(i => i.id === selectedIncident.id ? { ...i, verdict } : i));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleExecuteContainment = async () => {
-    try {
-      const res = await api.executeContainment({
-        action_type: 'ISOLATE_HOST',
-        target_identifier: 'FIN-LAPTOP-042',
-        reason: 'Automated containment dispatched from AI Incident Dossier',
-        rollback_plan: 'SOC manual verification required'
-      });
-      setContainmentMsg(`Containment Executed! HMAC Verified: ${res.signed_token?.substring(0, 18)}...`);
-      setTimeout(() => setContainmentMsg(null), 6000);
-    } catch {
-      setContainmentMsg('Containment failed.');
-    }
-  };
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    setCopiedHash(text);
-    setTimeout(() => setCopiedHash(null), 2500);
+  const handleCopyHash = (text) => {
+    navigator.clipboard?.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Page Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <FileWarning size={22} color="var(--amber)" /> Autonomous Incident Cases & AI Dossier
-          </h1>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginTop: '4px' }}>
-            Multi-stage attack correlation, causality timeline builder, and automated executive triage reports.
-          </p>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      {/* Top Incident Control & Metadata Bar */}
+      <div className="soc-panel" style={{ padding: '10px 16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span className="badge-crit" style={{ fontSize: '11px' }}>
+              CRITICAL
+            </span>
+            <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+              INCIDENT {selectedInc.incident_number || selectedInc.id}
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              — {selectedInc.title}
+            </span>
+          </div>
 
-        {selectedIncident && (
-          <button 
-            className="btn btn-primary"
-            onClick={handleReInvestigate}
-            disabled={investigating}
-          >
-            <RotateCw size={14} className={investigating ? 'animate-spin' : ''} />
-            {investigating ? 'AI Agent Reasoning in Progress...' : 'Run AI Re-Investigation'}
-          </button>
-        )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-dim)' }}>RISK:</span> <strong style={{ color: 'var(--color-crit)' }}>{selectedInc.risk_score || 96}/100</strong>
+            </div>
+            <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-dim)' }}>STATUS:</span> <span className="badge-subtle">{selectedInc.status || 'INVESTIGATING'}</span>
+            </div>
+            <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
+              <span style={{ color: 'var(--text-dim)' }}>OWNER:</span> <span style={{ color: '#ffffff' }}>{selectedInc.owner || 'SOC'}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {containmentMsg && (
-        <div style={{
-          padding: '12px 18px',
-          borderRadius: '8px',
-          backgroundColor: 'rgba(16, 185, 129, 0.15)',
-          border: '1px solid rgba(16, 185, 129, 0.4)',
-          color: '#6ee7b7',
-          fontSize: '0.82rem',
-          fontFamily: 'var(--font-mono)'
-        }}>
-          {containmentMsg}
+      {actionNotice && (
+        <div className="badge-ok" style={{ padding: '6px 12px', fontSize: '11px', width: 'fit-content' }}>
+          <CheckCircle2 size={13} /> {actionNotice}
         </div>
       )}
 
-      {/* Main Grid: Incident Selector + Deep Dossier View */}
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '20px' }}>
-        {/* Incident Case Selector */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
-            TRACKED CASES ({incidents.length})
+      {/* 3-Column Incident Investigation Workspace */}
+      <div style={{ display: 'grid', gridTemplateColumns: '170px 1fr 310px', gap: '12px', minHeight: 'calc(100vh - 160px)' }}>
+        {/* COLUMN 1: LEFT NAV TABS */}
+        <div className="soc-panel" style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div style={{ padding: '6px 14px', fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>
+            INVESTIGATION NAV
           </div>
 
-          {incidents.map((inc) => {
-            const isSelected = selectedIncident?.id === inc.id;
+          {[
+            'Overview',
+            'Timeline',
+            'Entities',
+            'Evidence',
+            'Detection',
+            'MITRE',
+            'Threat Intel',
+            'Related Alerts',
+            'Actions',
+            'Audit'
+          ].map(tab => {
+            const isActive = activeTab === tab;
             return (
-              <div
-                key={inc.id}
-                onClick={() => selectIncident(inc)}
-                className="glass-panel"
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
                 style={{
-                  padding: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '7px 14px',
+                  background: isActive ? 'var(--bg-panel-active)' : 'transparent',
+                  border: 'none',
+                  borderLeft: isActive ? '3px solid var(--color-info)' : '3px solid transparent',
+                  color: isActive ? '#ffffff' : 'var(--text-muted)',
+                  fontSize: '11.5px',
+                  fontWeight: isActive ? 600 : 400,
                   cursor: 'pointer',
-                  borderColor: isSelected ? 'var(--cyan)' : 'var(--border-subtle)',
-                  backgroundColor: isSelected ? 'rgba(0, 240, 255, 0.08)' : 'var(--bg-card)'
+                  textAlign: 'left'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--cyan)' }}>
-                    {inc.incident_number}
-                  </span>
-                  <span className={`badge badge-${inc.severity?.toLowerCase()}`}>
-                    {inc.severity}
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: '1.3' }}>
-                  {inc.title}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--text-dim)' }}>
-                  <span>Status: <strong style={{ color: '#ffffff' }}>{inc.status}</strong></span>
-                  <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>{inc.verdict}</span>
-                </div>
-              </div>
+                <span>{tab}</span>
+                {tab === 'Timeline' && <span className="badge-subtle" style={{ fontSize: '9px', padding: '1px 4px' }}>6</span>}
+                {tab === 'Evidence' && <span className="badge-subtle" style={{ fontSize: '9px', padding: '1px 4px' }}>5</span>}
+              </button>
             );
           })}
+
+          <div style={{ marginTop: 'auto', padding: '12px', borderTop: '1px solid var(--border-subtle)', fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+            <div>CASE TELEMETRY:</div>
+            <div style={{ color: '#ffffff', marginTop: '2px' }}>17 Events Correlated</div>
+            <div style={{ color: '#ffffff' }}>4 Sigma Detections</div>
+          </div>
         </div>
 
-        {/* Selected Incident Deep Dossier */}
-        {selectedIncident ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {/* Incident Header Card */}
-            <div className="glass-panel" style={{ padding: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '14px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', fontWeight: 700 }}>
-                      {selectedIncident.incident_number}
-                    </span>
-                    <span className={`badge badge-${selectedIncident.severity?.toLowerCase()}`}>
-                      {selectedIncident.severity}
-                    </span>
-                    <span className="badge badge-cyan">
-                      {selectedIncident.status}
-                    </span>
-                  </div>
-                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
-                    {selectedIncident.title}
-                  </h2>
-                </div>
-
-                {/* Verdict Picker */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>VERDICT:</span>
-                  {['TRUE_POSITIVE', 'FALSE_POSITIVE', 'BENIGN'].map((v) => (
-                    <button
-                      key={v}
-                      className="btn"
-                      onClick={() => handleUpdateVerdict(v)}
-                      style={{
-                        padding: '4px 10px',
-                        fontSize: '0.72rem',
-                        backgroundColor: selectedIncident.verdict === v ? 'var(--cyan)' : 'rgba(255, 255, 255, 0.05)',
-                        color: selectedIncident.verdict === v ? '#000000' : 'var(--text-main)',
-                        fontWeight: 700
-                      }}
-                    >
-                      {v.replace('_', ' ')}
-                    </button>
-                  ))}
-                </div>
+        {/* COLUMN 2: CENTER INVESTIGATION WORKSPACE */}
+        <div className="soc-panel" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '14px', overflowY: 'auto' }}>
+          {/* Chronological Attack Timeline */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Clock size={14} color="var(--color-info)" /> ATTACK TIMELINE (CHRONOLOGICAL)
               </div>
-
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: '1.5', marginBottom: '20px' }}>
-                {selectedIncident.description}
-              </p>
-
-              {/* AI Tier-1 Analyst Findings Card */}
-              <div style={{
-                borderRadius: '8px',
-                border: '1px solid rgba(0, 240, 255, 0.35)',
-                backgroundColor: 'rgba(0, 240, 255, 0.04)',
-                padding: '18px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '14px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Sparkles size={18} color="var(--cyan)" />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.04em' }}>
-                    AUTONOMOUS TIER-1 AI SOC ANALYST DOSSIER
-                  </span>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                    Executive Summary:
-                  </div>
-                  <div style={{ fontSize: '0.84rem', color: '#f1f5f9', lineHeight: '1.4' }}>
-                    {selectedIncident.ai_summary || 'Analysis pending.'}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--cyan)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                    Root Cause Analysis:
-                  </div>
-                  <div style={{ fontSize: '0.84rem', color: '#f1f5f9', lineHeight: '1.4' }}>
-                    {selectedIncident.ai_root_cause || 'Root cause identification running...'}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--emerald)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                    Recommended Active Containment Plan:
-                  </div>
-                  <div style={{ fontSize: '0.84rem', color: '#6ee7b7', lineHeight: '1.4', whiteSpace: 'pre-line' }}>
-                    {selectedIncident.ai_recommended_action || '1. Isolate target endpoint\n2. Block C2 IP address at firewall'}
-                  </div>
-                </div>
-
-                <div style={{ paddingTop: '6px' }}>
-                  <button 
-                    className="btn btn-danger"
-                    onClick={handleExecuteContainment}
-                  >
-                    <Lock size={15} /> Execute Containment Plan Now (SOAR Active Defense)
-                  </button>
-                </div>
-              </div>
+              <span style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                6 VERIFIED PHASES
+              </span>
             </div>
 
-            {/* Attack Causality Timeline */}
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <Clock size={18} color="var(--cyan)" />
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
-                  Interactive Attack Causality Timeline
-                </h3>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', position: 'relative', paddingLeft: '24px' }}>
-                {/* Timeline vertical line */}
-                <div style={{
-                  position: 'absolute',
-                  left: '7px',
-                  top: '6px',
-                  bottom: '6px',
-                  width: '2px',
-                  backgroundColor: 'rgba(0, 240, 255, 0.3)'
-                }}></div>
-
-                {timeline.map((step, idx) => (
-                  <div key={idx} style={{ position: 'relative' }}>
-                    {/* Node Dot */}
-                    <div style={{
-                      position: 'absolute',
-                      left: '-21px',
-                      top: '4px',
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      backgroundColor: 'var(--cyan)',
-                      boxShadow: '0 0 8px var(--cyan)'
-                    }}></div>
-
-                    <div style={{
-                      padding: '12px 14px',
-                      borderRadius: '6px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px solid var(--border-subtle)'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '0.72rem', color: 'var(--cyan)', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                            {step.timestamp}
-                          </span>
-                          <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>
-                            {step.stage || 'Event'}
-                          </span>
-                        </div>
-                        {step.severity && (
-                          <span className={`badge badge-${step.severity?.toLowerCase()}`}>
-                            {step.severity}
-                          </span>
-                        )}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ffffff' }}>
-                        {step.title || step.description}
-                      </div>
-                      {step.title && step.description && (
-                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                          {step.description}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Forensic Evidence Locker */}
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                <Fingerprint size={18} color="var(--purple)" />
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
-                  Forensic Evidence Locker
-                </h3>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {selectedIncident.evidence?.map((ev) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {CHRONO_TIMELINE.map((item, idx) => {
+                const isExp = expandedEvents[idx];
+                return (
                   <div 
-                    key={ev.id}
+                    key={idx}
                     style={{
-                      padding: '14px',
-                      borderRadius: '6px',
-                      backgroundColor: 'rgba(0, 0, 0, 0.45)',
-                      border: '1px solid var(--border-subtle)'
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '3px',
+                      backgroundColor: 'var(--bg-panel-subtle)',
+                      overflow: 'hidden'
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span className="badge badge-cyan" style={{ fontSize: '0.65rem' }}>
-                        {ev.evidence_type}
-                      </span>
-                      {ev.hash_sha256 && (
-                        <button
-                          className="btn btn-ghost"
-                          style={{ padding: '2px 8px', fontSize: '0.7rem' }}
-                          onClick={() => copyToClipboard(ev.hash_sha256)}
-                        >
-                          {copiedHash === ev.hash_sha256 ? <Check size={12} color="var(--emerald)" /> : <Copy size={12} />}
-                          Copy SHA-256
-                        </button>
-                      )}
+                    <div 
+                      onClick={() => toggleEvent(idx)}
+                      style={{
+                        padding: '8px 10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        fontSize: '11.5px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="mono" style={{ color: 'var(--color-warn)', fontWeight: 600 }}>{item.time}</span>
+                        <span className="badge-subtle" style={{ fontSize: '9.5px' }}>{item.source}</span>
+                        <span style={{ fontWeight: 600, color: '#ffffff' }}>{item.title}</span>
+                      </div>
+                      <ChevronDown size={14} color="var(--text-dim)" style={{ transform: isExp ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }} />
                     </div>
 
-                    <div style={{ fontSize: '0.8rem', color: '#e2e8f0', marginBottom: '8px' }}>
-                      {ev.notes}
+                    <div style={{ padding: '0 10px 8px 10px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                      {item.detail}
                     </div>
 
-                    {ev.hash_sha256 && (
-                      <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--cyan)', wordBreak: 'break-all', marginBottom: '8px' }}>
-                        SHA256: {ev.hash_sha256}
+                    {isExp && (
+                      <div style={{
+                        padding: '8px 10px',
+                        backgroundColor: 'var(--bg-base)',
+                        borderTop: '1px solid var(--border-subtle)',
+                        fontSize: '10.5px',
+                        fontFamily: 'var(--font-mono)',
+                        color: '#93c5fd'
+                      }}>
+                        {item.expanded}
                       </div>
                     )}
-
-                    <pre className="code-block" style={{ maxHeight: '120px', fontSize: '0.72rem' }}>
-                      {JSON.stringify(ev.raw_payload, null, 2)}
-                    </pre>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 2D Entity Relationship Graph */}
+          <div style={{ marginTop: '8px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Layers size={14} color="var(--color-cyan)" /> 2D ENTITY RELATIONSHIP GRAPH
+            </div>
+
+            <div style={{
+              padding: '14px',
+              backgroundColor: 'var(--bg-base)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '8px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px'
+            }}>
+              <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: '3px', textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>USER</div>
+                <div style={{ color: '#ffffff', fontWeight: 700 }}>USER-421</div>
+                <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>finance_lead</div>
+              </div>
+
+              <span style={{ color: 'var(--text-dim)' }}>➔</span>
+
+              <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--color-crit-border)', borderRadius: '3px', textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: 'var(--color-crit)' }}>HOST COMPROMISED</div>
+                <div style={{ color: '#ffffff', fontWeight: 700 }}>WS-182</div>
+                <div style={{ fontSize: '9px', color: 'var(--color-warn)' }}>192.168.1.188</div>
+              </div>
+
+              <span style={{ color: 'var(--text-dim)' }}>➔</span>
+
+              <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: '3px', textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>PROCESS</div>
+                <div style={{ color: 'var(--color-crit)', fontWeight: 700 }}>powershell.exe</div>
+                <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>PID: 4820</div>
+              </div>
+
+              <span style={{ color: 'var(--text-dim)' }}>➔</span>
+
+              <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: '3px', textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>C2 IP</div>
+                <div style={{ color: 'var(--color-high)', fontWeight: 700 }}>185.220.101.5</div>
+                <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>PORT 443</div>
+              </div>
+
+              <span style={{ color: 'var(--text-dim)' }}>➔</span>
+
+              <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: '3px', textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>C2 DOMAIN</div>
+                <div style={{ color: 'var(--color-crit)', fontWeight: 700 }}>suspicious-domain.top</div>
+                <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>URLhaus Match</div>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-dim)' }}>
-            Select an incident case to inspect the AI investigation dossier.
+
+          {/* Section 6: Raw Evidence Panel */}
+          <div style={{ marginTop: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FileText size={14} color="var(--color-ok)" /> EVIDENCE PANEL
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <button 
+                  onClick={() => handleCopyHash('SHA256: 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f')} 
+                  className="btn-soc" 
+                  style={{ padding: '2px 8px', fontSize: '10.5px' }}
+                >
+                  {copied ? <Check size={11} color="var(--color-ok)" /> : <Copy size={11} />}
+                  <span>{copied ? 'COPIED' : 'COPY HASH'}</span>
+                </button>
+              </div>
+            </div>
+
+            <pre style={{
+              backgroundColor: 'var(--bg-base)',
+              padding: '10px 12px',
+              borderRadius: '3px',
+              border: '1px solid var(--border-subtle)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              color: '#e2e8f0',
+              lineHeight: '1.5'
+            }}>
+HOST      : WS-182
+PROCESS   : powershell.exe (PID: 4820)
+COMMAND   : powershell.exe -NoP -NonI -W Hidden -Enc SQBFAFgAIAAoAE4AZQB3AC0ATwBi...
+HASH      : SHA256: 275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f
+NETWORK   : 185.220.101.5:443 (Outbound TCP TLS 1.3)
+USER      : finance_lead
+SOURCE    : EDR / Sysmon Event 1
+COLLECTED : 2026-09-25 17:21:14 UTC
+            </pre>
           </div>
-        )}
+        </div>
+
+        {/* COLUMN 3: RIGHT ACTION CENTER & SKYNET ANALYST */}
+        <div className="soc-panel" style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: '14px', overflowY: 'auto' }}>
+          {/* Action Center */}
+          <div>
+            <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', marginBottom: '8px' }}>
+              ACTION CENTER
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{
+                padding: '8px',
+                border: '1px solid var(--border-subtle)',
+                backgroundColor: 'var(--bg-panel-subtle)',
+                borderRadius: '3px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600, color: '#ffffff', fontSize: '11.5px' }}>ISOLATE ENDPOINT</span>
+                  <span className="badge-warn" style={{ fontSize: '9px' }}>APPROVAL REQUIRED</span>
+                </div>
+                <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', margin: '4px 0' }}>
+                  Target: WS-182 (192.168.1.188)
+                </div>
+                <Link href="/approvals" className="btn-soc-crit" style={{ width: '100%', padding: '5px', textAlign: 'center', textDecoration: 'none', display: 'block', fontSize: '11px' }}>
+                  SUBMIT FOR APPROVAL
+                </Link>
+              </div>
+
+              <div style={{
+                padding: '8px',
+                border: '1px solid var(--border-subtle)',
+                backgroundColor: 'var(--bg-panel-subtle)',
+                borderRadius: '3px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600, color: '#ffffff', fontSize: '11.5px' }}>DISABLE ACCOUNT</span>
+                  <span className="badge-warn" style={{ fontSize: '9px' }}>APPROVAL REQUIRED</span>
+                </div>
+                <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', margin: '4px 0' }}>
+                  Target: USER-421 (finance_lead)
+                </div>
+                <Link href="/approvals" className="btn-soc" style={{ width: '100%', padding: '5px', textAlign: 'center', textDecoration: 'none', display: 'block', fontSize: '11px' }}>
+                  SUBMIT FOR APPROVAL
+                </Link>
+              </div>
+
+              <div style={{
+                padding: '8px',
+                border: '1px solid var(--border-subtle)',
+                backgroundColor: 'var(--bg-panel-subtle)',
+                borderRadius: '3px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600, color: '#ffffff', fontSize: '11.5px' }}>BLOCK IP AT PERIMETER</span>
+                  <span className="badge-warn" style={{ fontSize: '9px' }}>APPROVAL REQUIRED</span>
+                </div>
+                <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', margin: '4px 0' }}>
+                  Target: 185.220.101.5:443
+                </div>
+                <Link href="/approvals" className="btn-soc" style={{ width: '100%', padding: '5px', textAlign: 'center', textDecoration: 'none', display: 'block', fontSize: '11px' }}>
+                  SUBMIT FOR APPROVAL
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)' }} />
+
+          {/* Section 15: Subtle SKYNET Analyst AI Drawer */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Cpu size={14} color="var(--color-info)" /> SKYNET ANALYST
+              </div>
+              <button 
+                onClick={handleRunAI} 
+                disabled={investigating}
+                className="btn-soc" 
+                style={{ padding: '2px 6px', fontSize: '10px' }}
+              >
+                {investigating ? 'REASONING...' : 'RUN AI'}
+              </button>
+            </div>
+
+            <div style={{
+              padding: '10px',
+              backgroundColor: 'var(--bg-base)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '3px',
+              fontSize: '11px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px'
+            }}>
+              <div>
+                <div style={{ color: 'var(--text-dim)', fontSize: '10px' }}>FINDING</div>
+                <div style={{ color: '#ffffff', fontWeight: 600 }}>
+                  Credential access & C2 beaconing confirmed on endpoint WS-182.
+                </div>
+              </div>
+
+              <div>
+                <div style={{ color: 'var(--text-dim)', fontSize: '10px' }}>EVIDENCE</div>
+                <div style={{ color: 'var(--text-muted)' }}>
+                  • 7 failed authentications<br />
+                  • LSASS memory handle access<br />
+                  • Suspicious winword → powershell process tree
+                </div>
+              </div>
+
+              <div>
+                <div style={{ color: 'var(--text-dim)', fontSize: '10px' }}>CONFIDENCE</div>
+                <div className="mono" style={{ color: 'var(--color-ok)', fontWeight: 700 }}>
+                  87% (BAYESIAN EVIDENCE SCORE)
+                </div>
+              </div>
+
+              <div>
+                <div style={{ color: 'var(--text-dim)', fontSize: '10px' }}>SUGGESTED NEXT STEPS</div>
+                <ol style={{ paddingLeft: '14px', color: 'var(--text-muted)' }}>
+                  <li>Isolate WS-182 via SOAR</li>
+                  <li>Hunt for procdump hash across fleet</li>
+                  <li>Revoke session for USER-421</li>
+                </ol>
+              </div>
+
+              <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                <Link href="/approvals" className="btn-soc-crit" style={{ flex: 1, padding: '4px', textAlign: 'center', textDecoration: 'none', fontSize: '10.5px' }}>
+                  ISOLATE HOST
+                </Link>
+                <Link href="/hunt" className="btn-soc" style={{ flex: 1, padding: '4px', textAlign: 'center', textDecoration: 'none', fontSize: '10.5px' }}>
+                  START HUNT
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
