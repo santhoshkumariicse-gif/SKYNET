@@ -135,7 +135,7 @@ export default function IncidentsPage() {
             <span className="badge-crit" style={{ fontSize: '11px' }}>
               CRITICAL
             </span>
-            <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+            <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-white)', fontFamily: 'var(--font-mono)' }}>
               INCIDENT {selectedInc.incident_number || selectedInc.id}
             </span>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -151,7 +151,7 @@ export default function IncidentsPage() {
               <span style={{ color: 'var(--text-dim)' }}>STATUS:</span> <span className="badge-subtle">{selectedInc.status || 'INVESTIGATING'}</span>
             </div>
             <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
-              <span style={{ color: 'var(--text-dim)' }}>OWNER:</span> <span style={{ color: '#ffffff' }}>{selectedInc.owner || 'SOC'}</span>
+              <span style={{ color: 'var(--text-dim)' }}>OWNER:</span> <span style={{ color: 'var(--text-white)' }}>{selectedInc.owner || 'SOC'}</span>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function IncidentsPage() {
                   background: isActive ? 'var(--bg-panel-active)' : 'transparent',
                   border: 'none',
                   borderLeft: isActive ? '3px solid var(--color-info)' : '3px solid transparent',
-                  color: isActive ? '#ffffff' : 'var(--text-muted)',
+                  color: isActive ? 'var(--text-white)' : 'var(--text-muted)',
                   fontSize: '11.5px',
                   fontWeight: isActive ? 600 : 400,
                   cursor: 'pointer',
@@ -212,8 +212,8 @@ export default function IncidentsPage() {
 
           <div style={{ marginTop: 'auto', padding: '12px', borderTop: '1px solid var(--border-subtle)', fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             <div>CASE TELEMETRY:</div>
-            <div style={{ color: '#ffffff', marginTop: '2px' }}>17 Events Correlated</div>
-            <div style={{ color: '#ffffff' }}>4 Sigma Detections</div>
+            <div style={{ color: 'var(--text-white)', marginTop: '2px' }}>17 Events Correlated</div>
+            <div style={{ color: 'var(--text-white)' }}>4 Sigma Detections</div>
           </div>
         </div>
 
@@ -257,7 +257,7 @@ export default function IncidentsPage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span className="mono" style={{ color: 'var(--color-warn)', fontWeight: 600 }}>{item.time}</span>
                         <span className="badge-subtle" style={{ fontSize: '9.5px' }}>{item.source}</span>
-                        <span style={{ fontWeight: 600, color: '#ffffff' }}>{item.title}</span>
+                        <span style={{ fontWeight: 600, color: 'var(--text-white)' }}>{item.title}</span>
                       </div>
                       <ChevronDown size={14} color="var(--text-dim)" style={{ transform: isExp ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }} />
                     </div>
@@ -269,11 +269,11 @@ export default function IncidentsPage() {
                     {isExp && (
                       <div style={{
                         padding: '8px 10px',
-                        backgroundColor: 'var(--bg-base)',
+                        backgroundColor: 'var(--bg-panel-subtle)',
                         borderTop: '1px solid var(--border-subtle)',
                         fontSize: '10.5px',
                         fontFamily: 'var(--font-mono)',
-                        color: '#93c5fd'
+                        color: 'var(--accent-blue)'
                       }}>
                         {item.expanded}
                       </div>
@@ -286,13 +286,13 @@ export default function IncidentsPage() {
 
           {/* 2D Entity Relationship Graph */}
           <div style={{ marginTop: '8px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-white)', fontFamily: 'var(--font-mono)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Layers size={14} color="var(--color-cyan)" /> 2D ENTITY RELATIONSHIP GRAPH
             </div>
 
             <div style={{
               padding: '14px',
-              backgroundColor: 'var(--bg-base)',
+              backgroundColor: 'var(--bg-panel-subtle)',
               border: '1px solid var(--border-subtle)',
               borderRadius: '4px',
               display: 'flex',
@@ -305,7 +305,7 @@ export default function IncidentsPage() {
             }}>
               <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-subtle)', borderRadius: '3px', textAlign: 'center' }}>
                 <div style={{ fontSize: '9px', color: 'var(--text-dim)' }}>USER</div>
-                <div style={{ color: '#ffffff', fontWeight: 700 }}>USER-421</div>
+                <div style={{ color: 'var(--text-white)', fontWeight: 700 }}>USER-421</div>
                 <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>finance_lead</div>
               </div>
 
@@ -313,7 +313,7 @@ export default function IncidentsPage() {
 
               <div style={{ padding: '6px 10px', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--color-crit-border)', borderRadius: '3px', textAlign: 'center' }}>
                 <div style={{ fontSize: '9px', color: 'var(--color-crit)' }}>HOST COMPROMISED</div>
-                <div style={{ color: '#ffffff', fontWeight: 700 }}>WS-182</div>
+                <div style={{ color: 'var(--text-white)', fontWeight: 700 }}>WS-182</div>
                 <div style={{ fontSize: '9px', color: 'var(--color-warn)' }}>192.168.1.188</div>
               </div>
 

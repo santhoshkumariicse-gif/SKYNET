@@ -1,0 +1,36 @@
+{
+  "health_api": {
+    "iterations": 500,
+    "avg_ms": 2.371,
+    "p50_ms": 2.218,
+    "p95_ms": 3.181,
+    "p99_ms": 4.16,
+    "min_ms": 1.909,
+    "max_ms": 7.792
+  },
+  "telemetry_ingest": {
+    "batches": 300,
+    "throughput_rps": 284.5,
+    "p50_ms": 3.171,
+    "p95_ms": 5.192,
+    "total_time_s": 1.055
+  },
+  "rag_vector_search": {
+    "lookups": 100,
+    "avg_ms": 39.393,
+    "p50_ms": 8.592,
+    "p95_ms": 10.53,
+    "p99_ms": 3065.727
+  },
+  "crypto_hmac": {
+    "operations": 1000,
+    "ops_per_sec": 289210.0,
+    "p50_us": 2.7,
+    "p95_us": 4.9
+  },
+  "ai_health_scoring": {
+    "cycles": 100,
+    "p50_ms": 8.623,
+    "p95_ms": 10.048
+  }
+}

@@ -36,10 +36,49 @@ class User(Base):
     role = relationship("Role", back_populates="users")
     assigned_incidents = relationship("Incident", back_populates="assignee")
 
+class Organization(Base):
+    __tablename__ = "organizations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    name = Column(String(128), unique=True, nullable=False, index=True)
+    slug = Column(String(64), unique=True, nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), default=get_utc_now)
+
+    sites = relationship("Site", back_populates="organization", cascade="all, delete-orphan")
+
+class Site(Base):
+    __tablename__ = "sites"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    organization_id = Column(String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True)
+    name = Column(String(128), nullable=False) # Headquarters, Data Center, Branch Office A, Branch Office B
+    code = Column(String(32), unique=True, nullable=False, index=True) # HQ-NYC, DC-FRA, BR-LON, BR-TYO
+    location = Column(String(128), nullable=False) # "New York, USA", "Frankfurt, Germany"
+    latitude = Column(Float, default=0.0)
+    longitude = Column(Float, default=0.0)
+    timezone = Column(String(64), default="UTC")
+    created_at = Column(DateTime(timezone=True), default=get_utc_now)
+
+    organization = relationship("Organization", back_populates="sites")
+    device_groups = relationship("DeviceGroup", back_populates="site", cascade="all, delete-orphan")
+    endpoints = relationship("Endpoint", back_populates="site")
+
+class DeviceGroup(Base):
+    __tablename__ = "device_groups"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    site_id = Column(String(36), ForeignKey("sites.id", ondelete="CASCADE"), nullable=False, index=True)
+    name = Column(String(128), nullable=False) # "Core Database Cluster", "Corporate Workstations"
+    description = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=get_utc_now)
+
+    site = relationship("Site", back_populates="device_groups")
+
 class Endpoint(Base):
     __tablename__ = "endpoints"
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
+    site_id = Column(String(36), ForeignKey("sites.id", ondelete="SET NULL"), nullable=True, index=True)
     hostname = Column(String(128), unique=True, nullable=False, index=True)
     ip_address = Column(String(45), nullable=False, index=True)
     os_name = Column(String(64), default="Windows")
@@ -52,21 +91,49 @@ class Endpoint(Base):
     network_tx_mb = Column(Float, default=0.0)
     status = Column(String(32), default="ONLINE", index=True) # ONLINE, OFFLINE, WARNING, COMPROMISED, ISOLATED
     agent_version = Column(String(32), default="1.0.0")
+    tags = Column(JSON, default=list)
     last_seen = Column(DateTime(timezone=True), default=get_utc_now, index=True)
     created_at = Column(DateTime(timezone=True), default=get_utc_now)
+
+    site = relationship("Site", back_populates="endpoints")
+
+# Device alias for Endpoint
+Device = Endpoint
+
+class Metric(Base):
+    __tablename__ = "metrics"
+
+    id = Column(String(64), primary_key=True, default=generate_uuid)
+    device_id = Column(String(64), ForeignKey("endpoints.id", ondelete="CASCADE"), nullable=False, index=True)
+    cpu = Column(Float, nullable=False, default=0.0)
+    ram = Column(Float, nullable=False, default=0.0)
+    gpu = Column(Float, nullable=False, default=0.0)
+    disk = Column(Float, nullable=False, default=0.0)
+    network = Column(Float, nullable=False, default=0.0)
+    network_rx_mb = Column(Float, default=0.0)
+    network_tx_mb = Column(Float, default=0.0)
+    temperature_c = Column(Float, default=0.0)
+    battery_pct = Column(Float, nullable=True)
+    processes_count = Column(Integer, default=0)
+    raw_vitals = Column(JSON, default=dict)
+    timestamp = Column(DateTime(timezone=True), default=get_utc_now, index=True)
 
 class Alert(Base):
     __tablename__ = "alerts"
 
     id = Column(String(36), primary_key=True, default=generate_uuid)
+    device_id = Column(String(64), nullable=True, index=True)
+    alert_type = Column(String(64), default="High CPU", index=True) # High CPU, High RAM, High GPU, Disk Critical, Device Offline
+    severity = Column(String(32), nullable=False, default="Warning", index=True) # Info, Warning, Critical
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=False)
-    severity = Column(String(16), nullable=False, index=True) # LOW, MEDIUM, HIGH, CRITICAL
-    source = Column(String(64), nullable=False) # SIGMA_RULE, IOC_MATCH, BEHAVIORAL_ANOMALY
+    source = Column(String(64), nullable=False, default="ANOMALY_ENGINE") # SIGMA_RULE, IOC_MATCH, ANOMALY_ENGINE
     status = Column(String(32), default="NEW", index=True) # NEW, ACKNOWLEDGED, SUPPRESSED, CLOSED
+    acknowledged = Column(Boolean, default=False, index=True)
     host_name = Column(String(128), nullable=True, index=True)
     host_ip = Column(String(45), nullable=True)
     mitre_technique = Column(String(32), nullable=True) # e.g. T1059.001
+    threat_score = Column(Integer, default=50)
     event_data = Column(JSON, default=dict)
     incident_id = Column(String(36), ForeignKey("incidents.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), default=get_utc_now, index=True)
@@ -170,4 +237,35 @@ class SavedHunt(Base):
     mitre_technique = Column(String(32), nullable=True)
     author = Column(String(64), default="admin")
     created_at = Column(DateTime(timezone=True), default=get_utc_now)
+
+class Baseline(Base):
+    __tablename__ = "baselines"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    device_id = Column(String(36), ForeignKey("endpoints.id", ondelete="CASCADE"), unique=True, nullable=False, index=True)
+    avg_cpu = Column(Float, default=25.0)
+    std_cpu = Column(Float, default=8.0)
+    avg_ram = Column(Float, default=45.0)
+    std_ram = Column(Float, default=6.0)
+    avg_gpu = Column(Float, default=10.0)
+    std_gpu = Column(Float, default=5.0)
+    avg_disk = Column(Float, default=40.0)
+    std_disk = Column(Float, default=2.0)
+    avg_network = Column(Float, default=1.5)
+    std_network = Column(Float, default=1.0)
+    sample_count = Column(Integer, default=100)
+    updated_at = Column(DateTime(timezone=True), default=get_utc_now, onupdate=get_utc_now)
+
+class Anomaly(Base):
+    __tablename__ = "anomalies"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    device_id = Column(String(36), ForeignKey("endpoints.id", ondelete="CASCADE"), nullable=False, index=True)
+    anomaly_type = Column(String(64), nullable=False, index=True) # CPU_SPIKE, MEMORY_LEAK, DISK_PRESSURE, NETWORK_SURGE, INACTIVITY
+    anomaly_score = Column(Float, nullable=False, index=True) # 0 to 100
+    confidence = Column(Float, nullable=False, default=0.90) # 0.0 to 1.0
+    evidence = Column(JSON, default=dict)
+    reason = Column(Text, nullable=False)
+    status = Column(String(32), default="ACTIVE", index=True) # ACTIVE, INVESTIGATING, RESOLVED, FALSE_POSITIVE
+    created_at = Column(DateTime(timezone=True), default=get_utc_now, index=True)
 

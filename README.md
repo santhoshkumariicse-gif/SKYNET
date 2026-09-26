@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14%20App%20Router-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com)
-[![Pytest Suite](https://img.shields.io/badge/Tests-13%2F13%20PASS%20(100%25)-success.svg)](#test-suite-execution)
+[![Pytest Suite](https://img.shields.io/badge/Tests-29%2F29%20PASS%20(100%25)-success.svg)](#test-suite-execution)
 [![License](https://img.shields.io/badge/License-MIT-gray.svg)](LICENSE)
 
 **SKYNET v5.0** is an enterprise-grade Autonomous Security Operations Center (SOC) and Extended Detection and Response (XDR) cyber defense platform. Built for hyperscale security environments and MSSPs, SKYNET executes sub-second telemetry ingestion, Sigma-based event detection, multi-entity temporal incident correlation, autonomous multi-agent AI root cause investigation, human-in-the-loop cryptographic SOAR containment, proactive threat hunting, and immutable HMAC-SHA256 forensic audit logging.
@@ -99,10 +99,10 @@ SKYNET includes an exhaustive end-to-end autonomous pipeline test suite verifyin
 To run the full backend test suite:
 ```bash
 cd backend
-py -3.11 -m pytest tests/test_autonomous_pipeline.py -v
+py -3.11 -m pytest tests -v
 ```
 
-**Results**: `13 passed in 2.41s (100% PASS RATE)`
+**Results**: `29 passed in 18.37s (100% PASS RATE)`
 
 ---
 
@@ -123,16 +123,16 @@ py -3.11 scripts/verify_all_62_processes.py
 Runtime Telemetry State:
   * Sigma Detection Rules Active   : 12/12 (Enterprise Set)
   * Threat Intel Indicators Active : 6 Seeded Indicators
-  * Monitored Fleet Endpoints     : 17 Endpoints Online
-  * Triaged Security Incidents     : 11 Cases In Flight
-  * Cryptographic Audit Logs       : 28 HMAC Records Verified
+  * Monitored Fleet Endpoints     : 38 Endpoints Online
+  * Triaged Security Incidents     : 35 Cases In Flight
+  * Cryptographic Audit Logs       : 133 HMAC Records Verified
 
 VERIFICATION SUMMARY:
   Total Architectural Processes Evaluated : 62
   Processes Successfully Verified         : 62
   Processes Failed                        : 0
   Architecture Compliance Score           : 100.0%
-  Audit Execution Latency                 : 69.30 ms
+  Audit Execution Latency                 : 56.33 ms
   System Compliance Certification         : GRADE A+ (ENTERPRISE AUTONOMOUS READY)
 ```
 
@@ -152,6 +152,7 @@ The frontend interface uses a 72px fixed left rail with operator-first ergonomic
 | **ASSETS** | `/assets` | CMDB Asset Inventory | Monitored endpoints, health metrics, host isolation toggle, risk dossiers. |
 | **INTEL** | `/intelligence` | Threat Intel Platform | Multi-feed reputation breakdown, confidence rating, 1-click firewall drop blocklist. |
 | **SOAR** | `/soar` | Active Defense Control | Running automation bus, pending approvals, 12-stage pipeline execution, direct action. |
+| **WAZUH** | `/wazuh` | Wazuh XDR Dashboard | Wazuh Manager v4.9 status, agent fleet connectivity, vulnerability scans, active response. |
 | **AUTO** | `/automation` | Playbook Orchestrator | Discovery for 150 n8n workflows, 7 core subsystem pipelines, execution test runner. |
 | **APPROV** | `/approvals` | Human-in-the-Loop Hub | 2-step confirmation modal with impact warnings, cryptographic HMAC tokens, audit log. |
 | **AUDIT** | `/audit` | Forensic Audit Trail | Immutable record of Actor → Action → Target → HMAC-SHA256 signature verification. |

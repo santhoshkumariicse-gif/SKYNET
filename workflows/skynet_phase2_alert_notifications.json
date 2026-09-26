@@ -1,0 +1,135 @@
+{
+  "name": "SKYNET_Phase2_Alert_Notification_Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "skynet-alerts",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "SKYNET Alert Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.severity }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "Critical",
+              "output": 0
+            },
+            {
+              "value2": "Warning",
+              "output": 1
+            },
+            {
+              "value2": "Info",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "id": "node-severity-switch",
+      "name": "Severity Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Format HTML Email and Telegram payloads\nconst alert = items[0].json.body;\nconst now = new Date().toUTCString();\n\nconst badgeColor = alert.severity === 'Critical' ? '#ef4444' : alert.severity === 'Warning' ? '#f59e0b' : '#3b82f6';\nconst emoji = alert.severity === 'Critical' ? '🚨' : alert.severity === 'Warning' ? '⚠️' : 'ℹ️';\n\nconst emailHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <title>SKYNET Alert Notification</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#0b1120;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#f8fafc;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0b1120;padding:32px 16px;\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#0f172a;border-radius:10px;border:1px solid #1e293b;overflow:hidden;\">\n          <tr>\n            <td style=\"background-color:#1e293b;padding:20px 24px;border-bottom:1px solid #334155;\">\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n                <tr>\n                  <td>\n                    <span style=\"font-size:16px;font-weight:800;color:#0ea5e9;letter-spacing:0.05em;\">SKYNET AUTONOMOUS DEFENSE</span>\n                  </td>\n                  <td align=\"right\">\n                    <span style=\"background-color:${badgeColor};color:#ffffff;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;text-transform:uppercase;\">${alert.severity}</span>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:24px;\">\n              <h2 style=\"margin:0 0 12px 0;font-size:18px;color:#f8fafc;\">${alert.title}</h2>\n              <p style=\"margin:0 0 20px 0;font-size:14px;color:#94a3b8;line-height:1.5;\">${alert.description}</p>\n              <table width=\"100%\" cellpadding=\"8\" cellspacing=\"0\" style=\"background-color:#1e293b;border-radius:6px;font-size:13px;color:#cbd5e1;margin-bottom:24px;\">\n                <tr><td width=\"30%\" style=\"color:#64748b;\">Device ID:</td><td style=\"font-weight:600;color:#f8fafc;\">${alert.device_id}</td></tr>\n                <tr><td style=\"color:#64748b;\">Alert Type:</td><td style=\"font-weight:600;color:#f8fafc;\">${alert.alert_type}</td></tr>\n                <tr><td style=\"color:#64748b;\">Timestamp:</td><td>${alert.created_at || now}</td></tr>\n              </table>\n              <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n                <tr>\n                  <td align=\"center\">\n                    <a href=\"http://localhost:3000/devices/${alert.device_id}\" style=\"background-color:#0284c7;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:13px;font-weight:600;display:inline-block;\">View Device Telemetry &rarr;</a>\n                  </td>\n                </tr>\n              </table>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n`;\n\nconst telegramMessage = `${emoji} <b>SKYNET ALERT: ${alert.severity.toUpperCase()}</b>\\n\\n` +\n  `<b>Alert Type:</b> ${alert.alert_type}\\n` +\n  `<b>Target:</b> <code>${alert.device_id}</code>\\n` +\n  `<b>Summary:</b> ${alert.title}\\n\\n` +\n  `<i>${alert.description}</i>\\n\\n` +\n  `🔗 <a href=\"http://localhost:3000/devices/${alert.device_id}\">Open Device Console</a>`;\n\nreturn [{\n  json: {\n    alertId: alert.id,\n    deviceId: alert.device_id,\n    severity: alert.severity,\n    title: alert.title,\n    emailSubject: `[${alert.severity.toUpperCase()}] SKYNET Alert: ${alert.title}`,\n    emailHtml: emailHtml,\n    telegramMessage: telegramMessage\n  }\n}];"
+      },
+      "id": "node-template-formatter",
+      "name": "Template Formatter",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "alerts@skynet.sec",
+        "toEmail": "soc-ops@skynet.sec",
+        "subject": "={{ $json.emailSubject }}",
+        "html": "={{ $json.emailHtml }}"
+      },
+      "id": "node-send-email",
+      "name": "Dispatch Email Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [920, 220]
+    },
+    {
+      "parameters": {
+        "chatId": "-1002345678901",
+        "text": "={{ $json.telegramMessage }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "node-send-telegram",
+      "name": "Dispatch Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [920, 380]
+    }
+  ],
+  "connections": {
+    "SKYNET Alert Webhook": {
+      "main": [
+        [
+          {
+            "node": "Severity Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Severity Router": {
+      "main": [
+        [
+          {
+            "node": "Template Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Template Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Formatter": {
+      "main": [
+        [
+          {
+            "node": "Dispatch Email Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dispatch Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -5,7 +5,10 @@ from sqlalchemy import select
 from loguru import logger
 from app.core.config import settings
 from app.core.security import get_password_hash
-from app.models.models import Base, Role, User, IOCRecord, Endpoint, Alert, Incident, Evidence, AuditLog, Approval, SavedHunt
+from app.models.models import (
+    Base, Role, User, IOCRecord, Endpoint, Alert, Incident, Evidence,
+    AuditLog, Approval, SavedHunt, Organization, Site, DeviceGroup
+)
 
 # Resolve DB URL with graceful fallback to local SQLite
 DB_URL = settings.DATABASE_URL
@@ -65,6 +68,30 @@ async def init_db():
                     for col_name, col_def in new_cols.items():
                         if col_name not in existing_cols:
                             await alter_conn.execute(text(f"ALTER TABLE audit_logs ADD COLUMN {col_name} {col_def}"))
+
+                    # Migrate Alert columns if SQLite
+                    alert_info = await alter_conn.execute(text("PRAGMA table_info(alerts)"))
+                    existing_alert_cols = {row[1] for row in alert_info.fetchall()}
+                    new_alert_cols = {
+                        "device_id": "VARCHAR(64)",
+                        "alert_type": "VARCHAR(64) DEFAULT 'High CPU'",
+                        "acknowledged": "BOOLEAN DEFAULT 0",
+                        "threat_score": "INTEGER DEFAULT 50"
+                    }
+                    for col_name, col_def in new_alert_cols.items():
+                        if col_name not in existing_alert_cols:
+                            await alter_conn.execute(text(f"ALTER TABLE alerts ADD COLUMN {col_name} {col_def}"))
+
+                    # Migrate Endpoint columns if SQLite
+                    ep_info = await alter_conn.execute(text("PRAGMA table_info(endpoints)"))
+                    existing_ep_cols = {row[1] for row in ep_info.fetchall()}
+                    new_ep_cols = {
+                        "site_id": "VARCHAR(36)",
+                        "tags": "JSON DEFAULT '[]'"
+                    }
+                    for col_name, col_def in new_ep_cols.items():
+                        if col_name not in existing_ep_cols:
+                            await alter_conn.execute(text(f"ALTER TABLE endpoints ADD COLUMN {col_name} {col_def}"))
 
             # Seed 6 Enterprise Roles
             roles_data = [
@@ -385,6 +412,68 @@ async def init_db():
                         mitre_technique=mitre_t,
                         author="admin"
                     ))
+
+            # Seed Multi-Site Hierarchy
+            org_res = await session.execute(select(Organization).where(Organization.slug == "skynet-corp"))
+            org = org_res.scalars().first()
+            if not org:
+                org = Organization(
+                    name="SKYNET Global Enterprise",
+                    slug="skynet-corp"
+                )
+                session.add(org)
+                await session.flush()
+
+            sites_data = [
+                ("Headquarters", "HQ-NYC", "New York, USA", 40.7128, -74.0060, "America/New_York"),
+                ("Primary Data Center", "DC-FRA", "Frankfurt, Germany", 50.1109, 8.6821, "Europe/Berlin"),
+                ("Branch Office A", "BR-LON", "London, UK", 51.5074, -0.1278, "Europe/London"),
+                ("Branch Office B", "BR-TYO", "Tokyo, Japan", 35.6762, 139.6503, "Asia/Tokyo")
+            ]
+            site_map = {}
+            for sname, scode, sloc, slat, slon, stz in sites_data:
+                s_res = await session.execute(select(Site).where(Site.code == scode))
+                s_obj = s_res.scalars().first()
+                if not s_obj:
+                    s_obj = Site(
+                        organization_id=org.id,
+                        name=sname,
+                        code=scode,
+                        location=sloc,
+                        latitude=slat,
+                        longitude=slon,
+                        timezone=stz
+                    )
+                    session.add(s_obj)
+                    await session.flush()
+                site_map[scode] = s_obj
+
+            # Seed Device Groups
+            groups_data = [
+                ("HQ-NYC", "Corporate Workstations", "Executive and developer laptops in NYC HQ"),
+                ("DC-FRA", "Core Infrastructure & DB", "High-throughput database nodes & kubernetes runners"),
+                ("BR-LON", "Branch Office Edge", "Local branch file servers and endpoint PCs"),
+                ("BR-TYO", "Logistics & Android Fleet", "Mobile telemetry gateways and tablets")
+            ]
+            for scode, gname, gdesc in groups_data:
+                if scode in site_map:
+                    g_res = await session.execute(
+                        select(DeviceGroup).where(DeviceGroup.site_id == site_map[scode].id, DeviceGroup.name == gname)
+                    )
+                    if not g_res.scalars().first():
+                        session.add(DeviceGroup(
+                            site_id=site_map[scode].id,
+                            name=gname,
+                            description=gdesc
+                        ))
+
+            # Associate existing endpoints to sites and assign tags
+            endpoints_list = (await session.execute(select(Endpoint))).scalars().all()
+            for i, ep in enumerate(endpoints_list):
+                if not ep.site_id and site_map:
+                    assigned_code = list(site_map.keys())[i % len(site_map)]
+                    ep.site_id = site_map[assigned_code].id
+                    ep.tags = ["prod", assigned_code.lower(), ep.device_type.lower()]
 
             await session.commit()
             logger.info("Database initialization and seed records completed successfully.")

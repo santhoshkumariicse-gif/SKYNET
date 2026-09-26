@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: skynet
+  labels:
+    app.kubernetes.io/name: skynet
+    app.kubernetes.io/part-of: skynet-autonomous-platform
+    environment: production

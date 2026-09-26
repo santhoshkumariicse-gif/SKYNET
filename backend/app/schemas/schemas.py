@@ -96,11 +96,14 @@ class AlertCreate(BaseModel):
 
 class AlertOut(BaseModel):
     id: str
+    device_id: Optional[str] = None
+    alert_type: Optional[str] = "High CPU"
     title: str
     description: str
     severity: str
     source: str
     status: str
+    acknowledged: bool = False
     host_name: Optional[str] = None
     host_ip: Optional[str] = None
     mitre_technique: Optional[str] = None
@@ -204,3 +207,62 @@ class InvestigationDossier(BaseModel):
     attack_chain: List[str]
     mitre_mappings: List[str]
     suggested_actions: List[Dict[str, Any]]
+
+# --- Phase-1 Core Device & Metrics Schemas ---
+class DeviceRegisterRequest(BaseModel):
+    id: Optional[str] = None
+    hostname: str
+    ip_address: str
+    os_name: str = "Windows"
+    os_version: str = "11 Pro"
+    device_type: str = "Workstation"
+    cpu_cores: Optional[int] = 4
+    total_ram_mb: Optional[float] = 0.0
+    total_disk_gb: Optional[float] = 0.0
+    agent_version: str = "5.0.0"
+    tags: Optional[List[str]] = Field(default_factory=list)
+
+class DeviceResponse(BaseModel):
+    id: str
+    hostname: str
+    ip_address: str
+    os_name: str
+    os_version: str
+    device_type: str
+    cpu_usage: float = 0.0
+    memory_usage: float = 0.0
+    disk_usage: float = 0.0
+    status: str = "ONLINE"
+    agent_version: str = "5.0.0"
+    last_seen: datetime
+
+    class Config:
+        from_attributes = True
+
+class MetricCreateRequest(BaseModel):
+    device_id: str
+    hostname: Optional[str] = None
+    cpu: float = Field(..., ge=0.0, le=100.0)
+    ram: float = Field(..., ge=0.0, le=100.0)
+    gpu: Optional[float] = Field(default=0.0, ge=0.0, le=100.0)
+    disk: float = Field(..., ge=0.0, le=100.0)
+    network: Optional[float] = 0.0
+    network_rx_mb: Optional[float] = 0.0
+    network_tx_mb: Optional[float] = 0.0
+    processes_count: Optional[int] = 0
+    battery_pct: Optional[float] = None
+    timestamp: Optional[datetime] = None
+    raw_vitals: Optional[Dict[str, Any]] = Field(default_factory=dict)
+
+class MetricResponse(BaseModel):
+    id: str
+    device_id: str
+    cpu: float
+    ram: float
+    gpu: float
+    disk: float
+    network: float
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True

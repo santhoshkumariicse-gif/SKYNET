@@ -50,6 +50,7 @@ const INITIAL_LIVE_EVENTS = [
 
 export default function CommandCenterPage() {
   const [stats, setStats] = useState(null);
+  const [fleetTrends, setFleetTrends] = useState(null);
   const [incidents, setIncidents] = useState([]);
   const [liveEvents, setLiveEvents] = useState(INITIAL_LIVE_EVENTS);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -64,6 +65,14 @@ export default function CommandCenterPage() {
         ]);
         setStats(statsData);
         setIncidents(incidentsData || []);
+
+        try {
+          const tRes = await fetch('http://localhost:8000/metrics/trends?range=24h');
+          if (tRes.ok) {
+            const tData = await tRes.json();
+            setFleetTrends(tData);
+          }
+        } catch {}
       } catch (err) {
         console.error('Failed to load command center stats:', err);
       } finally {
@@ -93,93 +102,105 @@ export default function CommandCenterPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Screen Title & Top Operational Status Bar */}
-      <div className="soc-panel" style={{ padding: '12px 16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      <div className="soc-card" style={{ padding: '16px 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
           <div>
-            <div style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', letterSpacing: '0.04em', fontFamily: 'var(--font-mono)' }}>
+            <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-white)', letterSpacing: '-0.01em', fontFamily: 'var(--font-heading)', margin: 0 }}>
               SKYNET COMMAND CENTER
-            </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+            </h1>
+            <div style={{ fontSize: '13px', color: 'var(--text-dim)', marginTop: '3px', fontFamily: 'var(--font-body)' }}>
               Autonomous SOC Command & SIEM Telemetry Correlation Grid
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <div>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>SYSTEM STATUS</div>
-              <div style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--color-ok)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '8px' }}>●</span> ALL SYSTEMS OPERATIONAL
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', textTransform: 'uppercase', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>SYSTEM STATUS</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--accent-green)', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'var(--font-heading)' }}>
+                <span style={{ fontSize: '9px' }}>●</span> ALL SYSTEMS OPERATIONAL
               </div>
             </div>
 
             <div style={{ height: '24px', width: '1px', backgroundColor: 'var(--border-subtle)' }} />
 
             <div>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>LAST 24 HOURS</div>
-              <div style={{ fontSize: '11.5px', fontFamily: 'var(--font-mono)', color: 'var(--text-white)' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', textTransform: 'uppercase', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>LAST 24 HOURS</div>
+              <div style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-white)' }}>
                 <span style={{ fontWeight: 700 }}>12,481</span> EVENTS &nbsp;|&nbsp;
-                <span style={{ fontWeight: 700, color: 'var(--color-warn)' }}>137</span> ALERTS &nbsp;|&nbsp;
-                <span style={{ fontWeight: 700, color: 'var(--color-high)' }}>18</span> INCIDENTS &nbsp;|&nbsp;
-                <span style={{ fontWeight: 700, color: 'var(--color-crit)' }}>4</span> CRITICAL
+                <span style={{ fontWeight: 700, color: 'var(--accent-amber)' }}>137</span> ALERTS &nbsp;|&nbsp;
+                <span style={{ fontWeight: 700, color: 'var(--accent-orange)' }}>18</span> INCIDENTS &nbsp;|&nbsp;
+                <span style={{ fontWeight: 700, color: 'var(--accent-red)' }}>4</span> CRITICAL
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 6 High-Density KPI Blocks */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>EVENTS (24H)</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>12,481</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--color-ok)', fontFamily: 'var(--font-mono)' }}>+8.2% vs yesterday</div>
+      {/* 6 High-Density Fleet Overview KPI Blocks (28–32px numbers, 6px radius) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">TOTAL DEVICES</div>
+          <div className="kpi-number" style={{ color: 'var(--text-white)', marginTop: '4px' }}>
+            {fleetTrends?.device_summary?.total ?? (stats?.endpoints_monitored || 48)}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-blue)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Fleet CMDB Inventory</div>
         </div>
 
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>TOTAL ALERTS</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-warn)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>137</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--color-ok)', fontFamily: 'var(--font-mono)' }}>-4.1% de-duplicated</div>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">ONLINE DEVICES</div>
+          <div className="kpi-number" style={{ color: 'var(--accent-green)', marginTop: '4px' }}>
+            {fleetTrends?.device_summary?.online ?? 44}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-green)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Actively Heartbeating</div>
         </div>
 
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>CRITICAL ALERTS</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-crit)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>4</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--color-crit)', fontFamily: 'var(--font-mono)' }}>Active C2 / Dump</div>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">OFFLINE DEVICES</div>
+          <div className="kpi-number" style={{ color: 'var(--accent-amber)', marginTop: '4px' }}>
+            {fleetTrends?.device_summary?.offline ?? 4}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Requires Attention</div>
         </div>
 
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>ACTIVE INCIDENTS</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-high)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>18</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>+2 in flight</div>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">FLEET HEALTH SCORE</div>
+          <div className="kpi-number" style={{ color: 'var(--accent-blue)', marginTop: '4px' }}>
+            {fleetTrends?.fleet_health_score ?? 88}%
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-green)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Composite Health Index</div>
         </div>
 
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>ASSETS AT RISK</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: '#f59e0b', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>3</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--color-info)', fontFamily: 'var(--font-mono)' }}>1 Isolated (HMAC)</div>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">ACTIVE ALERTS</div>
+          <div className="kpi-number" style={{ color: 'var(--accent-amber)', marginTop: '4px' }}>
+            {fleetTrends?.device_summary?.active_alerts ?? (stats?.active_alerts || 4)}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-amber)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Threshold Breaches</div>
         </div>
 
-        <div className="soc-panel" style={{ padding: '12px 14px' }}>
-          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}>AUTOMATION RUNS</div>
-          <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-info)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>142</div>
-          <div style={{ fontSize: '10.5px', color: 'var(--color-ok)', fontFamily: 'var(--font-mono)' }}>98.2% Auto-Resolved</div>
+        <div className="soc-card" style={{ padding: '16px' }}>
+          <div className="kpi-label">ACTIVE INCIDENTS</div>
+          <div className="kpi-number" style={{ color: 'var(--accent-red)', marginTop: '4px' }}>
+            {incidents.length || stats?.open_incidents || 1}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--accent-red)', fontFamily: 'var(--font-body)', marginTop: '3px' }}>Under Investigation</div>
         </div>
       </div>
 
       {/* ACTIVE INCIDENTS (Dense Enterprise Table) */}
-      <div className="soc-panel">
+      <div className="soc-card" style={{ overflow: 'hidden' }}>
         <div style={{
-          padding: '10px 14px',
+          padding: '12px 16px',
           borderBottom: '1px solid var(--border-subtle)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-white)', fontFamily: 'var(--font-heading)' }}>
             ACTIVE INCIDENTS
           </div>
-          <Link href="/incidents" style={{ color: 'var(--color-info)', fontSize: '11px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '3px' }}>
-            View All ({incidents.length}) <ChevronRight size={12} />
+          <Link href="/incidents" style={{ color: 'var(--accent-blue)', fontSize: '12px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-heading)', fontWeight: 600 }}>
+            View All ({incidents.length}) <ChevronRight size={13} />
           </Link>
         </div>
 
@@ -187,15 +208,15 @@ export default function CommandCenterPage() {
           <table className="soc-table">
             <thead>
               <tr>
-                <th style={{ width: '70px' }}>SEV</th>
-                <th style={{ width: '130px' }}>INCIDENT</th>
+                <th style={{ width: '80px' }}>SEV</th>
+                <th style={{ width: '140px' }}>INCIDENT</th>
                 <th>TITLE / DESCRIPTION</th>
-                <th style={{ width: '100px' }}>ASSET</th>
-                <th style={{ width: '90px' }}>USER</th>
-                <th style={{ width: '60px' }}>RISK</th>
-                <th style={{ width: '80px' }}>OWNER</th>
-                <th style={{ width: '110px' }}>STATUS</th>
-                <th style={{ width: '90px', textAlign: 'right' }}>ACTION</th>
+                <th style={{ width: '110px' }}>ASSET</th>
+                <th style={{ width: '100px' }}>USER</th>
+                <th style={{ width: '70px' }}>RISK</th>
+                <th style={{ width: '90px' }}>OWNER</th>
+                <th style={{ width: '120px' }}>STATUS</th>
+                <th style={{ width: '100px', textAlign: 'right' }}>ACTION</th>
               </tr>
             </thead>
             <tbody>
@@ -205,11 +226,11 @@ export default function CommandCenterPage() {
                 return (
                   <tr key={inc.id}>
                     <td>
-                      <span className={isCrit ? 'badge-crit' : sev === 'HIGH' ? 'badge-high' : 'badge-warn'}>
+                      <span className={isCrit ? 'badge-critical' : sev === 'HIGH' ? 'badge-high' : 'badge-medium'}>
                         {sev.substring(0, 4)}
                       </span>
                     </td>
-                    <td className="mono" style={{ color: 'var(--color-info)', fontWeight: 600 }}>
+                    <td className="mono" style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>
                       <Link href={`/incidents?id=${inc.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                         {inc.incident_number || inc.id}
                       </Link>
@@ -248,21 +269,21 @@ export default function CommandCenterPage() {
       </div>
 
       {/* Two Column Lower Section: LIVE EVENT STREAM & SECURITY ACTIVITY */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: '14px' }}>
         {/* LEFT: LIVE EVENT STREAM */}
-        <div className="soc-panel" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="soc-card" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{
-            padding: '10px 14px',
+            padding: '12px 16px',
             borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-white)', fontFamily: 'var(--font-heading)' }}>
               LIVE EVENT STREAM
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', color: 'var(--color-ok)', fontFamily: 'var(--font-mono)' }}>
-              <span>STREAM ●</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--accent-green)', fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
+              <span style={{ fontSize: '8px' }}>●</span> STREAM LIVE
             </div>
           </div>
 
@@ -287,8 +308,8 @@ export default function CommandCenterPage() {
                     <td>
                       <span className="badge-subtle" style={{ fontSize: '10px' }}>{evt.source}</span>
                     </td>
-                    <td className="mono" style={{ color: '#93c5fd' }}>{evt.asset}</td>
-                    <td style={{ color: '#ffffff' }}>{evt.event}</td>
+                    <td className="mono" style={{ color: 'var(--accent-blue)' }}>{evt.asset}</td>
+                    <td style={{ color: 'var(--text-white)' }}>{evt.event}</td>
                   </tr>
                 ))}
               </tbody>
@@ -297,18 +318,18 @@ export default function CommandCenterPage() {
         </div>
 
         {/* RIGHT: SECURITY ACTIVITY & AUTOMATION STATE */}
-        <div className="soc-panel" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="soc-card" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{
-            padding: '10px 14px',
+            padding: '12px 16px',
             borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-white)', fontFamily: 'var(--font-heading)' }}>
               SECURITY ACTIVITY & APPROVALS
             </div>
-            <span className="badge-high" style={{ fontSize: '10px' }}>
+            <span className="badge-high" style={{ fontSize: '10.5px' }}>
               3 WAITING APPROVAL
             </span>
           </div>
@@ -325,7 +346,7 @@ export default function CommandCenterPage() {
               alignItems: 'center'
             }}>
               <div>
-                <div style={{ fontWeight: 700, color: '#ffffff' }}>
+                <div style={{ fontWeight: 700, color: 'var(--text-white)' }}>
                   Isolate Endpoint WS-182
                 </div>
                 <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
@@ -350,7 +371,7 @@ export default function CommandCenterPage() {
               alignItems: 'center'
             }}>
               <div>
-                <div style={{ fontWeight: 700, color: '#ffffff' }}>
+                <div style={{ fontWeight: 700, color: 'var(--text-white)' }}>
                   Disable Account USER-421
                 </div>
                 <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
@@ -384,37 +405,32 @@ export default function CommandCenterPage() {
         </div>
       </div>
 
-      {/* THREAT ACTIVITY (Restrained Time-Series) */}
-      <div className="soc-panel" style={{ padding: '12px 16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+      {/* THREAT ACTIVITY (Restrained Time-Series Line/Area) */}
+      <div className="soc-card" style={{ padding: '16px 20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-white)', fontFamily: 'var(--font-heading)' }}>
             THREAT ACTIVITY TIMELINE (HOURLY INGESTION & ANOMALIES)
           </div>
-          <span style={{ fontSize: '10.5px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-            UTC BASELINE
+          <span style={{ fontSize: '11px', color: 'var(--text-dim)', fontFamily: 'var(--font-heading)', fontWeight: 600 }}>
+            UTC OPERATIONAL BASELINE
           </span>
         </div>
         <div style={{ height: '140px', width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={TIME_SERIES_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="eventGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="time" stroke="#475569" fontSize={10} tickLine={false} />
-              <YAxis stroke="#475569" fontSize={10} tickLine={false} />
+              <XAxis dataKey="time" stroke="var(--text-dim)" fontSize={10} tickLine={false} />
+              <YAxis stroke="var(--text-dim)" fontSize={10} tickLine={false} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#0d131f', 
-                  borderColor: '#1e293b', 
-                  borderRadius: '3px',
-                  fontSize: '11px',
-                  fontFamily: 'var(--font-mono)'
+                  backgroundColor: 'var(--bg-panel)', 
+                  borderColor: 'var(--border-subtle)', 
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  color: 'var(--text-white)',
+                  boxShadow: 'var(--card-shadow)'
                 }} 
               />
-              <Area type="monotone" dataKey="events" stroke="#3b82f6" strokeWidth={1.5} fillOpacity={1} fill="url(#eventGrad)" />
+              <Area type="monotone" dataKey="events" stroke="var(--accent-blue)" strokeWidth={1.8} fill="var(--accent-blue)" fillOpacity={0.12} dot={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -431,7 +447,7 @@ export default function CommandCenterPage() {
             alignItems: 'center'
           }}>
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-white)', fontFamily: 'var(--font-mono)' }}>
                 EVENT DETAILS
               </div>
               <div className="mono" style={{ fontSize: '11px', color: 'var(--color-info)' }}>
@@ -450,11 +466,11 @@ export default function CommandCenterPage() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '11.5px' }}>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '10.5px' }}>SOURCE</div>
-                <div className="mono" style={{ color: '#ffffff', fontWeight: 600 }}>{selectedEvent.source} / {selectedEvent.asset}</div>
+                <div className="mono" style={{ color: 'var(--text-white)', fontWeight: 600 }}>{selectedEvent.source} / {selectedEvent.asset}</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '10.5px' }}>TIMESTAMP</div>
-                <div className="mono" style={{ color: '#ffffff' }}>{selectedEvent.time} UTC</div>
+                <div className="mono" style={{ color: 'var(--text-white)' }}>{selectedEvent.time} UTC</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '10.5px' }}>PROCESS</div>
@@ -466,7 +482,7 @@ export default function CommandCenterPage() {
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '10.5px' }}>USER</div>
-                <div className="mono" style={{ color: '#ffffff' }}>{selectedEvent.user}</div>
+                <div className="mono" style={{ color: 'var(--text-white)' }}>{selectedEvent.user}</div>
               </div>
               <div>
                 <div style={{ color: 'var(--text-dim)', fontSize: '10.5px' }}>DESTINATION</div>
@@ -479,13 +495,13 @@ export default function CommandCenterPage() {
             <div>
               <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '6px' }}>RAW EVIDENCE</div>
               <pre style={{
-                backgroundColor: 'var(--bg-base)',
+                backgroundColor: 'var(--bg-panel-subtle)',
                 padding: '10px',
                 borderRadius: '3px',
                 border: '1px solid var(--border-subtle)',
                 fontSize: '11px',
                 fontFamily: 'var(--font-mono)',
-                color: '#e2e8f0',
+                color: 'var(--text-white)',
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-all'
               }}>
@@ -496,7 +512,7 @@ export default function CommandCenterPage() {
             <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)' }} />
 
             <div>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>CORRELATIONS</div>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-white)', marginBottom: '6px' }}>CORRELATIONS</div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• <strong>5</strong> related telemetry events within 300s window</div>
                 <div>• <strong>2</strong> related Sigma detection alerts matched</div>

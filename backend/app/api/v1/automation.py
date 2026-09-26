@@ -78,6 +78,13 @@ async def get_workflows(limit: int = Query(150, ge=1, le=200)):
                 except Exception:
                     pass
 
+    # Ensure Unified Master Autonomous SOC Pipeline is prominently positioned at index 0
+    unified_idx = next((i for i, p in enumerate(playbooks) if "UNIFIED" in p["id"].upper()), None)
+    if unified_idx is not None and unified_idx > 0:
+        unified_item = playbooks.pop(unified_idx)
+        unified_item["tier"] = "UNIFIED_MASTER_PIPELINE"
+        playbooks.insert(0, unified_item)
+
     return {
         "framework": "n8n Autonomous Cybersecurity Playbook Grid",
         "total_workflows_available": 150,

@@ -1,52 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-base: #080c14;
-  --bg-panel: #0d131f;
-  --bg-panel-subtle: #121827;
-  --bg-panel-hover: #161f32;
-  --bg-panel-active: #1b263d;
-  
-  --border-subtle: #1b2434;
-  --border-hover: #2d3b52;
-  --border-focus: #3b82f6;
+  /* =========================================================================
+     SKYNET Design System Tokens — Enterprise Light Theme (White Background)
+     ========================================================================= */
 
-  --text-white: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  --text-dark: #334155;
+  /* Surface & Base Colors (Clean White Architecture) */
+  --bg-base: #FFFFFF;          /* Pure white background */
+  --bg-panel: #FFFFFF;         /* Crisp white panels/cards */
+  --bg-panel-subtle: #F8FAFC;  /* Subtle elevated off-white */
+  --bg-panel-hover: #F1F5F9;   /* Interactive light hover */
+  --bg-panel-active: #E2E8F0;  /* Active selection */
+  --bg-striped: #F8FAFC;       /* Striped alternating table row background */
 
-  /* Semantic SOC Status Colors */
-  --color-crit: #ef4444;
-  --color-crit-bg: rgba(239, 68, 68, 0.12);
-  --color-crit-border: rgba(239, 68, 68, 0.3);
+  /* Borders & Separators */
+  --border-subtle: #E2E8F0;    /* Crisp light border */
+  --border-hover: #CBD5E1;     /* Interactive border hover */
+  --border-focus: #1976D2;     /* Focus ring */
 
-  --color-high: #f97316;
-  --color-high-bg: rgba(249, 115, 22, 0.12);
-  --color-high-border: rgba(249, 115, 22, 0.3);
+  /* Typography Colors (High Contrast on White) */
+  --text-white: #0F172A;       /* Primary deep slate / dark for headings & strong contrast */
+  --text-muted: #334155;       /* Secondary readable slate for body text */
+  --text-dim: #64748B;         /* Subdued slate for subtitles and labels */
+  --text-dark: #94A3B8;        /* Placeholder and tertiary */
 
-  --color-warn: #eab308;
-  --color-warn-bg: rgba(234, 179, 8, 0.12);
-  --color-warn-border: rgba(234, 179, 8, 0.3);
+  /* Accents */
+  --accent-green: #2E7D32;     /* Green for success/progress */
+  --accent-red: #D32F2F;       /* Red for critical */
+  --accent-amber: #F9A825;     /* Amber for warnings */
+  --accent-blue: #1976D2;      /* Blue for trust elements */
+  --accent-orange: #E65100;    /* Orange for high severity */
+  --accent-gray: #546E7A;      /* Gray for info */
 
-  --color-ok: #10b981;
-  --color-ok-bg: rgba(16, 185, 129, 0.12);
-  --color-ok-border: rgba(16, 185, 129, 0.3);
+  /* Semantic SOC Status Colors (Vibrant text on subtle tinted backgrounds) */
+  --color-crit: #D32F2F;
+  --color-crit-bg: #FEE2E2;
+  --color-crit-border: #FCA5A5;
 
-  --color-info: #3b82f6;
-  --color-info-bg: rgba(59, 130, 246, 0.12);
-  --color-info-border: rgba(59, 130, 246, 0.3);
+  --color-high: #E65100;
+  --color-high-bg: #FFEDD5;
+  --color-high-border: #FDBA74;
 
-  --color-cyan: #06b6d4;
-  --color-cyan-bg: rgba(6, 182, 212, 0.12);
-  --color-cyan-border: rgba(6, 182, 212, 0.3);
+  --color-warn: #B45309;
+  --color-warn-bg: #FEF3C7;
+  --color-warn-border: #FDE68A;
 
-  --color-purple: #8b5cf6;
-  --color-purple-bg: rgba(139, 92, 246, 0.12);
-  --color-purple-border: rgba(139, 92, 246, 0.3);
+  --color-ok: #15803D;
+  --color-ok-bg: #DCFCE7;
+  --color-ok-border: #86EFAC;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-info: #1D4ED8;
+  --color-info-bg: #DBEAFE;
+  --color-info-border: #93C5FD;
+
+  --color-gray: #475569;
+  --color-gray-bg: #F1F5F9;
+  --color-gray-border: #E2E8F0;
+
+  /* Typography Font Families */
+  --font-heading: 'Montserrat', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Roboto', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Font Sizes */
+  --fs-header: 22px;           /* 20–24px */
+  --fs-kpi: 30px;              /* 28–32px */
+  --fs-table: 14px;            /* 14–16px */
+  --fs-body: 14px;
+  --fs-small: 12px;
+  --fs-xs: 11px;
+
+  /* Card Layout Tokens */
+  --card-radius: 6px;          /* Rounded corners (6px) */
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03); /* Subtle light shadow */
+
+  /* Restrained Chart Palette (No Flashy Gradients) */
+  --chart-blue: #1976D2;
+  --chart-green: #2E7D32;
+  --chart-amber: #D97706;
+  --chart-red: #D32F2F;
+  --chart-cyan: #0288D1;
+  --chart-purple: #7B1FA2;
 }
 
 * {
@@ -57,52 +91,100 @@
 
 html, body {
   background-color: var(--bg-base);
-  color: var(--text-white);
-  font-family: var(--font-sans);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.5;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  font-size: 13px;
-  line-height: 1.45;
 }
+
+/* Headings Typography (Montserrat / Poppins) */
+h1, h2, h3, h4, h5, h6,
+.font-heading {
+  font-family: var(--font-heading);
+  color: var(--text-white);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 24px; line-height: 1.25; }
+h2 { font-size: 20px; line-height: 1.3; }
+h3 { font-size: 16px; line-height: 1.35; }
+h4 { font-size: 14px; line-height: 1.4; }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg-base);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 2px;
+  background: #CBD5E1;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #94A3B8;
 }
 
-/* Base Panel */
-.soc-panel {
+/* =========================================================================
+   Card & Panel Components (Rounded 6px, Subtle Shadow, High Density)
+   ========================================================================= */
+.soc-card,
+.soc-panel,
+.glass-panel {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
-  border-radius: 4px;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* High Density Table */
+.soc-card:hover,
+.soc-panel:hover {
+  border-color: var(--border-hover);
+}
+
+/* KPI Numbers: 28–32px with Montserrat Bold */
+.kpi-number {
+  font-family: var(--font-heading);
+  font-size: var(--fs-kpi);
+  font-weight: 800;
+  color: var(--text-white);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   Professional SOC Style Tables (Striped Rows, 14–16px, Severity Badges)
+   ========================================================================= */
 .soc-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: var(--fs-table);
+  font-family: var(--font-body);
   text-align: left;
 }
 
 .soc-table th {
-  padding: 8px 10px;
+  padding: 10px 14px;
   background: var(--bg-panel-subtle);
   color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   border-bottom: 1px solid var(--border-subtle);
@@ -110,34 +192,47 @@ html, body {
 }
 
 .soc-table td {
-  padding: 7px 10px;
-  border-bottom: 1px solid rgba(27, 36, 52, 0.7);
-  color: var(--text-white);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
   vertical-align: middle;
 }
 
-.soc-table tr:hover td {
+/* Striped Rows */
+.soc-table tbody tr:nth-child(even) {
+  background-color: var(--bg-striped);
+}
+
+.soc-table tbody tr:nth-child(odd) {
+  background-color: var(--bg-panel);
+}
+
+.soc-table tbody tr:hover td {
   background-color: var(--bg-panel-hover);
+  color: var(--text-white);
 }
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
-/* Semantic Badges */
+/* =========================================================================
+   Severity Badges (User Spec: Critical=Red, High=Orange, Medium=Yellow, Low=Blue, Info=Gray)
+   ========================================================================= */
+.badge-critical,
 .badge-crit {
   background: var(--color-crit-bg);
   color: var(--color-crit);
   border: 1px solid var(--color-crit-border);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 700;
-  font-family: var(--font-mono);
+  font-family: var(--font-heading);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
 }
 
@@ -145,77 +240,83 @@ html, body {
   background: var(--color-high-bg);
   color: var(--color-high);
   border: 1px solid var(--color-high-border);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 700;
-  font-family: var(--font-mono);
+  font-family: var(--font-heading);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
 }
 
+.badge-medium,
 .badge-warn {
   background: var(--color-warn-bg);
   color: var(--color-warn);
   border: 1px solid var(--color-warn-border);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 700;
-  font-family: var(--font-mono);
+  font-family: var(--font-heading);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
 }
 
-.badge-ok {
-  background: var(--color-ok-bg);
-  color: var(--color-ok);
-  border: 1px solid var(--color-ok-border);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
+.badge-low,
 .badge-info {
   background: var(--color-info-bg);
   color: var(--color-info);
   border: 1px solid var(--color-info-border);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 600;
-  font-family: var(--font-mono);
+  font-family: var(--font-heading);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
 }
 
+.badge-gray,
 .badge-subtle {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 10.5px;
-  font-family: var(--font-mono);
+  background: var(--color-gray-bg);
+  color: var(--color-gray);
+  border: 1px solid var(--color-gray-border);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: var(--font-heading);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
 }
 
-/* Action Buttons */
+.badge-success,
+.badge-ok {
+  background: var(--color-ok-bg);
+  color: var(--color-ok);
+  border: 1px solid var(--color-ok-border);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   Interactive Action Buttons
+   ========================================================================= */
 .btn-soc {
   display: inline-flex;
   align-items: center;
@@ -224,10 +325,11 @@ html, body {
   background: var(--bg-panel-subtle);
   border: 1px solid var(--border-subtle);
   color: var(--text-white);
-  padding: 6px 12px;
-  border-radius: 3px;
-  font-size: 12px;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
   font-weight: 600;
+  font-family: var(--font-heading);
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -239,78 +341,73 @@ html, body {
 }
 
 .btn-soc-primary {
-  background: #1e3a8a;
-  border: 1px solid #3b82f6;
-  color: #ffffff;
+  background: var(--accent-blue);
+  border: 1px solid var(--accent-blue);
+  color: #FFFFFF !important;
 }
 
 .btn-soc-primary:hover {
-  background: #2563eb;
+  background: #1565C0;
 }
 
 .btn-soc-crit {
-  background: rgba(239, 68, 68, 0.15);
+  background: #FEE2E2;
   border: 1px solid var(--color-crit);
-  color: #fca5a5;
+  color: var(--color-crit);
 }
 
 .btn-soc-crit:hover {
-  background: rgba(239, 68, 68, 0.28);
-  color: #ffffff;
+  background: #FCA5A5;
+  color: #FFFFFF;
 }
 
 .btn-soc-ok {
-  background: rgba(16, 185, 129, 0.15);
+  background: #DCFCE7;
   border: 1px solid var(--color-ok);
-  color: #6ee7b7;
+  color: var(--color-ok);
 }
 
 .btn-soc-ok:hover {
-  background: rgba(16, 185, 129, 0.28);
-  color: #ffffff;
+  background: #86EFAC;
+  color: #FFFFFF;
 }
 
-/* Drawers & Flyouts */
+/* Inputs */
+.soc-input {
+  background: var(--bg-panel-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-white);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+  font-family: var(--font-body);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.soc-input:focus {
+  background: #FFFFFF;
+  border-color: var(--border-focus);
+}
+
+/* Flyout / Drawers */
 .investigation-drawer {
   position: fixed;
-  top: 48px;
+  top: 54px;
   right: 0;
   bottom: 0;
-  width: 460px;
+  width: 480px;
   max-width: 90vw;
   background: var(--bg-panel);
   border-left: 1px solid var(--border-subtle);
   z-index: 100;
   display: flex;
   flex-direction: column;
-  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.6);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
   animation: slideInRight 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
-}
-
-/* Search Input */
-.soc-input {
-  background: var(--bg-base);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-white);
-  padding: 6px 10px;
-  border-radius: 3px;
-  font-size: 12px;
-  outline: none;
-  font-family: var(--font-sans);
-}
-
-.soc-input:focus {
-  border-color: var(--border-focus);
-}
-
-/* Legacy helper support */
-.glass-panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
 }

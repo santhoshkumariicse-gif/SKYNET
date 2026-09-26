@@ -1,0 +1,190 @@
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------
+  # 1. PostgreSQL 16 (Relational System of Record)
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: skynet-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-skynet_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-skynet_production_secret_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-skynet_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skynet_admin -d skynet_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # 2. Redis 7 (In-Memory Cache & Token Revocation)
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: skynet-redis-prod
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-skynet_redis_prod_2026}
+    volumes:
+      - redis_data:/data
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "skynet_redis_prod_2026", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # 3. Qdrant (Enterprise Vector Database for RAG)
+  # -------------------------------------------------------------
+  qdrant:
+    image: qdrant/qdrant:v1.9.0
+    container_name: skynet-qdrant-prod
+    restart: always
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:6333/readyz || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # 4. Ollama (Local AI LLM Server: Llama 3.x / DeepSeek)
+  # -------------------------------------------------------------
+  ollama:
+    image: ollama/ollama:latest
+    container_name: skynet-ollama-prod
+    restart: always
+    volumes:
+      - ollama_models:/root/.ollama
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 3
+
+  # -------------------------------------------------------------
+  # 5. n8n (Autonomous Workflow Orchestrator)
+  # -------------------------------------------------------------
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: skynet-n8n-prod
+    restart: always
+    environment:
+      - N8N_HOST=n8n
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=UTC
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/workflows:ro
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:5678/healthz || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # 6. SKYNET FastAPI Core Backend (Multi-Worker Uvicorn)
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skynet-backend-prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql+asyncpg://skynet_admin:skynet_production_secret_2026@postgres:5432/skynet_db
+      - REDIS_URL=redis://:skynet_redis_prod_2026@redis:6379/0
+      - QDRANT_URL=http://qdrant:6333
+      - OLLAMA_URL=http://ollama:11434
+      - SECRET_KEY=${SECRET_KEY:-skynet_master_production_jwt_secret_2026_enterprise}
+      - HMAC_SECRET=${HMAC_SECRET:-skynet_hmac_tamper_evidence_secret_key_2026}
+      - AGENT_API_KEY=${AGENT_API_KEY:-skynet_prod_agent_registration_secret_key}
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------
+  # 7. SKYNET Next.js 16 Web Console
+  # -------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skynet-frontend-prod
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://localhost/api/v1
+    networks:
+      - skynet-internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:3000/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # -------------------------------------------------------------
+  # 8. Nginx Production TLS Reverse Proxy & Gateway
+  # -------------------------------------------------------------
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: skynet-gateway-prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - skynet-internal
+      - skynet-edge
+
+networks:
+  skynet-internal:
+    driver: bridge
+  skynet-edge:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+  ollama_models:
+  n8n_data:
+  nginx_certs:

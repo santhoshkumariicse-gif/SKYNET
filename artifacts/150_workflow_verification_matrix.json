@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-25T19:19:49.552481+00:00",
+  "timestamp": "2026-09-26T06:02:30.871665+00:00",
   "total_workflows": 150,
   "passed": 150,
   "failed": 0,
@@ -20,8 +20,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0001|lat:0.58ms|nodes:6",
-      "latency_ms": 0.58
+      "evidence": "exec_id:EXEC-0001|lat:1.02ms|nodes:6",
+      "latency_ms": 1.02
     },
     {
       "id": "WF-002",
@@ -37,8 +37,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0002|lat:0.58ms|nodes:6",
-      "latency_ms": 0.58
+      "evidence": "exec_id:EXEC-0002|lat:0.98ms|nodes:6",
+      "latency_ms": 0.98
     },
     {
       "id": "WF-003",
@@ -88,8 +88,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0005|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0005|lat:0.99ms|nodes:6",
+      "latency_ms": 0.99
     },
     {
       "id": "WF-006",
@@ -105,8 +105,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0006|lat:0.52ms|nodes:6",
-      "latency_ms": 0.52
+      "evidence": "exec_id:EXEC-0006|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-007",
@@ -122,8 +122,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0007|lat:0.6ms|nodes:6",
-      "latency_ms": 0.6
+      "evidence": "exec_id:EXEC-0007|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-008",
@@ -139,8 +139,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0008|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0008|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-009",
@@ -173,8 +173,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0010|lat:0.63ms|nodes:6",
-      "latency_ms": 0.63
+      "evidence": "exec_id:EXEC-0010|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-011",
@@ -241,8 +241,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0014|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0014|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-015",
@@ -275,8 +275,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0016|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0016|lat:1.68ms|nodes:6",
+      "latency_ms": 1.68
     },
     {
       "id": "WF-017",
@@ -292,8 +292,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0017|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0017|lat:1.08ms|nodes:6",
+      "latency_ms": 1.08
     },
     {
       "id": "WF-018",
@@ -309,8 +309,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0018|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0018|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-019",
@@ -326,8 +326,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0019|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0019|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-020",
@@ -343,8 +343,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0020|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0020|lat:0.55ms|nodes:6",
+      "latency_ms": 0.55
     },
     {
       "id": "WF-021",
@@ -360,8 +360,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0021|lat:3.88ms|nodes:6",
-      "latency_ms": 3.88
+      "evidence": "exec_id:EXEC-0021|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-022",
@@ -377,8 +377,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0022|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0022|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-023",
@@ -394,8 +394,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0023|lat:0.82ms|nodes:6",
-      "latency_ms": 0.82
+      "evidence": "exec_id:EXEC-0023|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-024",
@@ -411,8 +411,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0024|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0024|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-025",
@@ -428,8 +428,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0025|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0025|lat:0.56ms|nodes:6",
+      "latency_ms": 0.56
     },
     {
       "id": "WF-026",
@@ -445,8 +445,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0026|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0026|lat:0.57ms|nodes:6",
+      "latency_ms": 0.57
     },
     {
       "id": "WF-027",
@@ -462,8 +462,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0027|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0027|lat:0.57ms|nodes:6",
+      "latency_ms": 0.57
     },
     {
       "id": "WF-028",
@@ -479,8 +479,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0028|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0028|lat:0.55ms|nodes:6",
+      "latency_ms": 0.55
     },
     {
       "id": "WF-029",
@@ -496,8 +496,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0029|lat:2.02ms|nodes:6",
-      "latency_ms": 2.02
+      "evidence": "exec_id:EXEC-0029|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-030",
@@ -513,8 +513,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0030|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0030|lat:0.51ms|nodes:6",
+      "latency_ms": 0.51
     },
     {
       "id": "WF-031",
@@ -530,8 +530,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0031|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0031|lat:0.62ms|nodes:6",
+      "latency_ms": 0.62
     },
     {
       "id": "WF-032",
@@ -547,8 +547,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0032|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0032|lat:0.51ms|nodes:6",
+      "latency_ms": 0.51
     },
     {
       "id": "WF-033",
@@ -564,8 +564,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0033|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0033|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-034",
@@ -581,8 +581,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0034|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0034|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-035",
@@ -598,8 +598,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0035|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0035|lat:0.57ms|nodes:6",
+      "latency_ms": 0.57
     },
     {
       "id": "WF-036",
@@ -615,8 +615,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0036|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0036|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-037",
@@ -632,8 +632,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0037|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0037|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-038",
@@ -649,8 +649,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0038|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0038|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-039",
@@ -666,8 +666,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0039|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0039|lat:0.53ms|nodes:6",
+      "latency_ms": 0.53
     },
     {
       "id": "WF-040",
@@ -683,8 +683,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0040|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0040|lat:0.67ms|nodes:6",
+      "latency_ms": 0.67
     },
     {
       "id": "WF-041",
@@ -700,8 +700,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0041|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0041|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-042",
@@ -717,8 +717,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0042|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0042|lat:0.55ms|nodes:6",
+      "latency_ms": 0.55
     },
     {
       "id": "WF-043",
@@ -734,8 +734,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0043|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0043|lat:0.59ms|nodes:6",
+      "latency_ms": 0.59
     },
     {
       "id": "WF-044",
@@ -751,8 +751,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0044|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0044|lat:0.55ms|nodes:6",
+      "latency_ms": 0.55
     },
     {
       "id": "WF-045",
@@ -768,8 +768,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0045|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0045|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-046",
@@ -819,8 +819,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0048|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0048|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-049",
@@ -853,8 +853,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0050|lat:0.55ms|nodes:6",
-      "latency_ms": 0.55
+      "evidence": "exec_id:EXEC-0050|lat:0.51ms|nodes:6",
+      "latency_ms": 0.51
     },
     {
       "id": "WF-051",
@@ -870,8 +870,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0051|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0051|lat:0.6ms|nodes:6",
+      "latency_ms": 0.6
     },
     {
       "id": "WF-052",
@@ -887,8 +887,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0052|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0052|lat:0.75ms|nodes:6",
+      "latency_ms": 0.75
     },
     {
       "id": "WF-053",
@@ -904,8 +904,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0053|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0053|lat:1.23ms|nodes:6",
+      "latency_ms": 1.23
     },
     {
       "id": "WF-054",
@@ -921,8 +921,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0054|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0054|lat:0.57ms|nodes:6",
+      "latency_ms": 0.57
     },
     {
       "id": "WF-055",
@@ -938,8 +938,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0055|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0055|lat:0.58ms|nodes:6",
+      "latency_ms": 0.58
     },
     {
       "id": "WF-056",
@@ -955,8 +955,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0056|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0056|lat:0.54ms|nodes:6",
+      "latency_ms": 0.54
     },
     {
       "id": "WF-057",
@@ -972,8 +972,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0057|lat:2.52ms|nodes:6",
-      "latency_ms": 2.52
+      "evidence": "exec_id:EXEC-0057|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-058",
@@ -989,8 +989,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0058|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0058|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-059",
@@ -1006,8 +1006,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0059|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0059|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-060",
@@ -1040,8 +1040,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0061|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0061|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-062",
@@ -1074,8 +1074,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0063|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0063|lat:1.5ms|nodes:6",
+      "latency_ms": 1.5
     },
     {
       "id": "WF-064",
@@ -1091,8 +1091,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0064|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0064|lat:0.52ms|nodes:6",
+      "latency_ms": 0.52
     },
     {
       "id": "WF-065",
@@ -1108,8 +1108,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0065|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0065|lat:0.5ms|nodes:6",
+      "latency_ms": 0.5
     },
     {
       "id": "WF-066",
@@ -1125,8 +1125,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0066|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0066|lat:0.66ms|nodes:6",
+      "latency_ms": 0.66
     },
     {
       "id": "WF-067",
@@ -1159,8 +1159,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0068|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0068|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-069",
@@ -1193,8 +1193,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0070|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0070|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-071",
@@ -1210,8 +1210,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0071|lat:4.28ms|nodes:6",
-      "latency_ms": 4.28
+      "evidence": "exec_id:EXEC-0071|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-072",
@@ -1227,8 +1227,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0072|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0072|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-073",
@@ -1261,8 +1261,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0074|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0074|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-075",
@@ -1278,8 +1278,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0075|lat:1.1ms|nodes:6",
-      "latency_ms": 1.1
+      "evidence": "exec_id:EXEC-0075|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-076",
@@ -1295,8 +1295,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0076|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0076|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-077",
@@ -1312,8 +1312,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0077|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0077|lat:65.21ms|nodes:6",
+      "latency_ms": 65.21
     },
     {
       "id": "WF-078",
@@ -1329,8 +1329,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0078|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0078|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-079",
@@ -1380,8 +1380,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0081|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0081|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-082",
@@ -1448,8 +1448,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0085|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0085|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-086",
@@ -1516,8 +1516,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0089|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0089|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-090",
@@ -1584,8 +1584,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0093|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0093|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-094",
@@ -1635,8 +1635,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0096|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0096|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-097",
@@ -1754,8 +1754,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0103|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0103|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-104",
@@ -1771,8 +1771,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0104|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0104|lat:0.51ms|nodes:6",
+      "latency_ms": 0.51
     },
     {
       "id": "WF-105",
@@ -1788,8 +1788,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0105|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0105|lat:0.46ms|nodes:6",
+      "latency_ms": 0.46
     },
     {
       "id": "WF-106",
@@ -1805,8 +1805,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0106|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0106|lat:0.56ms|nodes:6",
+      "latency_ms": 0.56
     },
     {
       "id": "WF-107",
@@ -1839,8 +1839,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0108|lat:2.01ms|nodes:6",
-      "latency_ms": 2.01
+      "evidence": "exec_id:EXEC-0108|lat:0.98ms|nodes:6",
+      "latency_ms": 0.98
     },
     {
       "id": "WF-109",
@@ -1924,8 +1924,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0113|lat:2.01ms|nodes:6",
-      "latency_ms": 2.01
+      "evidence": "exec_id:EXEC-0113|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-114",
@@ -1958,8 +1958,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0115|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0115|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-116",
@@ -2026,8 +2026,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0119|lat:2.01ms|nodes:6",
-      "latency_ms": 2.01
+      "evidence": "exec_id:EXEC-0119|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-120",
@@ -2060,8 +2060,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0121|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0121|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-122",
@@ -2145,8 +2145,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0126|lat:2.01ms|nodes:6",
-      "latency_ms": 2.01
+      "evidence": "exec_id:EXEC-0126|lat:0.51ms|nodes:6",
+      "latency_ms": 0.51
     },
     {
       "id": "WF-127",
@@ -2196,8 +2196,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0129|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0129|lat:1.01ms|nodes:6",
+      "latency_ms": 1.01
     },
     {
       "id": "WF-130",
@@ -2264,8 +2264,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0133|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0133|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-134",
@@ -2332,8 +2332,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0137|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0137|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-138",
@@ -2366,8 +2366,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0139|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0139|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-140",
@@ -2434,8 +2434,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0143|lat:5.14ms|nodes:6",
-      "latency_ms": 5.14
+      "evidence": "exec_id:EXEC-0143|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-144",
@@ -2468,8 +2468,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0145|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0145|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-146",
@@ -2502,8 +2502,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0147|lat:3.16ms|nodes:6",
-      "latency_ms": 3.16
+      "evidence": "exec_id:EXEC-0147|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-148",
@@ -2519,8 +2519,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0148|lat:0.0ms|nodes:6",
-      "latency_ms": 0.0
+      "evidence": "exec_id:EXEC-0148|lat:1.0ms|nodes:6",
+      "latency_ms": 1.0
     },
     {
       "id": "WF-149",
@@ -2536,8 +2536,8 @@
       "audit": true,
       "integration": true,
       "status": "PASS",
-      "evidence": "exec_id:EXEC-0149|lat:2.02ms|nodes:6",
-      "latency_ms": 2.02
+      "evidence": "exec_id:EXEC-0149|lat:0.0ms|nodes:6",
+      "latency_ms": 0.0
     },
     {
       "id": "WF-150",

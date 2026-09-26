@@ -1,0 +1,162 @@
+{
+  "name": "SKYNET v5.0 — Autonomous RAG Knowledge Base Sync & Incident Q&A Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "node-schedule-sync",
+      "name": "Hourly Knowledge Sync Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rag-chat-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-rag-chat",
+      "name": "Incoming Copilot / Slack RAG Query",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 500],
+      "webhookId": "skynet-rag-chat-webhook"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/api/v1/rag/documents",
+        "options": {}
+      },
+      "id": "node-get-indexed-docs",
+      "name": "Fetch Indexed Documents & Vector Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/api/v1/rag/query",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": $json.body.query || \"What caused yesterday's outage?\",\n  \"top_k\": 4,\n  \"include_telemetry\": true\n}",
+        "options": {}
+      },
+      "id": "node-rag-query-api",
+      "name": "Execute Local AI RAG Query with Citations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [480, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"SUCCESS\",\n  \"answer\": $json.answer,\n  \"citations\": $json.citations,\n  \"confidence\": $json.confidence,\n  \"model\": $json.model_used,\n  \"timestamp\": $json.timestamp\n}",
+        "options": {}
+      },
+      "id": "node-webhook-response",
+      "name": "Respond to Slack / Webhook Client",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.vector_store_stats.total_documents }}",
+              "operation": "largerEqual",
+              "value2": 1
+            }
+          ]
+        }
+      },
+      "id": "node-validate-kb-health",
+      "name": "Verify Knowledge Base Health",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    status: 'OPTIMAL',\n    total_docs: $json.vector_store_stats.total_documents,\n    total_chunks: $json.vector_store_stats.total_chunks,\n    backend: $json.vector_store_stats.backend,\n    verified_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-log-sync-success",
+      "name": "Log Knowledge Base Audit Verification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [960, 260]
+    }
+  ],
+  "connections": {
+    "node-schedule-sync": {
+      "main": [
+        [
+          {
+            "node": "node-get-indexed-docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "node-webhook-rag-chat": {
+      "main": [
+        [
+          {
+            "node": "node-rag-query-api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "node-get-indexed-docs": {
+      "main": [
+        [
+          {
+            "node": "node-validate-kb-health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "node-rag-query-api": {
+      "main": [
+        [
+          {
+            "node": "node-webhook-response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "node-validate-kb-health": {
+      "main": [
+        [
+          {
+            "node": "node-log-sync-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
